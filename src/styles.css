@@ -1,5 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Zen+Dots&display=swap');
 @import "tailwindcss";
+@import "flowbite/src/themes/default";
+
+@plugin "flowbite/plugin";
+@source "../node_modules/flowbite";
+
+@theme{
+    --color-noir: #1D1E18;
+    --color-vert: #7BFF39;
+    --color-blanc: #FCFCFC;
+    --font-zen: "Zen Dots";
+}
 
 
 body {
@@ -8,14 +19,9 @@ body {
     font-style: normal;
 }
 
-h1, h2, h3 {
+h1, h2, h3, a {
     font-family: "Zen Dots", sans-serif;
     font-weight: 400;
     font-style: normal;
 }
 
-@theme{
-    --color-noir: #1D1E18;
-    --color-vert: #7BFF39;
-    --color-white: #FCFCFC;
-}
