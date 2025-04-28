@@ -21,23 +21,26 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit  {
 
   ngAfterViewInit() {
     this.initMap();
-    this.centerMap();
   }
 
 
   private initMap() {
-    const baseMapURl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-    this.map = L.map('map');
-    L.tileLayer(baseMapURl).addTo(this.map);
-  }
-
-
-  private centerMap() {
-    // Create a boundary based on the markers
-    const bounds = L.latLngBounds(this.markers.map(marker => marker.getLatLng()));
-    
-    // Fit the map into the boundary
-    this.map.fitBounds(bounds);
+    const baseMapURl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    this.map = L.map('map', {
+      center: [23.7771, 90.3994], // Position de départ
+      zoom: 13
+    });
+  
+    L.tileLayer(baseMapURl, {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(this.map);
+  
+    this.markers.forEach(marker => marker.addTo(this.map));
+  
+    // Force une fois que tout est affiché
+    setTimeout(() => {
+      this.map.invalidateSize();
+    }, 100); // un petit délai pour être sûr (100ms plutôt que 0ms)
   }
 
 
