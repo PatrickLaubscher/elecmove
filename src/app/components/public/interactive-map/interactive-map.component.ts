@@ -45,7 +45,12 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
 
     new Marker({element: iconRed})
     .setLngLat([4.850000,45.760000])
-    .setPopup(new Popup().setHTML("<h1>Borne 1</h1>"))
+    .setPopup(new Popup().setHTML(
+      "<h1>Borne 1</h1>"
+      + "<p>Adresse : 1 rue de la République</p>"
+      + "<p>Type : Borne de recharge</p>"
+      + "<p>Réservée de 10h jusqu'à 14h</p>"
+    ))
     .addTo(this.map);
 
 
@@ -61,7 +66,12 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
   
       new Marker({element: iconBlue})
       .setLngLat([lng,lat])
-      .setPopup(new Popup().setHTML("<h1>Borne 1</h1>"))
+      .setPopup(new Popup().setHTML(
+        "<h1>Borne 1</h1>"
+        + "<p>Adresse : 1 rue de la République</p>"
+        + "<p>Type : Borne de recharge</p>"
+        + "<p>Disponibilité : Oui</p>"
+      ))
       .addTo(this.map);
 
     }
