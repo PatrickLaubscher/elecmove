@@ -53,26 +53,42 @@ class="w-11/12 md:w-4/6 mx-auto my-30"
         </div>
 
         <div
-        class="flex flex-col md:flex-row justify-between items-center gap-4"
+        class="flex flex-col md:flex-row justify-center items-center gap-4"
         >   
-            <label for="time" class="block mb-2 text-sm font-medium text-gray-900">Date de début:</label>
-            <div class="flex">
-                <input 
-                type="time" 
-                id="time" 
-                class="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 leading-none focus:ring-vert focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5" min="09:00" max="18:00" value="00:00" required
-                >
-                <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-s-0 border-s-0 border-gray-300 rounded-e-md">
-                    <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                        <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" clip-rule="evenodd"/>
-                    </svg>
-                </span>
+            <div class="flex flex-col">
+                <label for="startTime" class="block mb-2 text-sm font-medium text-gray-900">Heure de début:</label>
+                <div class="flex">
+                    <input 
+                    type="time" 
+                    id="time" 
+                    class="rounded-none rounded-s-lg bg-black border text-blanc leading-none focus:ring-vert focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5" min="09:00" max="18:00" value="00:00" required
+                    >
+                    <span class="inline-flex items-center px-3 text-sm text-blanc bg-black border rounded-s-0 border-s-0 border-gray-300 rounded-e-md">
+                        <svg 
+                        class="w-4 h-4 text-blanc"
+                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" clip-rule="evenodd"/>
+                        </svg>
+                    </span>
+                </div>
+            </div>
 
-                <input
-                class="w-full rounded-xl border border-noir focus:ring-vert placeholder:text-sm" 
-                type="text"
-                placeholder="Heure de fin"
-                >
+            <div class="flex flex-col">
+                <label for="endTime" class="block mb-2 text-sm font-medium text-gray-900">Heure de fin:</label>
+                <div class="flex">
+                    <input 
+                    type="time" 
+                    id="time" 
+                    class="rounded-none rounded-s-lg bg-black border text-blanc leading-none focus:ring-vert focus:border-blue-500 block flex-1 w-full text-sm border-gray-300 p-2.5" min="09:00" max="18:00" value="00:00" required
+                    >
+                    <span class="inline-flex items-center px-3 text-sm text-blanc bg-black border rounded-s-0 border-s-0 border-gray-300 rounded-e-md">
+                        <svg 
+                        class="w-4 h-4 text-blanc"
+                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z" clip-rule="evenodd"/>
+                        </svg>
+                    </span>
+                </div>
             </div>
 
 
