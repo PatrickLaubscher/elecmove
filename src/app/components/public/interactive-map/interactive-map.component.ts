@@ -13,7 +13,6 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
 
   map: Map | undefined;
 
-
   @ViewChild('map')
   private mapContainer!: ElementRef<HTMLElement>;
 
