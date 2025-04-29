@@ -81,4 +81,5 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
   ngOnDestroy() {
     this.map?.remove();
   }
+  
 }
