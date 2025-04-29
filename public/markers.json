@@ -1,0 +1,15 @@
+[
+    {
+      "lat": 45.7501,
+      "lng": 4.8502,
+      "adresse": "1 rue de la République",
+      "type": "Borne de recharge"
+    },
+    {
+      "lat": 45.7515,
+      "lng": 4.8523,
+      "adresse": "2 rue Victor Hugo",
+      "type": "Borne rapide"
+    }
+    
+  ]
