@@ -5,6 +5,7 @@
 @plugin "flowbite/plugin";
 @source "../node_modules/flowbite";
 
+
 @theme{
     --color-noir: #1D1E18;
     --color-vert: #7BFF39;

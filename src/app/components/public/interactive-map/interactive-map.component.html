@@ -25,6 +25,33 @@ class="w-11/12 md:w-4/6 mx-auto my-30"
         class="map" 
         #map
         ></div>
+        
+        <div
+        class="absolute top-5 left-5">
+            <input
+            class="rounded-xl border border-noir focus:ring-vert placeholder:text-sm" 
+            type="text"
+            #searchInput
+            (input)="onSearchInput(searchInput.value)"
+            name="searchQuery"
+            placeholder="Recherche une adresse..."
+            >
+            <ul
+            *ngIf="suggestions.length > 0"
+            class="absolute bg-white border border-gray-300 w-full mt-1 rounded-xl z-50 shadow-md max-h-60 overflow-auto"
+            >
+                <li
+                *ngFor="let suggestion of suggestions; let i = index"
+                (click)="selectSuggestion(i)"
+                class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                >
+                {{ suggestion.place_name }}
+                </li>
+            </ul>
+
+
+        </div>
+
     </div>
 
     <form

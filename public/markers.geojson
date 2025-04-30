@@ -1,0 +1,137 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "adresse": "1 rue de la République",
+          "type": "Borne de recharge"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [4.8502, 45.7501]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "adresse": "2 rue Victor Hugo",
+          "type": "Borne rapide"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [4.8533, 45.7485]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "adresse": "3 rue de la Liberté",
+          "type": "Borne normale"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [4.8460, 45.7528]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "adresse": "4 rue de la Paix",
+          "type": "Borne de recharge"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [4.8571, 45.7493]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "adresse": "5 rue des Fleurs",
+          "type": "Borne rapide"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [4.8449, 45.7512]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "adresse": "6 rue des Jardins",
+          "type": "Borne normale"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [4.8498, 45.7541]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "adresse": "7 rue des Écoles",
+          "type": "Borne de recharge"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [4.8555, 45.7533]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "adresse": "8 rue des Arts",
+          "type": "Borne rapide"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [4.8477, 45.7562]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "adresse": "9 rue des Sciences",
+          "type": "Borne normale"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [4.8514, 45.7586]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "adresse": "10 rue des Technologies",
+          "type": "Borne de recharge"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [4.8591, 45.7558]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "adresse": "11 rue de l'Innovation",
+          "type": "Borne rapide"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [4.8453, 45.7575]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "adresse": "12 rue de la Création",
+          "type": "Borne normale"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [4.8520, 45.7603]
+        }
+      }
+    ]
+  }
