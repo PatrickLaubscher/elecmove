@@ -24,9 +24,9 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
   private subscription!: Subscription;
   stations = this.stationService.stations;
   map: Map | undefined;
-  private positionMarker: Marker | undefined;
   private isDark = false;
   private isHybrid = false;
+  positionMarker: Marker | null = null
 
   searchQuery = '';
   suggestions: any[] = [];
@@ -38,8 +38,25 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
   ngOnInit(): void {
     maptilersdk.config.apiKey = 'GC5T8jKrwWEDcC6F741K';
   }
-  
 
+  addPositionMarker(lng: number, lat: number) {
+    if (this.positionMarker) {
+      this.positionMarker.remove();
+    }
+  
+    /*const el = document.createElement('div');
+    el.innerHTML = `<svg ... ></svg>`; // ton SVG ici
+    el.style.fontSize = '24px';
+    el.classList.add(/* tes classes Tailwind );*/
+
+    this.positionMarker = new maptilersdk.Marker({
+      color: "#FFFFFF"
+    })
+    .setLngLat([lng, lat])
+    .addTo(this.map!);
+
+  }
+  
   ngAfterViewInit(): void {
     //const initialState = { lng: 4.850000, lat: 45.750000, zoom: 14 };
 
@@ -58,6 +75,17 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
       ]
     });
 
+    this.map.on('load', () => {
+      const center = this.map?.getCenter();
+      if (!center) {
+        this.suggestions = [];
+        return;
+      }
+      const { lng, lat } = center;
+
+      this.addPositionMarker(lng, lat);
+
+    });
     
     // Ajout d'un boutoon de mode sombre et hybride
     const btnDarkMode = document.createElement('button');
@@ -140,8 +168,11 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
           ))
           .addTo(this.map!);
       });
-    }); 
+    });
+    
   }
+
+
 
   // Fonction pour l'automatisation de la recherche
   onSearchInput(query: string) {
@@ -195,6 +226,8 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     
     // Vider la liste des suggestions après sélection
     this.suggestions = [];
+
+    this.addPositionMarker(lng, lat);
   
     console.log('📍 Coordonnées sélectionnées :', { lat, lng });
   }
