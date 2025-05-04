@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy, inject } from '@angular/core';
-import { NgFor, NgIf } from '@angular/common';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener, OnDestroy, inject } from '@angular/core';
+import { NgFor, NgIf, NgClass } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Map, MapStyle, Marker, Popup } from '@maptiler/sdk';
 import '@maptiler/sdk/dist/maptiler-sdk.css';
 import * as maptilersdk from '@maptiler/sdk';
@@ -7,13 +8,12 @@ import { Subscription } from 'rxjs';
 import { StationService } from '../../../shared/services/station.service';
 import { Station } from '../../../shared/entities';
 import "@maptiler/sdk/dist/maptiler-sdk.css";
-import "@maptiler/geocoding-control/style.css";
 
 
 
 @Component({
   selector: 'app-interactive-map',
-  imports: [NgIf, NgFor],
+  imports: [NgIf, NgFor, NgClass, FormsModule],
   templateUrl: './interactive-map.component.html',
   styleUrl: './interactive-map.component.css'
 })
@@ -30,10 +30,25 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
 
   searchQuery = '';
   suggestions: any[] = [];
+  bookingDate: string = new Date().toISOString().split('T')[0];
+  bookingStartTime: string = '09:00';
+  bookingEndTime: string = '18:00';
 
 
   @ViewChild('map')
   private mapContainer!: ElementRef<HTMLElement>;
+  @ViewChild('searchContainer') 
+  private searchContainer!: ElementRef;
+
+  @HostListener('document:click', ['$event'])
+  handleClickOutside(event: MouseEvent) {
+    const targetElement = event.target as HTMLElement;
+
+    // Si le clic n’est pas dans la zone de recherche, on vide les suggestions
+    if (this.searchContainer && !this.searchContainer.nativeElement.contains(targetElement)) {
+      this.suggestions = [];
+    }
+  }
 
   ngOnInit(): void {
     maptilersdk.config.apiKey = 'GC5T8jKrwWEDcC6F741K';
@@ -87,18 +102,10 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
 
     });
     
-    // Ajout d'un boutoon de mode sombre et hybride
+    // Ajout d'un boutoon de mode sombre 
     const btnDarkMode = document.createElement('button');
     btnDarkMode.innerText = '🌓';
     btnDarkMode.style.cssText = `
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-    `;
-
-    const btnHybridMode = document.createElement('button');
-    btnHybridMode.innerText = '🛰️';
-    btnHybridMode.style.cssText = `
       border: none;
       cursor: pointer;
       box-shadow: 0 1px 4px rgba(0,0,0,0.3);
@@ -111,6 +118,15 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
         : maptilersdk.MapStyle.STREETS;
       this.map?.setStyle(newStyle);
     };
+
+    // Ajout d'un boutoon de mode hybride (vue satellite avec mentions sur la carte)
+    const btnHybridMode = document.createElement('button');
+    btnHybridMode.innerText = '🛰️';
+    btnHybridMode.style.cssText = `
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    `;
 
     btnHybridMode .onclick = () => {
       this.isHybrid = !this.isHybrid; 
@@ -173,7 +189,6 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
 
-
   // Fonction pour l'automatisation de la recherche
   onSearchInput(query: string) {
 
@@ -222,7 +237,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     // const marker = new Marker().setLngLat([lng, lat]).addTo(this.map);
   
     // Remplir le champ de saisie avec le lieu sélectionné
-    this.searchQuery = feature.place_name;
+    this.searchQuery = this.suggestions[index].place_name;
     
     // Vider la liste des suggestions après sélection
     this.suggestions = [];
@@ -232,7 +247,10 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     console.log('📍 Coordonnées sélectionnées :', { lat, lng });
   }
 
-
+  // Fonction pour gérer l'apparition des dates et heures de réservation
+  get showInputs(): boolean {
+    return this.searchQuery.trim().length > 0;
+  }
 
   ngOnDestroy() {
     this.map?.remove();
