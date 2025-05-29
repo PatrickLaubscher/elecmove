@@ -10,6 +10,7 @@ import { Credentials, Token } from '../entities';
 @Injectable({
   providedIn: 'root'
 })
+
 export class AuthentificationService {
 
   private apiUrl = environment.apiUrl;
@@ -20,6 +21,13 @@ export class AuthentificationService {
   private router = inject(Router);
   private http = inject(HttpClient);
 
+
+
+  /**
+   * 
+   * @param credentials - The credentials to register a new user
+   * @returns 
+   */
   login(credentials: Credentials): Observable<Token> {
     return this.http
       .post<Token>(`${this.apiUrl}/login_check`, credentials)
