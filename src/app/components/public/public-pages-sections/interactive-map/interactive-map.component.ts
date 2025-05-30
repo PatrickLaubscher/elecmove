@@ -5,8 +5,8 @@ import { Map, MapStyle, Marker, Popup } from '@maptiler/sdk';
 import '@maptiler/sdk/dist/maptiler-sdk.css';
 import * as maptilersdk from '@maptiler/sdk';
 import { Subscription } from 'rxjs';
-import { StationService } from '../../../shared/services/station.service';
-import { Station } from '../../../shared/entities';
+import { StationService } from '../../../../shared/services/station.service';
+import { Station } from '../../../../shared/entities';
 import "@maptiler/sdk/dist/maptiler-sdk.css";
 
 

@@ -30,7 +30,7 @@ export class AuthentificationService {
    */
   login(credentials: Credentials): Observable<Token> {
     return this.http
-      .post<Token>(`${this.apiUrl}/login_check`, credentials)
+      .post<Token>(`${this.apiUrl}/auth/login`, credentials)
       .pipe(
         tap(response => {
           if (response.token != null) {
