@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SubcribeComponent } from './subcribe.component';
+import { SubscribeComponent } from './subscribe.component';
 
-describe('SubcribeComponent', () => {
-  let component: SubcribeComponent;
-  let fixture: ComponentFixture<SubcribeComponent>;
+describe('SubscribeComponent', () => {
+  let component: SubscribeComponent;
+  let fixture: ComponentFixture<SubscribeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SubcribeComponent]
+      imports: [SubscribeComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SubcribeComponent);
+    fixture = TestBed.createComponent(SubscribeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
