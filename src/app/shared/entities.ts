@@ -19,8 +19,38 @@ export interface Token {
 }
 
 
+/* User */
+
+export interface User {
+
+    firstname: string;
+    lastname: string;
+    address: string;
+    city: string;
+    email: string;
+    phone: string;
+    roles: string;
+    creationDate: string;
+
+}
+
+export interface NewUser {
+
+    firstname: string;
+    lastname: string;
+    birthdate: string;
+    mobile: string;
+    email: string;
+    address: string;
+    city: string;
+    cp: string;
+    pwd: string;
+    creationDate: Date;
+
+}
 
 
+/* Charging Stations */
 export interface Station {
     lat: number,
     lng: number,
