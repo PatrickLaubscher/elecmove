@@ -45,7 +45,6 @@ export class SubscribeComponent {
   
   onSubmit() {
     if(this.form.valid) { 
-      const date = new Date();
 
       // Création d'un nouvel utilisateur à partir des valeurs du formulaire
       const newUser:NewUser = {
@@ -57,8 +56,7 @@ export class SubscribeComponent {
         address: this.form.value.address,
         city: this.form.value.city,
         cp: this.form.value.cp,
-        pwd : this.form.value.password,
-        creationDate: date,
+        pwd : this.form.value.password
       };
 
       console.log(newUser);

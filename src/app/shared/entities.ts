@@ -45,7 +45,6 @@ export interface NewUser {
     city: string;
     cp: string;
     pwd: string;
-    creationDate: Date;
 
 }
 
