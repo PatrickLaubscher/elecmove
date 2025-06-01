@@ -43,7 +43,7 @@ export interface NewUser {
     email: string;
     address: string;
     city: string;
-    cp: string;
+    zipcode: string;
     pwd: string;
 
 }

@@ -35,7 +35,7 @@ export class SubscribeComponent {
     email: new FormControl('', {validators: [Validators.required, Validators.email]}),
     address: new FormControl('', {validators: [Validators.required]}),
     city: new FormControl('', {validators: [Validators.required]}),
-    cp: new FormControl('', {validators: [Validators.required, Validators.pattern('^[0-9]{5}$')]}),
+    zipcode: new FormControl('', {validators: [Validators.required, Validators.pattern('^[0-9]{5}$')]}),
     password: new FormControl('', {validators: [Validators.required, Validators.minLength(4)]}),
     password_confirmation: new FormControl('', {validators: [Validators.required]}),
     
@@ -55,22 +55,21 @@ export class SubscribeComponent {
         email : this.form.value.email,
         address: this.form.value.address,
         city: this.form.value.city,
-        cp: this.form.value.cp,
+        zipcode: this.form.value.zipcode,
         pwd : this.form.value.password
       };
 
-      console.log(newUser);
       // Réinitialisation du formulaire après soumission
       this.form.reset();
       
-      // Appel du service pour ajouter un nouvel utilisateur
-      // this.userService.addNewUser(newUser).subscribe({    
-      //   next: () => console.log('Le compte a bien été créé'),
-      //   error: (error) => console.error('Il y a eu une erreur dans la création de votre compte'),
-      //   complete() {
-      //     (prompt:string) => prompt = "Votre compte client a bien été créé, merci!" 
-      //   },
-      // });
+      //Appel du service pour ajouter un nouvel utilisateur
+      this.userService.addNewUser(newUser).subscribe({    
+        next: () => console.log('Le compte a bien été créé'),
+        error: (error) => console.error('Il y a eu une erreur dans la création de votre compte'),
+        complete() {
+          (prompt:string) => prompt = "Votre compte client a bien été créé, merci!" 
+        },
+      });
     }
   }
 
