@@ -48,7 +48,6 @@ export class LoginComponent {
                 }
               }
             )*/
-           console.log(this.auth.getToken(), 'Token récupéré');
           }
         }
           catch (error) {
