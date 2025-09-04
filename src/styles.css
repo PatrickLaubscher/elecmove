@@ -5,10 +5,13 @@
 @plugin "flowbite/plugin";
 @source "../node_modules/flowbite";
 
+
 @theme{
     --color-noir: #1D1E18;
     --color-vert: #7BFF39;
     --color-blanc: #FCFCFC;
+    --color-bleu: #247BA0;
+    --color-rouge: #F25F5C;
     --font-zen: "Zen Dots";
 }
 
@@ -19,7 +22,7 @@ body {
     font-style: normal;
 }
 
-h1, h2, h3, a {
+h1, h2, h3, a, button {
     font-family: "Zen Dots", sans-serif;
     font-weight: 400;
     font-style: normal;
