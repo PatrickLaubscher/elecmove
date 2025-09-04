@@ -24,7 +24,6 @@
       "dom"
     ],
     "forceConsistentCasingInFileNames": true,
-    "allowSyntheticDefaultImports": true,
     "noImplicitAny": true
   },
   "angularCompilerOptions": {
