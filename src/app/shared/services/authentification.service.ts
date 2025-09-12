@@ -13,7 +13,7 @@ import { environment } from '../../../environments/environment.developpment';
 
 export class AuthentificationService {
 
-  private apiUrl = environment.apiUrl;
+  private apiUrl = environment.serverUrl;
   headers = new HttpHeaders().set('Content-Type', 'application/json');
 
   private isAuthenticated = new BehaviorSubject<boolean>(this.checkIfAuthenticated());

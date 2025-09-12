@@ -61,18 +61,27 @@ class="w-11/12 md:w-4/6 mx-auto my-30"
 
             <!-- Suggestion après auto-complétion -->
 
-            <ul
-            *ngIf="suggestions.length > 0"
-            class="absolute left-0 top-20 bg-white border border-gray-300 w-full mt-1 rounded-xl z-50 shadow-md max-h-60 overflow-auto"
-            >
-                <li
-                *ngFor="let suggestion of suggestions; let i = index"
-                (click)="selectSuggestion(i)"
-                class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+            @if(suggestions.length > 0) {
+                
+                <ul
+                class="absolute left-0 top-20 bg-white border border-gray-300 w-full mt-1 rounded-xl z-50 shadow-md max-h-60 overflow-auto"
                 >
-                {{ suggestion.place_name }}
-                </li>
-            </ul>
+                    
+                    @for(suggestion of suggestions; track suggestion.id; let i = $index) {
+                        <li
+                        (click)="selectSuggestion(i)"
+                        class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                        >
+                            {{ suggestion.place_name }}
+                        </li>
+                    }
+
+                    
+                </ul>
+
+
+            }
+
             
             <!-- Date picker -->
 

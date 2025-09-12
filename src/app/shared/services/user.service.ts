@@ -10,7 +10,7 @@ import { environment } from '../../../environments/environment.developpment';
 export class UserService {
 
   private http = inject(HttpClient);
-  private apiUrl = environment.apiUrl;
+  private apiUrl = environment.serverUrl;
   private headers = new HttpHeaders({
     'Content-Type': 'application/ld+json'
   });

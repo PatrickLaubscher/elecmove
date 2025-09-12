@@ -1,6 +1,5 @@
 
 
-
 /* Authentication */
 
 export interface AllowedUrl {
@@ -51,8 +50,19 @@ export interface NewUser {
 
 /* Charging Stations */
 export interface Station {
-    lat: number,
-    lng: number,
-    adresse: string,
-    type: string,
-  }
+
+    type: string;
+    location: Location;
+}
+
+
+/* Location */
+
+export interface Location {
+
+    latitude: number;
+    longitude: number;
+    address: number;
+ 
+
+}
