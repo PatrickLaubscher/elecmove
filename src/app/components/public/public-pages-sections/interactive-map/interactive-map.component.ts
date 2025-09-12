@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener, OnDestroy, inject } from '@angular/core';
-import { NgFor, NgIf, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Map, MapStyle, Marker, Popup } from '@maptiler/sdk';
 import '@maptiler/sdk/dist/maptiler-sdk.css';
@@ -13,7 +13,7 @@ import "@maptiler/sdk/dist/maptiler-sdk.css";
 
 @Component({
   selector: 'app-interactive-map',
-  imports: [NgIf, NgFor, NgClass, FormsModule],
+  imports: [NgClass, FormsModule],
   templateUrl: './interactive-map.component.html',
   styleUrl: './interactive-map.component.css'
 })

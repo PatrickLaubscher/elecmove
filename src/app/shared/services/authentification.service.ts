@@ -18,6 +18,7 @@ export class AuthentificationService {
 
   private isAuthenticated = new BehaviorSubject<boolean>(this.checkIfAuthenticated());
   isAuthenticated$ = this.isAuthenticated.asObservable();
+  
   private router = inject(Router);
   private http = inject(HttpClient);
 
