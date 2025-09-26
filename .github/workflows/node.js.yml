@@ -33,7 +33,6 @@ jobs:
 
     - name: Frontend lint
       run: |
-        cd frontend
         npm ci
         npx ng lint
 
