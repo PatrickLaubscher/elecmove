@@ -29,6 +29,4 @@ export class StationApi {
     return this.http.post<Station[]>(environment.serverUrl + '/api/stations/nearby', coordinates);
   }
   
-
-
 }
