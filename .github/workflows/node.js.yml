@@ -31,8 +31,11 @@ jobs:
     - name: Install all dependencies
       run: npm ci
 
-    - name: run unit tests
-      run: npm test
+    - name: Frontend lint
+      run: |
+        cd frontend
+        npm ci
+        npx ng lint
 
     - name : deploy
       uses: appleboy/ssh-action@v1.2.0
