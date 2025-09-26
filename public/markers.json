@@ -1,0 +1,74 @@
+[
+  {
+    "lat": 45.7501,
+    "lng": 4.8502,
+    "adresse": "1 rue de la République",
+    "type": "Borne de recharge"
+  },
+  {
+    "lat": 45.7485,
+    "lng": 4.8533,
+    "adresse": "2 rue Victor Hugo",
+    "type": "Borne rapide"
+  },
+  {
+    "lat": 45.7528,
+    "lng": 4.8460,
+    "adresse": "3 rue de la Liberté",
+    "type": "Borne normale"
+  },
+  {
+    "lat": 45.7493,
+    "lng": 4.8571,
+    "adresse": "4 rue de la Paix",
+    "type": "Borne de recharge"
+  },
+  {
+    "lat": 45.7512,
+    "lng": 4.8449,
+    "adresse": "5 rue des Fleurs",
+    "type": "Borne rapide"
+  },
+  {
+    "lat": 45.7541,
+    "lng": 4.8498,
+    "adresse": "6 rue des Jardins",
+    "type": "Borne normale"
+  },
+  {
+    "lat": 45.7533,
+    "lng": 4.8555,
+    "adresse": "7 rue des Écoles",
+    "type": "Borne de recharge"
+  },
+  {
+    "lat": 45.7562,
+    "lng": 4.8477,
+    "adresse": "8 rue des Arts",
+    "type": "Borne rapide"
+  },
+  {
+    "lat": 45.7586,
+    "lng": 4.8514,
+    "adresse": "9 rue des Sciences",
+    "type": "Borne normale"
+  },
+  {
+    "lat": 45.7558,
+    "lng": 4.8591,
+    "adresse": "10 rue des Technologies",
+    "type": "Borne de recharge"
+  },
+  {
+    "lat": 45.7575,
+    "lng": 4.8453,
+    "adresse": "11 rue de l'Innovation",
+    "type": "Borne rapide"
+  },
+  {
+    "lat": 45.7603,
+    "lng": 4.8520,
+    "adresse": "12 rue de la Création",
+    "type": "Borne normale"
+  }
+]
