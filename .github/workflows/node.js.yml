@@ -1,0 +1,46 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Deploy to production
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [22.14]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - name: Install all dependencies
+    - run: npm ci
+    
+    - name: build app
+    - run: npm run build --if-present
+
+    - name: run unit tests
+    - run: npm test
+
+    - name : deploy
+      uses: appleboy/ssh-action@v1.2.0
+      with:
+        host: ${{secrets.SERVER_HOST}}
+        username: ${{secrets.SERVER_USER}}
+        key: ${{secrets.SERVER_SSH_KEY}}
+        script: run ./home/debian/deploy-test.sh
