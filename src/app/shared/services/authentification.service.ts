@@ -1,10 +1,10 @@
-import { inject, Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
+import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { catchError, tap } from 'rxjs';
 import { Router } from '@angular/router';
-import { Credentials, Token } from '../entities';
-import { environment } from '../../../environments/environment.developpment';
-
+import { User } from '../entities';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { LoginCredentialsDTO, LoginResponseDTO, UserConnectedDTO, UserCreationDTO } from '../dto';
 
 
 @Injectable({
@@ -13,82 +13,61 @@ import { environment } from '../../../environments/environment.developpment';
 
 export class AuthentificationService {
 
-  private apiUrl = environment.serverUrl;
-  headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-  private isAuthenticated = new BehaviorSubject<boolean>(this.checkIfAuthenticated());
-  isAuthenticated$ = this.isAuthenticated.asObservable();
-  
-  private router = inject(Router);
-  private http = inject(HttpClient);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly router = inject(Router);
+  private readonly snackBar = inject(MatSnackBar);
 
+  private readonly http = inject(HttpClient);
 
+  readonly userLogged = signal<UserConnectedDTO|null>(null);
 
-  /**
-   * 
-   * @param credentials - The credentials to register a new user
-   * @returns 
-   */
-  login(credentials: Credentials): Observable<Token> {
-    return this.http
-      .post<Token>(`${this.apiUrl}/auth/login`, credentials)
-      .pipe(
-        tap(response => {
-          if (response.token != null) {
-            this.isAuthenticated.next(true);
-            this.setToken(response.token);
-            //this.setRefreshToken(response.refresh_token);
-          }
-        }),
-        catchError((error) => {
-          return throwError(() => error);
-        }
+  constructor() {
+    if(this.platformId === 'browser') {
+      
+      if(localStorage.getItem('user')){
+        this.userLogged.set(
+          JSON.parse(localStorage.getItem('user') || '{}')
         )
-      )
+      }
+    }
   }
 
-
-  /**
-   * logout the user by clearing the local storage and updating the authentication state
-   * @param credentials - The credentials to register a new user
-   * @returns An observable of the created user
-   */
-  logout():void {
-    this.isAuthenticated.next(false);
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('user');
-    this.router.navigateByUrl('/');
+  register(dto:UserCreationDTO) {
+    return this.http.post<User>(`/api/account`, dto);
   }
 
-
-  /**
-   * Sets the token in local storage
-   * @param token- The token to set in local storage
-   * @returns 
-   */
-  setToken(token: string):void  {
-    return localStorage.setItem('accessToken', token);
+  login(dto:LoginCredentialsDTO) {
+    return this.http.post<LoginResponseDTO>('/api/login', dto, {withCredentials: true})
+      .pipe(
+        tap(res => {
+          if(res.token) {
+            localStorage.setItem('token', res.token);
+            localStorage.setItem('user', JSON.stringify(res.user));
+            this.userLogged.set(res.user);
+          }
+        })
+      );
   }
 
-
-  /**
-   * Gets the token from local storage
-   * @returns The token from local storage or null if it does not exist
-   */
-  getToken():string | null {
-    return localStorage.getItem('accessToken');
+  refreshToken() {
+    return this.http.post<{message:string}>('/api/refresh-token', null, {withCredentials: true})
+      .pipe(
+        tap(res => localStorage.setItem('token', res.message)),
+        catchError(err => {
+          if(err.status == 403) {
+            this.logout();
+            this.router.navigate(['register']);
+            this.snackBar.open('Your session has expired, please login again', 'ok', {duration: 5000});
+          }
+          throw err;
+        })
+      );
   }
 
-
-  /**
-   * Checks if the user is authenticated by checking if the token exists in local storage
-   * @returns true if the user is authenticated, false otherwise
-  */
-  checkIfAuthenticated(): boolean {
-    const token = this.getToken();
-    return !!token;
+  logout() {
+    this.userLogged.set(null);
+    localStorage.clear();
   }
-
-
+  
 }

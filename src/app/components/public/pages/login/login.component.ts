@@ -1,9 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthentificationService } from '../../../../shared/services/authentification.service';
-import { Credentials } from '../../../../shared/entities';
-import { firstValueFrom } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { LoginCredentialsDTO } from '../../../../shared/dto';
 
 @Component({
   selector: 'app-login',
@@ -13,49 +13,48 @@ import { firstValueFrom } from 'rxjs';
 })
 export class LoginComponent {
 
-  
-  form: FormGroup = new FormGroup({
-    email: new FormControl('', {validators: [Validators.required, Validators.email]}),
-    password: new FormControl('', {validators: [Validators.required, Validators.minLength(4)]})
+  private readonly authApi = inject(AuthentificationService);
+  protected readonly router = inject(Router);
+  protected readonly snackBar = inject(MatSnackBar);
+  protected readonly serverError = signal('');
+  readonly redirectUrl = input<string>();
+
+  protected readonly form = new FormGroup({
+    email: new FormControl<string>('', {validators: [Validators.required, Validators.email]}),
+    password: new FormControl<string>('', {validators: [Validators.required, Validators.min(4)]}),
   });
-  router = inject(Router);
-  auth = inject(AuthentificationService);
-  //userService = inject(UserService);
 
-  //user: User|undefined;
   
-  /**
-   * This method is called when the form is submitted.
-   * It checks if the form is valid, and if so, it retrieves the credentials from the form,
-   */
-  async onSubmit() {
-    if(this.form.valid) {
-      const credentials:Credentials = {
-        username : this.form.value.email,
-        password : this.form.value.password
-      };
-      this.form.reset();
-  
-      try {
-        const response = await firstValueFrom(this.auth.login(credentials));
-          if(response.token != null) {
-            /*this.userService.fetchUserLogged().subscribe(
-              data => {
-                if(data) {
-                  this.user = data;
-                  this.userService.setUser(this.user);
-
-                }
-              }
-            )*/
+  loginUser(credentials: LoginCredentialsDTO) {
+    this.serverError.set('');
+    this.authApi.login(credentials)
+      .subscribe({
+        next: () => {
+          this.router.navigateByUrl(this.redirectUrl() ?? '/');
+          this.snackBar.open('Connexion réussie', 'Ok', {duration: 5000})
+        },
+        error: (err) => {
+          if(err.status == 403) {
+            this.serverError.set('Les identifiants sont incorrects')
+          } else {
+            this.serverError.set("Erreur serveur");
           }
         }
-          catch (error) {
-          console.log(error, 'Problème de connexion');
-      }
+    });
+  }
 
+  submit() {
+    if (this.form.invalid) {
+      this.form.markAllAsDirty();
+      return;
+    }
+    const credentials:LoginCredentialsDTO = {
+      email: this.form.value.email!,
+      password: this.form.value.password!
     }
 
+    this.loginUser(credentials);
   }
+
 
 }

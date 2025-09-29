@@ -1,50 +1,22 @@
 
-
-/* Authentication */
-
-export interface AllowedUrl {
-    url: string;
-    methods: string[];
-}
-
-export interface Credentials {
-    username: string;
-    password: string;
-}
-
-export interface Token {
-    token: string;
-    refresh_token: string;
-}
-
-
 /* User */
 
 export interface User {
 
     firstname: string;
     lastname: string;
-    address: string;
-    city: string;
     email: string;
-    phone: string;
-    roles: string;
-    creationDate: string;
-
+    mobile: string;
+    role: Role;
+    createdAt: string;
+    updatedAt: string;
 }
 
-export interface NewUser {
+/* Role */
 
-    firstname: string;
-    lastname: string;
-    birthdate: string;
-    mobile: string;
-    email: string;
-    address: string;
-    city: string;
-    zipcode: string;
-    pwd: string;
+export interface Role {
 
+    name:string;
 }
 
 
@@ -59,10 +31,8 @@ export interface Station {
 /* Location */
 
 export interface Location {
-
+    
     latitude: number;
     longitude: number;
     address: number;
- 
-
 }
