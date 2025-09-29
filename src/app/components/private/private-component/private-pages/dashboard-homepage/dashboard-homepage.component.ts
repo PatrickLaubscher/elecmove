@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { PrivateTitleService } from '../../../../../shared/services/private-title.service';
+import { PrivateTitleService } from '../../../../../services/private-title.service';
+
 
 @Component({
   selector: 'app-dashboard-homepage',

@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { PrivateNavbarComponent } from '../private-navbar/private-navbar.component';
-import { PrivateTitleService } from '../../../../shared/services/private-title.service';
+import { PrivateTitleService } from '../../../../services/private-title.service';
+
 
 
 @Component({

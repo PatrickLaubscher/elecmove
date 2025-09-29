@@ -67,23 +67,33 @@ class=""
     >
         <ul
         class="flex flex-col items-end mr-0 gap-2">
-            <li>
-                <a
-                routerLink="/login"
-                class="hover:text-vert ease-in-out duration-200"
-                >
-                    Se connecter   
-                </a>
-            </li>
-            <li>
-                <a
-                routerLink="/subscribe"
-                class="hover:text-vert ease-in-out duration-200"
-                >
-                    Créer un compte   
-                </a>
-            </li>
-
+            @if(!auth.userLogged()){
+                <li>
+                    <a
+                    routerLink="/login"
+                    class="hover:text-vert ease-in-out duration-200"
+                    >
+                        Se connecter   
+                    </a>
+                </li>
+                <li>
+                    <a
+                    routerLink="/subscribe"
+                    class="hover:text-vert ease-in-out duration-200"
+                    >
+                        Créer un compte   
+                    </a>
+                </li>
+            } @else {
+                <li>
+                    <a
+                    routerLink="/logout"
+                    class="hover:text-vert ease-in-out duration-200"
+                    >
+                        Se déconnecter 
+                    </a>
+                </li>
+            }
         </ul>
 
     </div>
@@ -103,22 +113,33 @@ class=""
                     Réserver une borne   
                 </a>
             </li>
-            <li>
-                <a
-                routerLink="/"
-                class="hover:text-vert ease-in-out duration-200"
-                >
-                    Se connecter   
-                </a>
-            </li>
-            <li>
-                <a
-                routerLink="/"
-                class="hover:text-vert ease-in-out duration-200"
-                >
-                    Créer un compte   
-                </a>
-            </li>
+            @if(!auth.userLogged()){
+                <li>
+                    <a
+                    routerLink="/login"
+                    class="hover:text-vert ease-in-out duration-200"
+                    >
+                        Se connecter   
+                    </a>
+                </li>
+                <li>
+                    <a
+                    routerLink="/subscribe"
+                    class="hover:text-vert ease-in-out duration-200"
+                    >
+                        Créer un compte   
+                    </a>
+                </li>
+            } @else {
+                <li>
+                    <a
+                    routerLink="/logout"
+                    class="hover:text-vert ease-in-out duration-200"
+                    >
+                        Se déconnecter 
+                    </a>
+                </li>
+            }
 
         </ul>
 

@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AuthentificationService } from '../../../../api/authentication/authentification.service';
 
 
 @Component({
@@ -10,5 +11,7 @@ import { RouterLink } from '@angular/router';
     styleUrl: './nav-bar.component.css'
 })
 export class NavBarComponent {
+
+    protected readonly auth = inject(AuthentificationService);
 
 }

@@ -2,9 +2,9 @@ import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, tap } from 'rxjs';
 import { Router } from '@angular/router';
-import { User } from '../entities';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { LoginCredentialsDTO, LoginResponseDTO, UserConnectedDTO, UserCreationDTO } from '../dto';
+import { User } from '../../shared/entities';
+import { LoginCredentialsDTO, LoginResponseDTO, UserConnectedDTO, UserCreationDTO } from './dto';
 
 
 @Injectable({
@@ -45,6 +45,7 @@ export class AuthentificationService {
             localStorage.setItem('token', res.token);
             localStorage.setItem('user', JSON.stringify(res.user));
             this.userLogged.set(res.user);
+            console.log(res);
           }
         })
       );

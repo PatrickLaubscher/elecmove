@@ -1,7 +1,7 @@
 import { HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { inject, PLATFORM_ID } from '@angular/core';
-import { AuthentificationService } from '../services/authentification.service';
 import { catchError, concatMap } from 'rxjs';
+import { AuthentificationService } from '../authentification.service';
 
 
 

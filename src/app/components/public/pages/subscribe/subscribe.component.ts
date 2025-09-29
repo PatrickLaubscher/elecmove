@@ -1,19 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { UserService } from '../../../../shared/services/user.service';
-import { UserCreationDTO } from '../../../../shared/dto';
-import { AuthentificationService } from '../../../../shared/services/authentification.service';
-
-
-export const confirmPasswordValidator: ValidatorFn = (
-  control: AbstractControl
-): ValidationErrors | null => {
-  return control.value.password === control.value.password_confirmation
-    ? null
-    : { PasswordNoMatch: true };
-};
-
+import { Component, inject, signal } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { UserCreationDTO } from '../../../../api/authentication/dto';
+import { AuthentificationService } from '../../../../api/authentication/authentification.service';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { confirmPasswordValidator } from '../../../../shared/validators';
 
 @Component({
   selector: 'app-subscribe',
@@ -25,43 +17,58 @@ export const confirmPasswordValidator: ValidatorFn = (
 
 export class SubscribeComponent {
 
-  private readonly authApi = inject(AuthentificationService);
+  private readonly auth = inject(AuthentificationService);
+  protected readonly router = inject(Router);
+  protected readonly serverError = signal('');
+  private readonly snackBar = inject(MatSnackBar);
 
 
-  form: FormGroup = new FormGroup({
-    firstname: new FormControl('', {validators: [Validators.required]}),
-    lastname: new FormControl('', {validators: [Validators.required]}),
-    mobile: new FormControl('', {validators: [Validators.required, Validators.pattern('^[0-9]{10}$')]}),
-    email: new FormControl('', {validators: [Validators.required, Validators.email]}),
-    address: new FormControl('', {validators: [Validators.required]}),
-    password: new FormControl('', {validators: [Validators.required, Validators.minLength(4)]}),
-    password_confirmation: new FormControl('', {validators: [Validators.required]}),
+  protected readonly form = new FormGroup({
+    firstname: new FormControl<string>('', {validators: [Validators.required]}),
+    lastname: new FormControl<string>('', {validators: [Validators.required]}),
+    mobile: new FormControl<string>('', {validators: [Validators.required, Validators.pattern('^[0-9]{10}$')]}),
+    email: new FormControl<string>('', {validators: [Validators.required, Validators.email]}),
+    password: new FormControl<string>('', {validators: [Validators.required, Validators.minLength(4)]}),
+    password_confirmation: new FormControl<string>('', {validators: [Validators.required]}),
     
     }, {validators: confirmPasswordValidator},
   );
 
   
-  onSubmit() {
-    if(this.form.valid) { 
+  
+  registerNewUser(newUser: UserCreationDTO) {
+    this.serverError.set('');
+    this.auth.register(newUser)
+      .subscribe({
+        next: () => {
+          this.snackBar.open('Votre compte été créé avec succès !', 'Ok', {duration: 5000});
+          this.router.navigate(['/login']);
+        },
+        error: (err) => {
+          if(err.status == 400) {
+            this.serverError.set('L\'email est utilisé dans un autre compte');
+          } else {
+            this.serverError.set("Error with server");
+          }
+        }
+    });
+  }
 
-      // Création d'un nouvel utilisateur à partir des valeurs du formulaire
-      const newUser:UserCreationDTO = {
-        firstname : this.form.value.firstname,
-        lastname: this.form.value.lastname,
-        mobile: this.form.value.mobile,
-        email : this.form.value.email,
-        password : this.form.value.password
-      };
 
-      // Réinitialisation du formulaire après soumission
-      this.form.reset();
-      
-      //Appel du service pour ajouter un nouvel utilisateur
-      this.authApi.register(newUser).subscribe({    
-        next: () => console.log('Le compte a bien été créé'),
-        error: (error) => console.error('Il y a eu une erreur dans la création de votre compte')
-      });
+  submit() {
+    if (this.form.invalid) {
+      this.form.markAllAsDirty();
+      return;
     }
+    const newUser:UserCreationDTO = {
+        firstname : this.form.value.firstname!,
+        lastname: this.form.value.lastname!,
+        mobile: this.form.value.mobile!,
+        email : this.form.value.email!,
+        password : this.form.value.password!
+    }
+
+    this.registerNewUser(newUser);
   }
 
 }

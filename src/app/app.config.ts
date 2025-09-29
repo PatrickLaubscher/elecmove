@@ -4,8 +4,10 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
-import { tokenInterceptor } from './shared/interceptors/token.interceptor';
-import { globalInterceptor } from './shared/interceptors/global.interceptor';
+import { globalInterceptor } from './api/authentication/interceptors/global.interceptor';
+import { tokenInterceptor } from './api/authentication/interceptors/token.interceptor';
+
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
