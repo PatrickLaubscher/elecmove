@@ -1,7 +1,6 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoginCredentialsDTO } from '../../../../api/authentication/dto';
 import { AuthentificationService } from '../../../../api/authentication/authentification.service';
@@ -32,13 +31,13 @@ export class LoginComponent {
       .subscribe({
         next: () => {
           this.router.navigateByUrl(this.redirectUrl() ?? '/');
-          this.snackBar.open('Connexion réussie', 'Ok', {duration: 5000})
+          this.snackBar.open('Connexion réussie', 'Ok', {duration: 5000, verticalPosition:'top'})
         },
         error: (err) => {
-          if(err.status == 403) {
-            this.serverError.set('Les identifiants sont incorrects')
-          } else {
-            this.serverError.set("Erreur serveur");
+          if (err.status === 401) {
+            this.serverError.set('Identifiants incorrects');
+          } else if (err.status === 403) {
+            this.serverError.set('Vous devez valider votre compte par mail avant de vous connecter.');
           }
         }
     });

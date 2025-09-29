@@ -18,7 +18,7 @@ export class LogoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.auth.logout();
-    this.snackBar.open('Vous avez été déconnecté', 'Ok', { duration: 5000 });
+    this.snackBar.open('Vous avez été déconnecté', 'Ok', { duration: 5000, verticalPosition:'top' });
     this.router.navigate(['/']);
   }
 

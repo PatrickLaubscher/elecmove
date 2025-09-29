@@ -1,6 +1,6 @@
 import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { catchError, tap } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { catchError, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { User } from '../../shared/entities';
@@ -47,6 +47,9 @@ export class AuthentificationService {
             this.userLogged.set(res.user);
             console.log(res);
           }
+        }),
+        catchError((error: HttpErrorResponse) => {
+          return throwError(() => error);
         })
       );
   }

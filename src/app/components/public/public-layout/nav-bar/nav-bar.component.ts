@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, signal, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthentificationService } from '../../../../api/authentication/authentification.service';
 
@@ -13,5 +13,25 @@ import { AuthentificationService } from '../../../../api/authentication/authenti
 export class NavBarComponent {
 
     protected readonly auth = inject(AuthentificationService);
+    isMenuOpen = signal<boolean>(false);
+
+    @ViewChild('menuDropdown') menuDropdown!: ElementRef;
+    @ViewChild('menuButton') menuButton!: ElementRef;
+
+
+    toggleMenu() {
+       this.isMenuOpen.update(open => !open);
+    }
+
+
+    @HostListener('document:click', ['$event'])
+    onClickOutside(event: MouseEvent) {
+    const clickedInsideMenu = this.menuDropdown?.nativeElement.contains(event.target);
+    const clickedButton = this.menuButton?.nativeElement.contains(event.target);
+
+    if (!clickedInsideMenu && !clickedButton) {
+      this.isMenuOpen.set(false);
+    }
+  }
 
 }

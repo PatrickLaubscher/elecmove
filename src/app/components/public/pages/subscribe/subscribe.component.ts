@@ -34,14 +34,14 @@ export class SubscribeComponent {
     }, {validators: confirmPasswordValidator},
   );
 
-  
+
   
   registerNewUser(newUser: UserCreationDTO) {
     this.serverError.set('');
     this.auth.register(newUser)
       .subscribe({
         next: () => {
-          this.snackBar.open('Votre compte été créé avec succès !', 'Ok', {duration: 5000});
+          this.snackBar.open('Votre compte été créé avec succès !', 'Ok', {duration: 5000, verticalPosition:'top'});
           this.router.navigate(['/login']);
         },
         error: (err) => {

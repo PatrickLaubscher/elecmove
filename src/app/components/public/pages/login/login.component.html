@@ -12,6 +12,15 @@ class="max-w-screen-xl w-11/12 md:w-4/6 mx-auto my-15 flex flex-col md:justify-c
 
 </section>
 
+<div
+class="w-11/12 md:w-4/6 mx-auto my-5 h-4"
+>
+    @if(serverError()) {
+        <p class="text-xl text-rouge text-center position-absolute">
+            {{serverError()}}
+        </p>
+    }
+</div>
 
 
 <!-- Login Form -->
