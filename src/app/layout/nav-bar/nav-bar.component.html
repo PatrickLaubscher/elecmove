@@ -1,0 +1,162 @@
+<nav
+class=""
+>
+
+    <div 
+    class="max-w-screen-xl w-11/12 md:w-4/6 mx-auto flex justify-between items-center"
+    >
+        <a 
+        routerLink="/"
+        class=""
+        >
+            <img 
+            src="img/elecmove-logo-light.png" alt="Logo Elec'move"
+            class="max-w-20"
+            >
+    
+        </a>
+
+        <div>
+            <ul
+            class="hidden md:flex justify-between items-center gap-6">
+                <li>
+                    <a
+                    routerLink="/"
+                    class="hover:text-vert ease-in-out duration-200"
+                    >
+                        Réserver une borne   
+                    </a>
+                </li>
+                <li class="relative">
+                    <button
+                    (click)="toggleMenu()"
+                    #menuButton
+                    class="cursor-pointer relative hover:text-vert ease-in-out duration-200"
+                    aria-controls="navbar-login" 
+                    aria-expanded="false"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4s-4 1.79-4 4s1.79 4 4 4m0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4"/></svg>
+                    </button>
+
+                        <!-- Menu caché desktop -->
+                    <div 
+                    #menuDropdown
+                    [class.hidden]="!isMenuOpen()"
+                    class="absolute left-0 w-60 bg-blanc shadow-lg rounded-xl p-4 z-50" 
+                    >
+                        <ul
+                        class="flex flex-col mr-0 gap-2">
+                            @if(!auth.userLogged()){
+                                <li>
+                                    <a
+                                    routerLink="/login"
+                                    class="hover:text-vert ease-in-out duration-200"
+                                    >
+                                        Se connecter   
+                                    </a>
+                                </li>
+                                <li>
+                                    <a
+                                    routerLink="/subscribe"
+                                    class="hover:text-vert ease-in-out duration-200"
+                                    >
+                                        Créer un compte   
+                                    </a>
+                                </li>
+                            } @else {
+
+                                <li>
+                                    <a
+                                    routerLink="/logout"
+                                    class="hover:text-vert ease-in-out duration-200"
+                                    >
+                                        Espace privé 
+                                    </a>
+                                </li>
+                                <li>
+                                    <a
+                                    routerLink="/logout"
+                                    class="hover:text-vert ease-in-out duration-200"
+                                    >
+                                        Se déconnecter 
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+
+                    </div>
+
+                </li>
+            </ul>
+    
+        </div>
+
+        <!-- Menu burger -->
+        <button 
+        data-collapse-toggle="navbar-mobile" 
+        type="button" 
+        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-200 dark:focus:ring-gray-600" 
+        aria-controls="navbar-mobile" 
+        aria-expanded="false" 
+        >
+            <span 
+            class="sr-only"
+            >Open main menu</span>
+            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="noir" viewBox="0 0 17 14">
+                <path stroke="#1D1E18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+            </svg>
+        </button>
+
+    </div>
+
+
+    <!-- Menu caché mobile -->
+    <div 
+    class="hidden max-w-screen-xl w-11/12 mx-auto mt-15" 
+    id="navbar-mobile"
+    >
+        <ul
+        class="flex flex-col gap-3">
+            <li>
+                <a
+                routerLink="/"
+                class="hover:text-vert ease-in-out duration-200"
+                >
+                    Réserver une borne   
+                </a>
+            </li>
+            @if(!auth.userLogged()){
+                <li>
+                    <a
+                    routerLink="/login"
+                    class="hover:text-vert ease-in-out duration-200"
+                    >
+                        Se connecter   
+                    </a>
+                </li>
+                <li>
+                    <a
+                    routerLink="/subscribe"
+                    class="hover:text-vert ease-in-out duration-200"
+                    >
+                        Créer un compte   
+                    </a>
+                </li>
+            } @else {
+                <li>
+                    <a
+                    routerLink="/logout"
+                    class="hover:text-vert ease-in-out duration-200"
+                    >
+                        Se déconnecter 
+                    </a>
+                </li>
+            }
+
+        </ul>
+
+    </div>
+
+
+</nav>
+

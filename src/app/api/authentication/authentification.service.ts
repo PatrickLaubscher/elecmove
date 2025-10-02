@@ -45,7 +45,6 @@ export class AuthentificationService {
             localStorage.setItem('token', res.token);
             localStorage.setItem('user', JSON.stringify(res.user));
             this.userLogged.set(res.user);
-            console.log(res);
           }
         }),
         catchError((error: HttpErrorResponse) => {
