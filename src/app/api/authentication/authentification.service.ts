@@ -54,13 +54,15 @@ export class AuthentificationService {
   }
 
   refreshToken() {
-    return this.http.post<{message:string}>('/api/refresh-token', null, {withCredentials: true})
+    return this.http.post<string>('/api/refresh-token', null, {withCredentials: true, responseType: 'text' as 'json'})
       .pipe(
-        tap(res => localStorage.setItem('token', res.message)),
+        tap(token => {
+          localStorage.setItem('token', token);
+        }),
         catchError(err => {
           if(err.status == 403) {
             this.logout();
-            this.router.navigate(['register']);
+            this.router.navigate(['/register']);
             this.snackBar.open('Your session has expired, please login again', 'ok', {duration: 5000});
           }
           throw err;

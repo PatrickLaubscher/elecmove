@@ -14,8 +14,8 @@ class="w-11/12 md:w-4/6 mx-auto my-20"
             alt="Borne de recharge électrique"
             class="size-10"
             />
-            <a 
-            routerLink="/"
+            <button 
+            (click)="authService.refreshToken().subscribe()"
             class="w-4/5 text-center uppercase cursor-pointer bg-noir text-blanc px-4 py-2 rounded-md border border-vert ease-in-out duration-200h hover:text-vert"
             >
                 <span
@@ -23,7 +23,7 @@ class="w-11/12 md:w-4/6 mx-auto my-20"
                 >
                     Trouver une borne
                 </span>
-            </a>
+            </button>
         </div>
 
         <div

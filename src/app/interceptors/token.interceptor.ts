@@ -4,8 +4,6 @@ import { catchError, concatMap } from 'rxjs';
 import { AuthentificationService } from '../api/authentication/authentification.service';
 
 
-
-
 export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
 
   const auth = inject(AuthentificationService);
@@ -17,7 +15,7 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(cloneWithBearer(req)).pipe(
     catchError(err => {
-      if(err.status == 403) {
+      if(err.status == 401 || err.status == 403) {
         return auth.refreshToken().pipe(
           concatMap(() => next(cloneWithBearer(req)))
         );
