@@ -1,8 +1,7 @@
-import { Component, inject } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { HeroComponent } from '../hero/hero.component';
+import { Component } from '@angular/core';
+import { HeroComponent } from './hero/hero.component';
 import { InteractiveMapComponent } from '../../../components/interactive-map/interactive-map.component';
-import { CustomerReviewsComponent } from '../customer-reviews/customer-reviews.component';
+import { CustomerReviewsComponent } from './customer-reviews/customer-reviews.component';
 
 
 @Component({

@@ -3,8 +3,9 @@ import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Map, MapStyle, Marker, Popup } from '@maptiler/sdk';
 import * as maptilersdk from '@maptiler/sdk';
-import { StationApi } from '../../app/api/station/station-api';
+
 import "@maptiler/sdk/dist/maptiler-sdk.css";
+import { StationService } from '../../api/station/station.service';
 
 
 @Component({
@@ -16,7 +17,7 @@ import "@maptiler/sdk/dist/maptiler-sdk.css";
 
 export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  private readonly stationApi = inject(StationApi);
+  private readonly stationApi = inject(StationService);
 
   protected map: Map | undefined;
   protected isDark = false;

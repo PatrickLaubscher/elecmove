@@ -4,7 +4,7 @@ import { catchError, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { User } from '../../shared/entities';
-import { LoginCredentialsDTO, LoginResponseDTO, UserConnectedDTO, UserCreationDTO } from './dto';
+import { LoginCredentialsDTO, LoginResponseDTO, UserConnectedDTO, UserCreationDTO } from '../dto';
 
 
 @Injectable({
@@ -34,7 +34,7 @@ export class AuthentificationService {
   }
 
   register(dto:UserCreationDTO) {
-    return this.http.post<User>(`/api/account`, dto);
+    return this.http.post<User>(`/api/account/register`, dto);
   }
 
   login(dto:LoginCredentialsDTO) {

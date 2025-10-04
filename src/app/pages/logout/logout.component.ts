@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthentificationService } from '../../app/api/authentication/authentification.service';
+import { AuthentificationService } from '../../api/authentication/authentification.service';
 
 @Component({
   selector: 'app-logout',

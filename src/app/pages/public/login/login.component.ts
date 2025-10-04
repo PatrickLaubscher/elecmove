@@ -2,8 +2,9 @@ import { Component, inject, input, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthentificationService } from '../../../app/api/authentication/authentification.service';
-import { LoginCredentialsDTO } from '../../../app/api/authentication/dto';
+import { AuthentificationService } from '../../../api/authentication/authentification.service';
+import { LoginCredentialsDTO } from '../../../api/dto';
+
 
 
 @Component({

@@ -32,7 +32,7 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
 function cloneWithBearer(req:HttpRequest<unknown>) {
   return req.clone({
     setHeaders: {
-      'Authorization' : 'Bearer' + localStorage.getItem('token')
+      'Authorization' : 'Bearer ' + localStorage.getItem('token')
     }
   });
 }
