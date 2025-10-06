@@ -49,8 +49,8 @@ export class AuthentificationService {
         }),
         catchError((error: HttpErrorResponse) => {
           return throwError(() => error);
-        })
-      );
+      })
+    );
   }
 
   refreshToken() {

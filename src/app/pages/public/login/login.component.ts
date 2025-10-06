@@ -37,10 +37,12 @@ export class LoginComponent {
         },
         error: (err) => {
           if (err.status === 401) {
-            this.serverError.set('Identifiants incorrects');
+            this.serverError.set(err.error || 'Identifiants incorrects');
           } else if (err.status === 403) {
-            this.serverError.set('Vous devez valider votre compte par mail avant de vous connecter.');
-          }
+            this.serverError.set(err.error || 'Vous devez valider votre compte par mail avant de vous connecter.');
+          } else {
+            this.serverError.set(err.error || 'Erreur serveur');
+        }
         }
     });
   }

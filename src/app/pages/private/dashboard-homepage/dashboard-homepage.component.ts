@@ -1,11 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { PrivateTitleService } from '../../../services/private-title.service';
 import { AuthentificationService } from '../../../api/authentication/authentification.service';
 import { BookingService } from '../../../api/booking/booking.service';
 import { StationService } from '../../../api/station/station.service';
-
-
-
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -20,14 +18,34 @@ export class DashboardHomepageComponent implements OnInit {
   protected readonly stationService = inject(StationService);
   protected readonly bookingService = inject(BookingService);
   protected readonly titleService = inject(PrivateTitleService);
+  protected readonly snackBar = inject(MatSnackBar);
 
   ngOnInit(): void {
     this.titleService.setTitle('Accueil');
-    console.log(this.stations);
   }
 
+  readonly pendingStatusId = 1;
   readonly stations = this.stationService.getAll();
+  readonly pendingBookings = this.bookingService.getAllByStationOwnerAndStatus(this.pendingStatusId);
+  
+  readonly actualBookings = this.bookingService.getAllUpcoming();
 
 
+  updateBookingStatus(id:string, statusId:number) {
+    return this.bookingService.updateBookingStatus(id, statusId).subscribe(
+      {
+        next: () => {
+          this.pendingBookings.reload();
+          if(statusId == 2) {
+            this.snackBar.open('Réservation pour la borne confirmée :)', 'Ok', {duration: 5000, verticalPosition:'top'});
+          } else {
+            this.snackBar.open('Réservation annulée :(', 'Ok', {duration: 5000, verticalPosition:'top'});
+          }
+          
+        },
+        error:  (err) => console.error('Erreur dans la mise à jour de la réservation')
+      }
+    )
+  }
 
 }

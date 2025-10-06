@@ -10,8 +10,28 @@ export class BookingService {
 
   private readonly http = inject(HttpClient);
 
-  getOne(id:string) {
-    return httpResource<Booking>(() => '/api/bookings/' + id);
+  getOne(id:Signal<number>) {
+    return httpResource<Booking>(() => '/api/bookings/' + id());
+  }
+
+  getAll() {
+    return httpResource<Booking[]>(() => '/api/bookings/');
+  }
+
+  getAllUpcoming() {
+    return httpResource<Booking[]>(() => '/api/bookings/upcoming');
+  }
+
+  getAllByStationId(id:Signal<number>) {
+    return httpResource<Booking[]>(() => '/api/bookings/station/' + id());
+  }
+
+  getAllByStatus(statusId:number) {
+    return httpResource<Booking[]>(() => '/api/bookings/status/' + statusId);
+  }
+
+  getAllByStationOwnerAndStatus(statusId:number) {
+    return httpResource<Booking[]>(() => '/api/bookings/stations/user/status/' + statusId);
   }
 
   add(newBooking:BookingCreationDTO) {
@@ -22,8 +42,12 @@ export class BookingService {
     return this.http.put<Booking>('/api/bookings/'+ id(), booking);
   }
 
-  updateStatus(id:Signal<number>, status:BookingStatus) {
-    return this.http.patch<null>('/api/bookings/'+ id(), status);
+  updateBookingStatus(id:string, statusId:number) {
+    return this.http.patch<Booking>(
+    '/api/bookings/' + id + '/updateStatus',
+    { statusId }, 
+    { headers: { 'Content-Type': 'application/json' } }
+  );
   }
 
   delete(id:Signal<number>) {

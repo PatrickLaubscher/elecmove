@@ -40,6 +40,7 @@ export interface Car {
 /* Charging Stations */
 export interface Station {
     id:string;
+    name?:string;
     type:string;
     location:Location;
 }
