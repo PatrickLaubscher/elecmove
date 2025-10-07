@@ -1,0 +1,197 @@
+
+
+<div
+class="w-11/12 md:w-4/6 mx-auto my-5 h-4"
+>
+    @if(serverError()) {
+        <p class="text-xl text-rouge text-center position-absolute">
+            {{serverError()}}
+        </p>
+    }
+</div>
+
+
+<!-- New station Form -->
+
+<section
+class="w-11/12 md:w-4/6 mx-auto my-30"
+>
+
+    <form
+    [formGroup]="form" 
+    (ngSubmit)="submit()"
+    class="w-full md:w-4/5 lg:w-3/5 mx-auto flex flex-col justify-center items-center"
+    >   
+
+
+        <!-- nom de la station -->
+        <div
+        class="w-full mb-2"
+        >
+            <label 
+            for="name" 
+            class="hidden"
+            >
+                Nom de la station
+            </label>
+            <input 
+            formControlName="name" 
+            type="text" 
+            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
+            placeholder="Nom de la borne" required 
+            />
+
+            <div class="h-5 mt-1 text-sm">
+                @let nameInput = form.controls.name;
+                @if (nameInput.invalid && (nameInput.dirty || nameInput.touched)) {
+                    @if (nameInput.hasError('required')) {
+                        <span
+                        class="text-rouge">
+                            Veuillez donner un nom à la borne (ex: Borne de recharge)
+                        </span>
+                    }
+                }
+            </div>
+
+        </div>
+ 
+
+        <!-- tarification -->
+        <div
+        class="w-full mb-2"
+        >
+            <label 
+            for="tarification"	 
+            >
+                Tarif horaire en €
+            </label>
+            <input 
+            formControlName="tarification" 
+            type="number" 
+            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
+             required 
+            />
+
+            <div class="h-5 mt-1 text-sm">
+                @let tarificationInput = form.controls.tarification;
+                @if (tarificationInput.invalid && (tarificationInput.touched)) {
+                    @if (tarificationInput.hasError('required')) {
+                        <span
+                        class="text-rouge">
+                            Veuillez renseigner le tarif de la borne
+                        </span>
+                    }
+                }
+            </div>
+        </div>
+    
+        
+        <!-- instructions -->
+        <div
+        class="w-full mb-2"
+        >
+            <label 
+            for="instruction"	 
+            class="hidden"
+            >
+                Vos instructions pour accéder à la borne
+            </label>
+            <textarea 
+            formControlName="instruction" 
+            type="instruction" 
+            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
+            placeholder="Vos instructions (optionels)" 
+            >
+            </textarea>
+
+        </div>
+
+
+        <!-- Téléphone mobile -->
+        <div
+        class="w-full mb-2"
+        >
+            <label 
+            for="mobile"	 
+            class="hidden"
+            >
+                Votre téléphone mobile
+            </label>
+            <input 
+            formControlName="mobile" 
+            type="tel" 
+            class="mx-auto mb-5 rounded-xl border border-noir px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
+            placeholder="Votre portable" required 
+            />
+
+
+            <div class="h-5 mt-1 text-sm">
+                @let mobileInput = form.controls.mobile;
+                @if (mobileInput.invalid && (mobileInput.dirty || mobileInput.touched)) {
+                    @if (mobileInput.hasError('required')) {
+                        <span
+                        class="text-rouge">
+                            Votre téléphone mobile est obligatoire.
+                        </span>
+                    }
+                    @if (mobileInput.hasError('pattern')) {
+                        <span
+                        class="text-rouge">
+                            Le champ doit contenir un numéro de téléphone valide.
+                        </span>
+                    }
+                }
+            </div>
+
+        </div>
+
+
+        <!-- Mot de passe -->
+        <div
+        class="w-full"
+        >
+            <label 
+            for="password"	 
+            class="hidden"
+            >
+                Votre mot de passe
+            </label>
+            <input 
+            formControlName="password" 
+            type="password" 
+            class="mx-auto mb-5 rounded-xl border border-noir px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
+            placeholder="Votre mot de passe" required 
+            />
+
+        </div>
+
+        <!-- Confirmation du mot de passe -->
+        <label 
+        for="password_confirmation"	 
+        class="hidden"
+        >
+            Votre mot de passe (confirmation)
+        </label>
+        <input 
+        formControlName="password_confirmation" 
+        type="password" 
+        class="mx-auto mb-5 rounded-xl border border-noir px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
+        placeholder="Confirmation de votre mot de passe" required 
+        />
+
+        <div class="text-rouge mb-4" *ngIf="form.errors?.['PasswordNoMatch']">
+                Les mots de passe ne correspondent pas.
+        </div>
+
+
+
+        <button 
+        type="submit" 
+        [disabled]="form.invalid"
+        class="mt-8 uppercase cursor-pointer bg-noir text-blanc px-4 py-2 rounded-md border border-vert ease-in-out duration-200 hover:drop-shadow-2xl hover:text-vert"
+        >
+            Créer un compte
+        </button>
+
+    </form>
+</section>  

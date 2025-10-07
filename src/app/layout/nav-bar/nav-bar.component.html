@@ -27,6 +27,18 @@ class=""
                         Réserver une borne   
                     </a>
                 </li>
+
+                @if(this.auth.userLogged()) {
+                    <li>
+                        <a
+                        routerLink="/private/stations"
+                        class="hover:text-vert ease-in-out duration-200"
+                        >
+                            Mes bornes  
+                        </a>
+                    </li>
+                }
+
                 <li class="relative">
                     <button
                     (click)="toggleMenu()"
@@ -67,7 +79,7 @@ class=""
 
                                 <li>
                                     <a
-                                    routerLink="/logout"
+                                    routerLink="/private"
                                     class="hover:text-vert ease-in-out duration-200"
                                     >
                                         Espace privé 

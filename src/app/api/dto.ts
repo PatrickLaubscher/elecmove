@@ -1,4 +1,4 @@
-import { BookingStatus, Car, Station, User } from "../shared/entities";
+import { BookingStatus, Car, Station, User, Location } from "../shared/entities";
 
 
 
@@ -38,12 +38,11 @@ export interface CarCreationDTO {
     brand:string;
 }
 
-export interface LocationStationCreationDTO extends Location {
-    
+export interface LocationCreationDTO extends Location {
 }
 
 export interface StationCreationDTO {
-    name?:string;
+    name:string;
     tarification:number;
     power:string;
     instruction?:string;

@@ -6,6 +6,8 @@ import { PrivateLayoutComponent } from './layout/private-layout/private-layout.c
 import { LoginComponent } from './pages/public/login/login.component';
 import { SubscribeComponent } from './pages/public/subscribe/subscribe.component';
 import { DashboardHomepageComponent } from './pages/private/dashboard-homepage/dashboard-homepage.component';
+import { authGuard } from './api/authentication/auth.guard';
+import { StationPageComponent } from './pages/private/station-page/station-page.component';
 
 
 
@@ -18,11 +20,13 @@ export const routes: Routes = [
             {path: 'subscribe', component: SubscribeComponent},
         ]
     },
-    {path: 'espace-prive', component: PrivateLayoutComponent,
+    {path: 'private', component: PrivateLayoutComponent,
         children: [
-            {path: '', component: DashboardHomepageComponent}
-        ]
-    },
+            {path: '', component: DashboardHomepageComponent},
+            {path: 'stations', component: StationPageComponent},
+
+        ],
+    canActivate: [authGuard]},
     {path: '**', component: HomepageComponent}
 
 ];

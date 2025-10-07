@@ -12,9 +12,8 @@ export interface User {
 }
 
 
-/* address */ 
-interface Location {
-    id:string;
+/* Location */ 
+export interface Location {
     address:string;
     city:string;
     zipcode:string;
@@ -24,6 +23,7 @@ interface Location {
 
 /* User address */
 export interface UserAddress extends Location {
+    id:string;
     addressName?:string;
 }
 
@@ -54,7 +54,7 @@ export interface FavoriteStation {
 
 /* Location */
 export interface LocationStation extends Location {
-
+    id:string;
 }
 
 

@@ -32,7 +32,7 @@ export class LoginComponent {
     this.authApi.login(credentials)
       .subscribe({
         next: () => {
-          this.router.navigateByUrl(this.redirectUrl() ?? '/espace-prive');
+          this.router.navigateByUrl(this.redirectUrl() ?? '/private');
           this.snackBar.open('Connexion réussie', 'Ok', {duration: 5000, verticalPosition:'top'})
         },
         error: (err) => {

@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { PrivateTitleService } from '../../../services/private-title.service';
 import { AuthentificationService } from '../../../api/authentication/authentification.service';
 import { BookingService } from '../../../api/booking/booking.service';
@@ -12,17 +12,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   templateUrl: './dashboard-homepage.component.html',
   styleUrl: './dashboard-homepage.component.css'
 })
-export class DashboardHomepageComponent implements OnInit {
+export class DashboardHomepageComponent {
 
   protected readonly authService = inject(AuthentificationService);
   protected readonly stationService = inject(StationService);
   protected readonly bookingService = inject(BookingService);
-  protected readonly titleService = inject(PrivateTitleService);
   protected readonly snackBar = inject(MatSnackBar);
 
-  ngOnInit(): void {
-    this.titleService.setTitle('Accueil');
-  }
 
   readonly pendingStatusId = 1;
   readonly stations = this.stationService.getAll();

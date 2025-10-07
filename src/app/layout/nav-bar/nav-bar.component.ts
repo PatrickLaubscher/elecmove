@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, inject, signal, ViewChild } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthentificationService } from '../../api/authentication/authentification.service';
 
 
@@ -26,13 +26,14 @@ export class NavBarComponent {
 
 
     @HostListener('document:click', ['$event'])
-    onClickOutside(event: MouseEvent) {
-    const clickedInsideMenu = this.menuDropdown?.nativeElement.contains(event.target);
-    const clickedButton = this.menuButton?.nativeElement.contains(event.target);
 
-    if (!clickedInsideMenu && !clickedButton) {
+    onClickOutside(event: MouseEvent) {
+      const clickedInsideMenu = this.menuDropdown?.nativeElement.contains(event.target);
+      const clickedButton = this.menuButton?.nativeElement.contains(event.target);
+
+      if (!clickedInsideMenu && !clickedButton) {
       this.isMenuOpen.set(false);
+      }
     }
-  }
 
 }
