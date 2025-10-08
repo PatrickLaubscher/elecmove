@@ -1,5 +1,5 @@
 <nav
-class=""
+class="bg-white dark:bg-gray-900 text-noir dark:text-gray-200"
 >
 
     <div 
@@ -7,11 +7,19 @@ class=""
     >
         <a 
         routerLink="/"
-        class=""
+        class="py-2"
         >
-            <img 
-            src="img/elecmove-logo-light.png" alt="Logo Elec'move"
-            class="max-w-20"
+  
+            <img
+                src="img/elecmove-logo-light.png"
+                alt="Logo Elec'move"
+                class="max-w-20 dark:hidden"
+            >
+
+            <img
+                src="img/elecmove-logo-dark.png"
+                alt="Logo Elec'move (dark)"
+                class="max-w-20 hidden dark:block"
             >
     
         </a>
@@ -98,6 +106,10 @@ class=""
 
                     </div>
 
+                </li>
+
+                <li>
+                    <app-theme-toggle/>
                 </li>
             </ul>
     

@@ -1,13 +1,14 @@
 import { Component, ElementRef, HostListener, inject, signal, ViewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthentificationService } from '../../api/authentication/authentification.service';
+import { ThemeToggleComponent } from "../../components/theme-toggle/theme-toggle.component";
 
 
 
 @Component({
     selector: 'app-nav-bar',
     standalone: true,
-    imports: [RouterLink],
+    imports: [RouterLink, ThemeToggleComponent],
     templateUrl: './nav-bar.component.html',
     styleUrl: './nav-bar.component.css'
 })
