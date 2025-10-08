@@ -15,6 +15,9 @@
     --font-zen: "Zen Dots";
 }
 
+/* input.css */
+@custom-variant dark (&:where(.dark, .dark *));
+
 
 body {
     font-family: "Montserrat", sans-serif;

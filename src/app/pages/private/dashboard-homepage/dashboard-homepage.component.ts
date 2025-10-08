@@ -1,5 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { PrivateTitleService } from '../../../services/private-title.service';
+import { Component, inject, signal } from '@angular/core';
 import { AuthentificationService } from '../../../api/authentication/authentification.service';
 import { BookingService } from '../../../api/booking/booking.service';
 import { StationService } from '../../../api/station/station.service';

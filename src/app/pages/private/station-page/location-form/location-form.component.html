@@ -16,11 +16,18 @@ class="w-11/12 md:w-4/6 mx-auto my-5 h-4"
 <section
 class="w-11/12 md:w-4/6 mx-auto my-30"
 >
+    <h2 
+    class="text-md md:text-xl uppercase mb-15"
+    >
+        Ajouter une localisation
+    </h2>
+
+    <app-interactive-map [form]="form"/>
 
     <form
     [formGroup]="form" 
     (ngSubmit)="submit()"
-    class="w-full md:w-4/5 lg:w-3/5 mx-auto flex flex-col justify-center items-center"
+    class="w-full md:w-4/5 lg:w-3/5 mx-auto mt-4 flex flex-col justify-center items-center"
     >   
 
 
@@ -40,19 +47,6 @@ class="w-11/12 md:w-4/6 mx-auto my-30"
             class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
             placeholder="Adresse du lieu..." required 
             />
-
-            <div class="h-5 mt-1 text-sm">
-                @let addressInput = form.controls.address;
-                @if (addressInput.invalid && (addressInput.dirty || addressInput.touched)) {
-                    @if (addressInput.hasError('required')) {
-                        <span
-                        class="text-rouge">
-                            L'adresse est obligatoire.
-                        </span>
-                    }
-                }
-            </div>
-
         </div>
  
 
@@ -72,24 +66,12 @@ class="w-11/12 md:w-4/6 mx-auto my-30"
             class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
             placeholder="Ville..." required 
             />
-
-            <div class="h-5 mt-1 text-sm">
-                @let cityInput = form.controls.city;
-                @if (cityInput.invalid && (cityInput.dirty || cityInput.touched)) {
-                    @if (cityInput.hasError('required')) {
-                        <span
-                        class="text-rouge">
-                            Le nom de la ville est obligatoire.
-                        </span>
-                    }
-                }
-            </div>
         </div>
     
         
         <!-- Code postal -->
         <div
-        class="w-full mb-2"
+        class="w-full mb-4"
         >
             <label 
             for="zipcode"	 
@@ -100,85 +82,48 @@ class="w-11/12 md:w-4/6 mx-auto my-30"
             <input 
             formControlName="zipcode" 
             type="text" 
-            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
+            class="w-1/2 rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
             placeholder="Code postal..." required 
             />
-
-            <div class="h-5 mt-1 text-sm">
-                @let zipcodeInput = form.controls.zipcode;
-                @if (zipcodeInput.invalid && (zipcodeInput.dirty || zipcodeInput.touched)) {
-                    @if (zipcodeInput.hasError('required')) {
-                        <span
-                        class="text-rouge">
-                            Le code postal est obligatoire.
-                        </span>
-                    }
-                }
-            </div>
-
         </div>
 
 
         <!-- Latitude -->
         <div
-        class="w-full mb-2"
+        class="w-full flex flex-col"
         >
             <label 
             for="latitude"	 
-            class="hidden"
             >
                 Latitude
             </label>
             <input 
             formControlName="latitude" 
-            type="number" 
-            class="mx-auto mb-5 rounded-xl border border-noir px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
-            placeholder="Latitude" required 
+            type="number"
+            readonly
+            class="mb-5 rounded-xl border border-noir px-4 py-2 w-1/3 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
+            placeholder="" required 
             />
-
-            <div class="h-5 mt-1 text-sm">
-                @let latitudeInput = form.controls.latitude;
-                @if (latitudeInput.invalid && (latitudeInput.dirty || latitudeInput.touched)) {
-                    @if (latitudeInput.hasError('required')) {
-                        <span
-                        class="text-rouge">
-                            La latitude est obligatoire.
-                        </span>
-                    }
-                }
-            </div>
 
         </div>
 
 
         <!-- Longitude -->
         <div
-        class="w-full"
+        class="w-full flex flex-col"
         >
             <label 
             for="longitude"	 
-            class="hidden"
             >
                 Longitude
             </label>
             <input 
             formControlName="longitude" 
-            type="number" 
-            class="mx-auto mb-5 rounded-xl border border-noir px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
-            placeholder="Longitude" required 
+            type="number"
+            readonly 
+            class="mb-5 rounded-xl border border-noir px-4 py-2 w-1/3 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
+            placeholder="" required 
             />
-
-            <div class="h-5 mt-1 text-sm">
-                @let longitudeInput = form.controls.longitude;
-                @if (longitudeInput.invalid && (longitudeInput.dirty || longitudeInput.touched)) {
-                    @if (longitudeInput.hasError('required')) {
-                        <span
-                        class="text-rouge">
-                            La longitude est obligatoire.
-                        </span>
-                    }
-                }
-            </div>
         </div>
 
 

@@ -2,12 +2,14 @@ import { Component, inject, signal } from '@angular/core';
 import { StationService } from '../../../../api/station/station.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { StationCreationDTO } from '../../../../api/dto';
+import { CommonModule } from '@angular/common';
+import { StandardModalComponent } from "../../../../components/standard-modal/standard-modal.component";
 
 @Component({
   selector: 'app-station-form',
-  imports: [],
+  imports: [ReactiveFormsModule, CommonModule, StandardModalComponent],
   templateUrl: './station-form.component.html',
   styleUrl: './station-form.component.css'
 })
@@ -17,6 +19,9 @@ export class StationFormComponent {
   protected readonly router = inject(Router);
   protected readonly serverError = signal('');
   private readonly snackBar = inject(MatSnackBar);
+  protected readonly isLocationModalOpen = signal(false);
+
+
 
 
   protected readonly form = new FormGroup({
@@ -26,8 +31,7 @@ export class StationFormComponent {
       instruction: new FormControl<string>(''),
       freeStanding: new FormControl<boolean>(true, {validators: [Validators.required]}),
       available: new FormControl<boolean>(true, {validators: [Validators.required]}),
-      type: new FormControl<string>('', {validators: [Validators.required]}),
-      locationStationId: new FormControl<string>('', {validators: [Validators.required]}),
+      locationStationId: new FormControl<string>('', {validators: [Validators.required]})
     }
   );
 
@@ -57,7 +61,6 @@ export class StationFormComponent {
       instruction: this.form.value.instruction!,
       freeStanding: this.form.value.freeStanding!,
       available: this.form.value.available!,
-      type: this.form.value.type!,
       locationStationId: this.form.value.locationStationId!
     }
 

@@ -48,7 +48,6 @@ export interface StationCreationDTO {
     instruction?:string;
     freeStanding:boolean;
     available:boolean;
-    type:string;
     locationStationId:string;
 }
 

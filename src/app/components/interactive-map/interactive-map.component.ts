@@ -1,11 +1,12 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener, OnDestroy, inject, input } from '@angular/core';
 import { NgClass } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormGroup, FormsModule } from '@angular/forms';
 import { Map, MapStyle, Marker, Popup } from '@maptiler/sdk';
 import * as maptilersdk from '@maptiler/sdk';
 
 import "@maptiler/sdk/dist/maptiler-sdk.css";
 import { StationService } from '../../api/station/station.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -17,13 +18,16 @@ import { StationService } from '../../api/station/station.service';
 
 export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  private readonly stationApi = inject(StationService);
+  protected readonly stationApi = inject(StationService);
+  protected readonly router = inject(Router);
 
   protected map: Map | undefined;
   protected isDark = false;
   protected isHybrid = false;
   
   protected positionMarker: Marker | null = null
+
+  readonly form = input<FormGroup>();
 
 
   searchQuery = '';
@@ -52,7 +56,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     maptilersdk.config.apiKey = 'GC5T8jKrwWEDcC6F741K';
   }
 
-  addPositionMarker(lng: number, lat: number) {
+  addPositionMarker(lng: number, lat: number, addressData?:any) {
     if (this.positionMarker) {
       this.positionMarker.remove();
     }
@@ -67,6 +71,13 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     })
     .setLngLat([lng, lat])
     .addTo(this.map!);
+
+    if(this.form()){
+      this.form()?.patchValue({ 
+        latitude:parseFloat(lat.toFixed(6)),
+        longitude:parseFloat(lng.toFixed(6))
+      });
+    }
 
   }
   

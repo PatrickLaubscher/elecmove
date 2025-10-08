@@ -5,11 +5,12 @@ import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LocationStationService } from '../../../../api/location-station/location-station.service';
 import { LocationCreationDTO } from '../../../../api/dto';
+import { InteractiveMapComponent } from '../../../../components/interactive-map/interactive-map.component';
 
 
 @Component({
   selector: 'app-location-form',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, InteractiveMapComponent],
   templateUrl: './location-form.component.html',
   styleUrl: './location-form.component.css'
 })
