@@ -7,12 +7,15 @@ class="map-wrap mx-auto"
     class="map" 
     #map
     ></div>
-    
-    <div
-    class="absolute top-2 left-2 w-fit h-fit group cursor-pointer flex flex-col"
-    #searchContainer
-    >
-    
+
+
+
+        <div
+        class="absolute top-2 left-2 w-fit h-fit group cursor-pointer flex flex-col"
+        #searchContainer
+        >
+
+
         <div 
         class="bg-blanc group-hover:bg-[#F2F2F2] rounded-md w-fit p-1 shadow-md mb-2 transition-all duration-200 ease-in-out border border-noir group-hover:border-vert group-hover:ring-noir focus:ring-2 focus:outline-none"
         >
@@ -25,41 +28,44 @@ class="map-wrap mx-auto"
             </svg>
         </div>
 
-        <!-- Input adresse -->
+            <!-- Input adresse -->
 
-        <input
-        [(ngModel)]="searchQuery"
-        [ngClass]="{
-            'opacity-100 max-h-40 scale-100': searchQuery,
-            'opacity-0 max-h-0 scale-95 group-hover:opacity-100 group-hover:max-h-40 group-hover:scale-100': !searchQuery
-            }"
-        class="opacity-0 max-h-0 scale-95 group-hover:opacity-100 group-hover:max-h-40 group-hover:scale-100 focus:opacity-100 focus:scale-100 active:scale-100 active:opacity-100 focus:max-h-40 transition-all duration-300 delay-200 ease-in-out rounded-md border border-noir focus:ring-vert placeholder:text-sm relative" 
-        type="text"
-        #searchInput
-        (input)="onSearchInput(searchInput.value)"
-        name="searchQuery"
-        placeholder="Recherche une adresse..."
-        >
-
-        <!-- Suggestion après auto-complétion -->
-
-        @if(suggestions.length > 0) {
-            
-            <ul
-            class="absolute left-0 top-20 bg-white border border-gray-300 w-full mt-1 rounded-xl z-50 shadow-md max-h-60 overflow-auto"
+            <input
+            [(ngModel)]="searchQuery"
+            [ngClass]="{
+                'opacity-100 max-h-40 scale-100': searchQuery,
+                'opacity-0 max-h-0 scale-95 group-hover:opacity-100 group-hover:max-h-40 group-hover:scale-100': !searchQuery
+                }"
+            class="opacity-0 max-h-0 scale-95 group-hover:opacity-100 group-hover:max-h-40 group-hover:scale-100 focus:opacity-100 focus:scale-100 active:scale-100 active:opacity-100 focus:max-h-40 transition-all duration-300 delay-200 ease-in-out rounded-md border border-noir focus:ring-vert placeholder:text-sm relative" 
+            type="text"
+            #searchInput
+            (input)="onSearchInput(searchInput.value)"
+            name="searchQuery"
+            placeholder="Recherche une adresse..."
             >
-                
-                @for(suggestion of suggestions; track suggestion.id; let i = $index) {
-                    <li 
-                    (click)="selectSuggestion(i)" 
-                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
-                    >
-                        {{ suggestion.place_name }}
-                    </li>
-                }
 
+            <!-- Suggestion après auto-complétion -->
+
+            @if(suggestions.length > 0) {
                 
-            </ul>
+                <ul
+                class="absolute left-0 top-20 bg-white border border-gray-300 w-full mt-1 rounded-xl z-50 shadow-md max-h-60 overflow-auto"
+                >
+                    
+                    @for(suggestion of suggestions; track suggestion.id; let i = $index) {
+                        <button
+                        type="button"
+                        (click)="selectSuggestion(i)" 
+                        (keydown)="selectSuggestion(i)" 
+                        tabindex="0"
+                        class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm w-full text-left"
+                        >
+                            {{ suggestion.place_name }}
+                        </button>
+                    }
+
+                    
+                </ul>
 
 
         }
@@ -134,6 +140,7 @@ class="map-wrap mx-auto"
             </span>
             </div>
 
+        
         }
 
     </div>

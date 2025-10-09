@@ -6,10 +6,11 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { StationCreationDTO } from '../../../../api/dto';
 import { CommonModule } from '@angular/common';
 import { StandardModalComponent } from "../../../../components/standard-modal/standard-modal.component";
+import { LocationFormComponent } from "../location-form/location-form.component";
 
 @Component({
   selector: 'app-station-form',
-  imports: [ReactiveFormsModule, CommonModule, StandardModalComponent],
+  imports: [ReactiveFormsModule, CommonModule, StandardModalComponent, LocationFormComponent],
   templateUrl: './station-form.component.html',
   styleUrl: './station-form.component.css'
 })

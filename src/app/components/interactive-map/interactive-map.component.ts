@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener, OnDestroy, inject, input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener, OnDestroy, inject, input, output } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { FormGroup, FormsModule } from '@angular/forms';
 import { Map, MapStyle, Marker, Popup } from '@maptiler/sdk';
@@ -22,12 +22,15 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
   protected readonly router = inject(Router);
 
   protected map: Map | undefined;
-  protected isDark = false;
   protected isHybrid = false;
+
+  protected isDark = false;
+  
   
   protected positionMarker: Marker | null = null
 
   readonly form = input<FormGroup>();
+  readonly addressSelected = output<any>();
 
 
   searchQuery = '';
@@ -54,6 +57,11 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
 
   ngOnInit(): void {
     maptilersdk.config.apiKey = 'GC5T8jKrwWEDcC6F741K';
+
+    if(document.documentElement.classList.contains('dark')) {
+      this.isDark = true;
+    }
+
   }
 
   addPositionMarker(lng: number, lat: number, addressData?:any) {
@@ -72,17 +80,10 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     .setLngLat([lng, lat])
     .addTo(this.map!);
 
-    if(this.form()){
-      this.form()?.patchValue({ 
-        latitude:parseFloat(lat.toFixed(6)),
-        longitude:parseFloat(lng.toFixed(6))
-      });
-    }
-
   }
-  
+
+
   ngAfterViewInit():void {
-    //const initialState = { lng: 4.850000, lat: 45.750000, zoom: 14 };
 
     this.map = new maptilersdk.Map({
       container: this.mapContainer.nativeElement,
@@ -92,7 +93,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
       //zoom: initialState.zoom,
       zoom: 14,
       geolocate: true,
-      geolocateControl: false,
+      geolocateControl: true,
       maxBounds: [
         [-5.2, 41.3], 
         [9.7, 51.1] 
@@ -150,7 +151,6 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     controlContainer.appendChild(btnDarkMode);
     controlContainer.appendChild(btnHybridMode);
 
-    //this.map.addControl(gc, 'top-left');
     this.map.addControl(
       {
         onAdd: () => controlContainer,
@@ -159,7 +159,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
       },
       'top-right'
     );
-
+    
     const stationMarker = document.createElement('div');
     stationMarker.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10 2H9c-2.828 0-4.243 0-5.121.879C3 3.757 3 5.172 3 8v13.25H2a.75.75 0 0 0 0 1.5h15.25a.75.75 0 0 0 0-1.5H16v-3.5h1.571c.375 0 .679.304.679.679v.071a2.25 2.25 0 1 0 4.5 0V7.602c0-.157 0-.265-.006-.37a3.75 3.75 0 0 0-1.24-2.582a9 9 0 0 0-.286-.236l-1.25-1a.75.75 0 1 0-.936 1.172l1.233.986c.144.116.194.156.237.195c.443.397.711.954.745 1.549a6 6 0 0 1 .003.306V8h-.75A1.5 1.5 0 0 0 19 9.5v2.419a1.5 1.5 0 0 0 1.026 1.423l1.224.408v4.75a.75.75 0 0 1-1.5 0v-.071a2.18 2.18 0 0 0-2.179-2.179H16V8c0-2.828 0-4.243-.879-5.121C14.243 2 12.828 2 10 2m-.114 7.357a.75.75 0 0 1 .257 1.029l-.818 1.364H11a.75.75 0 0 1 .643 1.136l-1.5 2.5a.75.75 0 1 1-1.286-.772l.818-1.364H8a.75.75 0 0 1-.643-1.136l1.5-2.5a.75.75 0 0 1 1.029-.257" clip-rule="evenodd"/></svg>`; 
     stationMarker.style.fontSize = '24px';
@@ -236,7 +236,8 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     fetch(url)
       .then(res => res.json())
       .then(data => {
-        this.suggestions = data.features || [];  // Récupération des suggestions
+        this.suggestions = data.features || [];
+        console.log(data.features)  // Récupération des suggestions
       })
       .catch(err => console.error('Erreur géocodage :', err));
   }
@@ -247,9 +248,37 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     if (!feature) return;
   
     const [lng, lat] = feature.geometry.coordinates;
-  
+    const placeName = feature.place_name;
+
+     // Extraire les infos utiles (ville, code postal, etc.)
+    const context = feature.context || [];
+    const city = context.find((c: any) => c.id.startsWith('place'))?.text || '';
+    const postcode = context.find((c: any) => c.id.startsWith('postcode'))?.text || '';
+    
+    
+    if(this.form()){
+      this.form()?.patchValue({
+            address: placeName,
+            city: city,
+            zipcode: postcode,
+            latitude: parseFloat(lat.toFixed(6)),
+            longitude: parseFloat(lng.toFixed(6))
+      });
+    }
+
     // Centrer la carte sur les coordonnées sélectionnées
     this.map?.flyTo({ center: [lng, lat], zoom: 15 });
+
+    this.addPositionMarker(lng, lat);
+
+    // 🧾 Émettre les données complètes au parent
+    this.addressSelected.emit({
+      address: placeName,
+      city,
+      zipcode: postcode,
+      latitude: lat,
+      longitude: lng
+    });
   
     // Ajouter un marqueur si nécessaire
     // const marker = new Marker().setLngLat([lng, lat]).addTo(this.map);
@@ -259,10 +288,6 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     
     // Vider la liste des suggestions après sélection
     this.suggestions = [];
-
-    this.addPositionMarker(lng, lat);
-  
-    console.log('📍 Coordonnées sélectionnées :', { lat, lng });
   }
 
   // Fonction pour gérer l'apparition des dates et heures de réservation

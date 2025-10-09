@@ -14,7 +14,7 @@ class="w-11/12 md:w-4/6 mx-auto my-5 h-4"
 <!-- New station Form -->
 
 <section
-class="w-11/12 md:w-4/6 mx-auto my-30"
+class="w-11/12 md:w-4/6 mx-auto"
 >   
     
     <h2 
@@ -72,9 +72,16 @@ class="w-11/12 md:w-4/6 mx-auto my-30"
             </button>
             
             <app-standard-modal  [(open)]="isLocationModalOpen">
-                <h3 ngProjectAs="card-title">Hello</h3>
-                <p ngProjectAs="card-body" class="text-white">ceci est le corps de ma card</p>
-                <p ngProjectAs="card-footer" class="text-white">Footer</p>
+                <h2
+                ngProjectAs="card-title"
+                class="text-sm md:text-md uppercase"
+                >
+                    Ajouter une localisation
+                </h2>
+                <div ngProjectAs="card-body">
+                    <app-location-form/>
+                </div>
+                <p ngProjectAs="card-footer" class="text-white"></p>
 
             </app-standard-modal>
         </div>

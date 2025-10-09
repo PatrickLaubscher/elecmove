@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LocationStationService } from '../../../../api/location-station/location-station.service';
 import { LocationCreationDTO } from '../../../../api/dto';
 import { InteractiveMapComponent } from '../../../../components/interactive-map/interactive-map.component';
+import { debounceTime } from 'rxjs';
 
 
 @Component({
@@ -14,13 +15,34 @@ import { InteractiveMapComponent } from '../../../../components/interactive-map/
   templateUrl: './location-form.component.html',
   styleUrl: './location-form.component.css'
 })
-export class LocationFormComponent {
+export class LocationFormComponent implements OnInit {
 
   private readonly locationService = inject(LocationStationService);
   protected readonly router = inject(Router);
   protected readonly serverError = signal('');
   private readonly snackBar = inject(MatSnackBar);
 
+  @ViewChild('mapComponent') mapComponent!: InteractiveMapComponent;
+
+  ngOnInit() {
+  this.form.get('address')?.valueChanges
+    .pipe(debounceTime(400))
+    .subscribe(value => {
+      if (value && this.mapComponent) {
+        this.mapComponent.onSearchInput(value);
+      }
+    });
+  }
+
+  onAddressSelected(addressData: any) {
+    this.form.patchValue({
+      address: addressData.address,
+      city: addressData.city,
+      zipcode: addressData.zipcode,
+      latitude: addressData.latitude,
+      longitude: addressData.longitude
+    });
+  }
 
   protected readonly form = new FormGroup({
       address: new FormControl<string>('', {validators: [Validators.required]}),
