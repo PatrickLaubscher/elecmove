@@ -44,7 +44,7 @@ export class StationFormComponent {
         next: () => {
           this.snackBar.open('Votre nouvelle borne de recharge a été ajoutée', 'Ok', {duration: 5000, verticalPosition:'top'});
         },
-        error: (err) => {
+        error: () => {
           this.serverError.set("Error with server");
         }
     });
