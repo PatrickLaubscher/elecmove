@@ -1,24 +1,32 @@
 import { Routes } from '@angular/router';
-import { PublicLayoutComponent } from './components/public/public-layout/public-layout.component';
-import { HomepageComponent } from './components/public/pages/homepage/homepage.component';
-import { LoginComponent } from './components/public/pages/login/login.component';
-import { SubscribeComponent } from './components/public/pages/subscribe/subscribe.component';
-import { PrivateLayoutComponent } from './components/private/private-layout/private-layout.component';
-import { DashboardHomepageComponent } from './components/private/private-component/private-pages/dashboard-homepage/dashboard-homepage.component';
+import { PublicLayoutComponent } from './layout/public-layout/public-layout.component';
+import { HomepageComponent } from './pages/public/homepage/homepage.component';
+import { LogoutComponent } from './pages/logout/logout.component';
+import { PrivateLayoutComponent } from './layout/private-layout/private-layout.component';
+import { LoginComponent } from './pages/public/login/login.component';
+import { SubscribeComponent } from './pages/public/subscribe/subscribe.component';
+import { DashboardHomepageComponent } from './pages/private/dashboard-homepage/dashboard-homepage.component';
+import { authGuard } from './api/authentication/auth.guard';
+import { StationPageComponent } from './pages/private/station-page/station-page.component';
+
+
 
 export const routes: Routes = [
     {path: '', component: PublicLayoutComponent,
         children: [
             {path: '', component: HomepageComponent},
             {path: 'login', component: LoginComponent},
+            {path: 'logout', component:LogoutComponent},
             {path: 'subscribe', component: SubscribeComponent},
         ]
     },
-    {path: 'espace-prive', component: PrivateLayoutComponent,
+    {path: 'private', component: PrivateLayoutComponent,
         children: [
-            {path: '', component: DashboardHomepageComponent}
-        ]
-    },
+            {path: '', component: DashboardHomepageComponent},
+            {path: 'stations', component: StationPageComponent},
+
+        ],
+    canActivate: [authGuard]},
     {path: '**', component: HomepageComponent}
 
 ];

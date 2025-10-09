@@ -1,68 +1,80 @@
 
-
-/* Authentication */
-
-export interface AllowedUrl {
-    url: string;
-    methods: string[];
-}
-
-export interface Credentials {
-    username: string;
-    password: string;
-}
-
-export interface Token {
-    token: string;
-    refresh_token: string;
-}
-
-
 /* User */
-
 export interface User {
 
-    firstname: string;
-    lastname: string;
-    address: string;
-    city: string;
-    email: string;
-    phone: string;
-    roles: string;
-    creationDate: string;
-
+    firstname:string;
+    lastname:string;
+    email:string;
+    mobile:string;
+    role:string;
+    createdAt:string;
+    updatedAt:string;
 }
 
-export interface NewUser {
 
-    firstname: string;
-    lastname: string;
-    birthdate: string;
-    mobile: string;
-    email: string;
-    address: string;
-    city: string;
-    zipcode: string;
-    pwd: string;
+/* Location */ 
+export interface Location {
+    address:string;
+    city:string;
+    zipcode:string;
+    latitude:number;
+    longitude:number;
+}
 
+/* User address */
+export interface UserAddress extends Location {
+    id:string;
+    addressName?:string;
+}
+
+
+/* Car */
+export interface Car {
+    id:string;
+    type:string;
+    registration:string;
+    brand:string;
 }
 
 
 /* Charging Stations */
 export interface Station {
+    id:string;
+    name?:string;
+    type:string;
+    location:Location;
+}
 
-    type: string;
-    location: Location;
+/* Favorite station */
+export interface FavoriteStation {
+    user:User;
+    station:Station;
 }
 
 
 /* Location */
+export interface LocationStation extends Location {
+    id:string;
+}
 
-export interface Location {
 
-    latitude: number;
-    longitude: number;
-    address: number;
- 
+/* Booking */
+export interface Booking {
+    id:string;
+    date:Date;
+    startTime:string;
+    endTime:string;
+    totalPrice:number;
+    createdAt:Date;
+    user:User;
+    car:Car;
+    station:Station;
+    status:BookingStatus;
+}
 
+
+/* Booking status */
+export interface BookingStatus {
+    id:number;
+    name:string;
 }

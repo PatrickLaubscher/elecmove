@@ -1,0 +1,142 @@
+
+
+<div
+class="w-11/12 md:w-4/6 mx-auto my-5 h-4"
+>
+    @if(serverError()) {
+        <p class="text-xl text-rouge text-center position-absolute">
+            {{serverError()}}
+        </p>
+    }
+</div>
+
+
+<!-- New location station Form -->
+
+<section
+class="w-full mx-auto"
+>
+    
+    <div class="h-64 md:h-80 rounded-xl overflow-hidden">
+        <app-interactive-map
+        #mapComponent
+        [form]="form"
+        (addressSelected)="onAddressSelected($event)"
+        ></app-interactive-map>
+    </div>
+
+    <form
+    [formGroup]="form" 
+    (ngSubmit)="submit()"
+    class="w-full md:w-4/5 lg:w-3/5 mx-auto mt-4 flex flex-col justify-center items-center"
+    >   
+
+
+        <!-- Adresse -->
+        <div
+        class="w-full mb-2"
+        >
+            <label 
+            for="address" 
+            class="hidden"
+            >
+                Adresse du lieu
+            </label>
+            <input 
+            formControlName="address" 
+            type="text" 
+            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
+            placeholder="Adresse du lieu..." required 
+            />
+        </div>
+ 
+
+        <!-- Ville -->
+        <div
+        class="w-full mb-2"
+        >
+            <label 
+            for="city"	 
+            class="hidden"
+            >
+                Ville
+            </label>
+            <input 
+            formControlName="city" 
+            type="text" 
+            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
+            placeholder="Ville..." required 
+            />
+        </div>
+    
+        
+        <!-- Code postal -->
+        <div
+        class="w-full mb-4"
+        >
+            <label 
+            for="zipcode"	 
+            class="hidden"
+            >
+                Code postal
+            </label>
+            <input 
+            formControlName="zipcode" 
+            type="text" 
+            class="w-1/2 rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
+            placeholder="Code postal..." required 
+            />
+        </div>
+
+
+        <div class="w-full flex gap-4">
+            <!-- Latitude -->
+            <div
+            class="flex flex-col w-1/2"
+            >
+                <label 
+                for="latitude"	 
+                >
+                    Latitude
+                </label>
+                <input 
+                formControlName="latitude" 
+                type="number"
+                readonly
+                class="mb-5 rounded-xl border border-noir px-4 py-2 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
+                placeholder="" required 
+                />
+
+            </div>
+
+            <!-- Longitude -->
+            <div
+            class="flex flex-col w-1/2"
+            >
+                <label 
+                for="longitude"	 
+                >
+                    Longitude
+                </label>
+                <input 
+                formControlName="longitude" 
+                type="number"
+                readonly 
+                class="mb-5 rounded-xl border border-noir px-4 py-2 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
+                placeholder="" required 
+                />
+            </div>
+        </div>
+
+
+
+        <button 
+        type="submit" 
+        [disabled]="form.invalid"
+        class="mt-8 uppercase cursor-pointer bg-noir text-blanc px-4 py-2 rounded-md border border-vert ease-in-out duration-200 hover:drop-shadow-2xl hover:text-vert"
+        >
+            Ajouter la localisation
+        </button>
+
+    </form>
+</section>  
