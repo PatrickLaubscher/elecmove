@@ -1,9 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, OnInit, output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { LocationStationService } from '../../../../api/location-station/location-station.service';
 import { LocationCreationDTO } from '../../../../api/dto';
 import { InteractiveMapComponent } from '../../../../components/interactive-map/interactive-map.component';
 import { debounceTime } from 'rxjs';
@@ -17,12 +14,10 @@ import { debounceTime } from 'rxjs';
 })
 export class LocationFormComponent implements OnInit {
 
-  private readonly locationService = inject(LocationStationService);
-  protected readonly router = inject(Router);
-  protected readonly serverError = signal('');
-  private readonly snackBar = inject(MatSnackBar);
-
   @ViewChild('mapComponent') mapComponent!: InteractiveMapComponent;
+
+  readonly locationFormSubmit = output<{location: LocationCreationDTO}>();
+
 
   ngOnInit() {
   this.form.get('address')?.valueChanges
@@ -53,21 +48,7 @@ export class LocationFormComponent implements OnInit {
     }
   );
 
-  
-  addNewLocation(newLocation:LocationCreationDTO) {
-    this.serverError.set('');
-    this.locationService.add(newLocation)
-      .subscribe({
-        next: () => {
-          this.snackBar.open('La nouvelle localisation de station a été ajoutée', 'Ok', {duration: 5000, verticalPosition:'top'});
-        },
-        error: (err) => {
-            this.serverError.set("Error with server");
-        }
-    });
-  }
-
-  submit() {
+  handleSubmit() {
     if (this.form.invalid) {
       this.form.markAllAsDirty();
       return;
@@ -80,7 +61,8 @@ export class LocationFormComponent implements OnInit {
       longitude: this.form.value.longitude!
     }
 
-    this.addNewLocation(newLocation);
+    this.locationFormSubmit.emit({location:newLocation});
+
   }
 
 }

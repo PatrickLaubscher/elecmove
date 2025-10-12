@@ -3,10 +3,11 @@ import { StationService } from '../../../../api/station/station.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { StationCreationDTO } from '../../../../api/dto';
+import { LocationCreationDTO, StationCreationDTO } from '../../../../api/dto';
 import { CommonModule } from '@angular/common';
 import { StandardModalComponent } from "../../../../components/standard-modal/standard-modal.component";
 import { LocationFormComponent } from "../location-form/location-form.component";
+import { LocationStationService } from '../../../../api/location-station/location-station.service';
 
 @Component({
   selector: 'app-station-form',
@@ -17,13 +18,11 @@ import { LocationFormComponent } from "../location-form/location-form.component"
 export class StationFormComponent {
 
   private readonly stationService = inject(StationService);
+    private readonly locationService = inject(LocationStationService);
   protected readonly router = inject(Router);
   protected readonly serverError = signal('');
   private readonly snackBar = inject(MatSnackBar);
   protected readonly isLocationModalOpen = signal(false);
-
-
-
 
   protected readonly form = new FormGroup({
       name: new FormControl<string>('Borne de recharge', {validators: [Validators.required]}),
@@ -36,8 +35,22 @@ export class StationFormComponent {
     }
   );
 
-  
-  addNewLocation(newStation:StationCreationDTO) {
+    
+  addNewLocation(newLocation:LocationCreationDTO) {
+    this.serverError.set('');
+    this.locationService.add(newLocation)
+      .subscribe({
+        next: () => {
+          this.snackBar.open('La nouvelle localisation de station a été ajoutée', 'Ok', {duration: 5000, verticalPosition:'top'});
+        },
+        error: (err) => {
+            this.serverError.set("Error with server");
+        }
+    });
+  }
+
+
+  addNewStation(newStation:StationCreationDTO) {
     this.serverError.set('');
     this.stationService.add(newStation)
       .subscribe({

@@ -60,15 +60,16 @@ export class AuthentificationService {
           localStorage.setItem('token', token);
         }),
         catchError(err => {
-          if(err.status == 401) {
+          if(err.status == 401 || err.status == 500) {
             this.logout();
             this.router.navigate(['login']);
             this.snackBar.open('Votre session a expiré, veuillez vous reconnecter', 'ok', {duration: 5000, verticalPosition:'top'});
-          }
+          } 
           throw err;
         })
       );
   }
+
 
   logout() {
     this.userLogged.set(null);

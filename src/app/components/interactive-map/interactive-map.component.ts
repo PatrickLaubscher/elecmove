@@ -246,23 +246,24 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
   selectSuggestion(index: number) {
     const feature = this.suggestions[index];
     if (!feature) return;
-  
+    
+    
+    // Select fields from response Api before patch with form value
     const [lng, lat] = feature.geometry.coordinates;
+    
+    const context = feature.context || [];
     const placeName = feature.place_name;
 
-     // Extraire les infos utiles (ville, code postal, etc.)
-    const context = feature.context || [];
-    const city = context.find((c: any) => c.id.startsWith('place'))?.text || '';
-    const postcode = context.find((c: any) => c.id.startsWith('postcode'))?.text || '';
+    const number = feature.address || '';
+    const street = feature.text || '';
+    const city = context.find((c: any) => c.id.startsWith('municipality'))?.text || '';
+    const postcode = context.find((c: any) => c.id.startsWith('postal_code'))?.text || '';
     
+  
     
     if(this.form()){
       this.form()?.patchValue({
-            address: placeName,
-            city: city,
-            zipcode: postcode,
-            latitude: parseFloat(lat.toFixed(6)),
-            longitude: parseFloat(lng.toFixed(6))
+            address: placeName
       });
     }
 
@@ -271,13 +272,13 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
 
     this.addPositionMarker(lng, lat);
 
-    // 🧾 Émettre les données complètes au parent
+    // Send datas to parent element
     this.addressSelected.emit({
-      address: placeName,
+      address: number + ' ' + street,
       city,
       zipcode: postcode,
-      latitude: lat,
-      longitude: lng
+      latitude: parseFloat(lat.toFixed(6)),
+      longitude: parseFloat(lng.toFixed(6))
     });
   
     // Ajouter un marqueur si nécessaire
