@@ -7,6 +7,7 @@ import * as maptilersdk from '@maptiler/sdk';
 import "@maptiler/sdk/dist/maptiler-sdk.css";
 import { StationService } from '../../api/station/station.service';
 import { Router } from '@angular/router';
+import { LocationCreationDTO } from '../../api/dto';
 
 
 @Component({
@@ -30,8 +31,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
   protected positionMarker: Marker | null = null
 
   readonly form = input<FormGroup>();
-  readonly addressSelected = output<any>();
-
+  readonly addressSelected = output<LocationCreationDTO>();
 
   searchQuery = '';
   suggestions: any[] = [];
@@ -179,7 +179,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     this.stationApi.getAllNearby({
       latitude: 45.7578,
       longitude: 4.8320,
-      rayonMeters: 2000
+      rayonMeters: 5000
     }).subscribe((stations) => {
       stations.forEach((station) => {
         const stationMarker = document.createElement('div');

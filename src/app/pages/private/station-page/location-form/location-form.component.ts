@@ -18,7 +18,6 @@ export class LocationFormComponent implements OnInit {
 
   readonly locationFormSubmit = output<{location: LocationCreationDTO}>();
 
-
   ngOnInit() {
   this.form.get('address')?.valueChanges
     .pipe(debounceTime(400))
@@ -38,6 +37,7 @@ export class LocationFormComponent implements OnInit {
       longitude: addressData.longitude
     });
   }
+
 
   protected readonly form = new FormGroup({
       address: new FormControl<string>('', {validators: [Validators.required]}),

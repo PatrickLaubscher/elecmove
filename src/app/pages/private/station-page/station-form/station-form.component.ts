@@ -18,11 +18,12 @@ import { LocationStationService } from '../../../../api/location-station/locatio
 export class StationFormComponent {
 
   private readonly stationService = inject(StationService);
-    private readonly locationService = inject(LocationStationService);
+  private readonly locationService = inject(LocationStationService);
   protected readonly router = inject(Router);
   protected readonly serverError = signal('');
   private readonly snackBar = inject(MatSnackBar);
   protected readonly isLocationModalOpen = signal(false);
+  protected readonly locationAddress = signal<string>('');
 
   protected readonly form = new FormGroup({
       name: new FormControl<string>('Borne de recharge', {validators: [Validators.required]}),
@@ -40,8 +41,13 @@ export class StationFormComponent {
     this.serverError.set('');
     this.locationService.add(newLocation)
       .subscribe({
-        next: () => {
+        next: (location) => {
+          this.isLocationModalOpen.set(false);
           this.snackBar.open('La nouvelle localisation de station a été ajoutée', 'Ok', {duration: 5000, verticalPosition:'top'});
+          this.form.patchValue({ locationStationId: location.id });
+          this.locationAddress.update(() => 
+            `${newLocation.address}, ${newLocation.zipcode} ${newLocation.city}`
+          )
         },
         error: (err) => {
             this.serverError.set("Error with server");
@@ -78,7 +84,8 @@ export class StationFormComponent {
       locationStationId: this.form.value.locationStationId!
     }
 
-    this.stationService.add(newStation);
+    this.addNewStation(newStation);
+    console.log(newStation);
   }
 
 
