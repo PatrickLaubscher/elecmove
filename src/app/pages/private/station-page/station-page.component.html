@@ -7,6 +7,47 @@ class="max-w-screen-xl w-11/12 md:w-4/6 mx-auto my-15"
         Gérer mes bornes
     </h1>
 
+    <button 
+    (click)="displayForm()" 
+    class="mt-8 uppercase cursor-pointer bg-noir text-blanc px-4 py-2 rounded-md border border-vert ease-in-out duration-200 hover:drop-shadow-2xl hover:text-vert"
+    >   
+        @if(isDiplay() == false) {
+            Ajouter une borne +
+        } @else {
+            Retour à la liste
+        }
+        
+    </button>
 </section>
 
-<app-station-form/>
+@if(isDiplay() == false) {
+    <section
+    class="max-w-screen-xl w-11/12 md:w-4/6 mx-auto my-15"
+    >
+        <h2 
+        class="text-md md:text-xl uppercase mb-3"
+        >
+            Liste de vos bornes
+        </h2>
+
+        @if(stationsList.isLoading()){
+        <p>Loading...</p>
+
+        } @else {
+
+            @if(stationsList.hasValue()) {
+
+                <app-station-list [stations]="stationsList.value()"/>
+
+            } @else {
+
+            <p>Vous n'avez aucune borne de recharge.</p>
+            }
+
+        }
+    </section>
+} @else {
+    <app-station-form/>
+}
+
+
