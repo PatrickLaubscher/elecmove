@@ -1,6 +1,6 @@
 import { HttpClient, httpResource } from '@angular/common/http';
 import { inject, Injectable, Signal } from '@angular/core';
-import { Booking, BookingStatus } from '../../shared/entities';
+import { Booking } from '../../shared/entities';
 import { BookingCreationDTO } from '../dto';
 
 @Injectable({

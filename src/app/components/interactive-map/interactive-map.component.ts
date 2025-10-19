@@ -186,15 +186,28 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
           'transition-all', 'delay-300', 'cursor-pointer', 'duration-300', 'ease-in-out'
         );
 
+        const popup = new Popup().setHTML(`
+          <h1>Borne</h1>
+          <p>Adresse : ${station.location.address}</p>
+          <p>Type : ${station.type}</p>
+          <a class="bookingLink cursor-pointer hover:text-vert">Réserver</a>
+        `);
+
         new Marker({ element: stationMarker })
           .setLngLat([station.location.longitude, station.location.latitude]) 
-          .setPopup(new Popup().setHTML(
-            `<h1>Borne</h1>
-            <p>Adresse : ${station.location.address}</p>
-            <p>Type : ${station.type}</p>
-            <button class="..."> Réserver </button>`
-          ))
+          .setPopup(popup)
           .addTo(this.map!);
+
+        popup.on('open', () => {
+          const link = popup.getElement().querySelector('.bookingLink');
+          if (link) {
+            link.addEventListener('click', () => {
+              this.router.navigate(['/private/bookings'], {queryParams: {stationId: station.id} });
+              console.log('test')
+            });
+          }
+        });
+          
       });
     });
 

@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { BookingFormComponent } from "./booking-form/booking-form.component";
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BookingService } from '../../../api/booking/booking.service';
 import { CarService } from '../../../api/car/car.service';
@@ -13,10 +13,16 @@ import { CarService } from '../../../api/car/car.service';
 })
 export class BookingPageComponent {
 
+  stationId = signal<string>('');
+
   protected readonly router = inject(Router);
+  protected readonly activatedRoute = inject(ActivatedRoute);
   protected readonly serverError = signal('');
   private readonly bookingService = inject(BookingService);
   private readonly carService = inject(CarService);
   private readonly snackBar = inject(MatSnackBar);
+
+
+
 
 }

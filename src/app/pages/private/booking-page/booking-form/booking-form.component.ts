@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit, output, signal } from '@angular/core';
+import { Component, computed, inject, input, OnInit, output, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { StandardModalComponent } from '../../../../components/standard-modal/standard-modal.component';
@@ -7,6 +7,8 @@ import { BookingCreationDTO } from '../../../../api/dto';
 import { Car, Station } from '../../../../shared/entities';
 import { CarService } from '../../../../api/car/car.service';
 import { endAfterStartValidator, futureDateValidator } from '../../../../shared/validators';
+import { StationService } from '../../../../api/station/station.service';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -18,17 +20,23 @@ import { endAfterStartValidator, futureDateValidator } from '../../../../shared/
 
 export class BookingFormComponent implements OnInit {
 
+  private readonly activatedRoute = inject(ActivatedRoute);
   protected readonly isMapModalOpen = signal(false);
   protected readonly isCarModalOpen = signal(false);
   protected readonly carService = inject(CarService);
-  readonly cars = this.carService.getAll();
-  readonly stationSelected = input<Station>();
+  protected readonly stationService = inject(StationService);
+
+  readonly stationId = signal<string>('');
+  readonly station = signal<Station | null>(null);
+  readonly isLoadingStation = signal(false);
   readonly carSelected = input<Car>();
   readonly bookingFormSubmit = output<{booking: BookingCreationDTO}>();
+  
+
+  readonly cars = this.carService.getAll();
 
   private readonly now = new Date();
 
-  private readonly formatDate = (d: Date) => d.toISOString().substring(0, 10);
   private readonly formatTime = (d: Date) => d.toTimeString().substring(0, 5);
 
   private getInitialStart(): Date {
@@ -47,7 +55,6 @@ export class BookingFormComponent implements OnInit {
     return new Date(this.now.getTime() - tzOffset).toISOString().split('T')[0];
   }
 
-
   protected readonly form = new FormGroup({
       date: new FormControl<string>(new Date().toISOString().substring(0, 10), {validators: [Validators.required, futureDateValidator]}),
       startTime: new FormControl<string>(this.formatTime(this.getInitialStart()), {validators: [Validators.required]}),
@@ -61,9 +68,23 @@ export class BookingFormComponent implements OnInit {
 
   
   ngOnInit() {
-    if(this.stationSelected()?.id){
-      this.form.patchValue({ stationId: this.stationSelected()!.id });
-    }
+
+    this.activatedRoute.queryParams.subscribe(params => {
+        const id = params['stationId'];
+        if (id) {
+          this.stationId.set(id);
+          this.form.patchValue({ stationId: id });
+          this.isLoadingStation.set(true);
+          this.stationService.getOneObservable(id).subscribe({
+            next: (station) => {
+              this.station.set(station);
+              this.isLoadingStation.set(false);
+            },
+            error: () => this.isLoadingStation.set(false)
+          });
+        }
+      });
+
     if(this.carSelected()?.id){
       this.form.patchValue({ carId: this.carSelected()!.id });
     }
@@ -94,6 +115,7 @@ export class BookingFormComponent implements OnInit {
     }
 
     this.bookingFormSubmit.emit({booking:newBooking});
+    console.log(this.bookingFormSubmit);
 
   }
 

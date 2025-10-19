@@ -2,6 +2,7 @@ import { HttpClient, httpResource } from '@angular/common/http';
 import { inject, Injectable, Signal } from '@angular/core';
 import { Station } from '../../shared/entities';
 import { StationCreationDTO } from '../dto';
+import { Observable } from 'rxjs';
 
 export interface CoordinatesWithRadius {
     latitude:number;
@@ -23,6 +24,10 @@ export class StationService {
   getOne(id:string) {
     return httpResource<Station>(() => '/api/stations/' + id);
   }
+
+  getOneObservable(id: string): Observable<Station> {
+  return this.http.get<Station>(`/api/stations/${id}`);
+}
 
   getAllNearby(coordinates:CoordinatesWithRadius) {
     return this.http.post<Station[]>('/api/stations/nearby', coordinates);
