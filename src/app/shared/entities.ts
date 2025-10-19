@@ -1,7 +1,6 @@
 /* Api MapTiler */
 
 export interface MapTilerSuggestion {
-
     type: "Feature";
     id: string;
     place_type: string[];
@@ -18,13 +17,13 @@ export interface MapTilerSuggestion {
         type: "Point";
         coordinates: [number, number];
     };
-    context?: Array<{
+    context?: [{
         id: string;
         text: string;
         text_fr?: string;
         wikidata?: string;
         short_code?: string;
-    }>;
+    }];
     properties?: {
         ref?: string;
         country_code?: string;
@@ -45,7 +44,6 @@ export interface MapTilerSuggestionsResponse {
 
 /* User */
 export interface User {
-
     firstname:string;
     lastname:string;
     email:string;

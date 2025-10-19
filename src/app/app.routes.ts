@@ -8,6 +8,7 @@ import { SubscribeComponent } from './pages/public/subscribe/subscribe.component
 import { DashboardHomepageComponent } from './pages/private/dashboard-homepage/dashboard-homepage.component';
 import { authGuard } from './api/authentication/auth.guard';
 import { StationPageComponent } from './pages/private/station-page/station-page.component';
+import { BookingPageComponent } from './pages/private/booking-page/booking-page.component';
 
 
 
@@ -24,6 +25,7 @@ export const routes: Routes = [
         children: [
             {path: '', component: DashboardHomepageComponent},
             {path: 'stations', component: StationPageComponent},
+            {path: 'bookings', component: BookingPageComponent},
 
         ],
     canActivate: [authGuard]},

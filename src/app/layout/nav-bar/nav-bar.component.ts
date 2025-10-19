@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, inject, signal, ViewChild } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AuthentificationService } from '../../api/authentication/authentification.service';
 import { ThemeToggleComponent } from "../../components/theme-toggle/theme-toggle.component";
 

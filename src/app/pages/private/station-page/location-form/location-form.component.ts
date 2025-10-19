@@ -28,7 +28,7 @@ export class LocationFormComponent implements OnInit {
     });
   }
 
-  onAddressSelected(addressData: any) {
+  onAddressSelected(addressData:Location) {
     this.form.patchValue({
       address: addressData.address,
       city: addressData.city,

@@ -50,7 +50,7 @@ export class StationFormComponent {
             `${newLocation.address}, ${newLocation.zipcode} ${newLocation.city}`
           )
         },
-        error: (err) => {
+        error: () => {
             this.serverError.set("Error with server");
         }
     });

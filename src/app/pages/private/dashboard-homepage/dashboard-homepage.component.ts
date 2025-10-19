@@ -31,14 +31,14 @@ export class DashboardHomepageComponent {
       {
         next: () => {
           this.pendingBookings.reload();
-          if(statusId == 2) {
+          if(statusId === 2) {
             this.snackBar.open('Réservation pour la borne confirmée :)', 'Ok', {duration: 5000, verticalPosition:'top'});
           } else {
             this.snackBar.open('Réservation annulée :(', 'Ok', {duration: 5000, verticalPosition:'top'});
           }
           
         },
-        error:  (err) => console.error('Erreur dans la mise à jour de la réservation')
+        error:  () => console.error('Erreur dans la mise à jour de la réservation')
       }
     )
   }

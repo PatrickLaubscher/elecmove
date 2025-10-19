@@ -56,10 +56,7 @@ export interface BookingCreationDTO {
     date:Date;
     startTime:string;
     endTime:string;
-    totalPrice:number;
-    createdAt:Date;
     user:User;
     car:Car;
     station:Station;
-    status:BookingStatus;
 }

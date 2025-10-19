@@ -269,8 +269,8 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
       address: number + ' ' + street,
       city,
       zipcode: postcode,
-      latitude: parseFloat(lat.toFixed(6)),
-      longitude: parseFloat(lng.toFixed(6))
+      latitude: Number.parseFloat(lat.toFixed(6)),
+      longitude: Number.parseFloat(lng.toFixed(6))
     });
   
     // Ajouter un marqueur si nécessaire
