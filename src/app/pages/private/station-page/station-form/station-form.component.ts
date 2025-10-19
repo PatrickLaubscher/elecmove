@@ -3,11 +3,12 @@ import { StationService } from '../../../../api/station/station.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LocationCreationDTO, StationCreationDTO } from '../../../../api/dto';
+import { StationCreationDTO } from '../../../../api/dto';
 import { CommonModule } from '@angular/common';
 import { StandardModalComponent } from "../../../../components/standard-modal/standard-modal.component";
 import { LocationFormComponent } from "../location-form/location-form.component";
 import { LocationStationService } from '../../../../api/location-station/location-station.service';
+import { Location } from '../../../../shared/entities';
 
 @Component({
   selector: 'app-station-form',
@@ -37,7 +38,7 @@ export class StationFormComponent {
   );
 
     
-  addNewLocation(newLocation:LocationCreationDTO) {
+  addNewLocation(newLocation:Location) {
     this.serverError.set('');
     this.locationService.add(newLocation)
       .subscribe({

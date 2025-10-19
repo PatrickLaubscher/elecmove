@@ -38,9 +38,6 @@ export interface CarCreationDTO {
     brand:string;
 }
 
-export interface LocationCreationDTO extends Location {
-}
-
 export interface StationCreationDTO {
     name:string;
     tarification:number;

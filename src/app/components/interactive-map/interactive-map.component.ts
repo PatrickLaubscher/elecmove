@@ -7,7 +7,7 @@ import * as maptilersdk from '@maptiler/sdk';
 import "@maptiler/sdk/dist/maptiler-sdk.css";
 import { StationService } from '../../api/station/station.service';
 import { Router } from '@angular/router';
-import { LocationCreationDTO } from '../../api/dto';
+import { Location, MapTilerSuggestion } from '../../shared/entities';
 
 
 @Component({
@@ -24,21 +24,17 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
 
   protected map: Map | undefined;
   protected isHybrid = false;
-
   protected isDark = false;
-  
-  
   protected positionMarker: Marker | null = null
 
   readonly form = input<FormGroup>();
-  readonly addressSelected = output<LocationCreationDTO>();
+  readonly addressSelected = output<Location>();
 
   searchQuery = '';
-  suggestions: any[] = [];
+  suggestions: MapTilerSuggestion[] = [];
   bookingDate: string = new Date().toISOString().split('T')[0];
-  bookingStartTime: string = '09:00';
-  bookingEndTime: string = '18:00';
-
+  bookingStartTime = '09:00';
+  bookingEndTime = '18:00';
 
   @ViewChild('map')
   protected readonly mapContainer!: ElementRef<HTMLElement>;
@@ -64,7 +60,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
 
   }
 
-  addPositionMarker(lng: number, lat: number, addressData?:any) {
+  addPositionMarker(lng: number, lat: number) {
     if (this.positionMarker) {
       this.positionMarker.remove();
     }
@@ -154,8 +150,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     this.map.addControl(
       {
         onAdd: () => controlContainer,
-        onRemove: () => {},
-      
+        onRemove: () => controlContainer,
       },
       'top-right'
     );
@@ -236,8 +231,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     fetch(url)
       .then(res => res.json())
       .then(data => {
-        this.suggestions = data.features || [];
-        console.log(data.features)  // Récupération des suggestions
+        this.suggestions = data.features || []; 
       })
       .catch(err => console.error('Erreur géocodage :', err));
   }
@@ -251,15 +245,13 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     // Select fields from response Api before patch with form value
     const [lng, lat] = feature.geometry.coordinates;
     
-    const context = feature.context || [];
+    const context = feature.context ?? [];
     const placeName = feature.place_name;
 
-    const number = feature.address || '';
-    const street = feature.text || '';
-    const city = context.find((c: any) => c.id.startsWith('municipality'))?.text || '';
-    const postcode = context.find((c: any) => c.id.startsWith('postal_code'))?.text || '';
-    
-  
+    const number = feature.address ?? '';
+    const street = feature.text ?? '';
+    const city = context.find((c) => c.id.startsWith('municipality'))?.text ?? '';
+    const postcode = context.find((c) => c.id.startsWith('postal_code'))?.text ?? '';
     
     if(this.form()){
       this.form()?.patchValue({

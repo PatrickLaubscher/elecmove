@@ -1,7 +1,6 @@
 import { HttpClient, httpResource } from '@angular/common/http';
 import { inject, Injectable, Signal } from '@angular/core';
-import { LocationStation } from '../../shared/entities';
-import { LocationCreationDTO } from '../dto';
+import { Location, LocationStation } from '../../shared/entities';
 
 
 @Injectable({
@@ -15,11 +14,11 @@ export class LocationStationService {
     return httpResource<LocationStation>(() => '/api/locations/' + id);
   }
 
-  add(newLocation:LocationCreationDTO) {
+  add(newLocation:Location) {
     return this.http.post<LocationStation>('/api/locations', newLocation);
   }
 
-  put(id:Signal<number>, location:LocationCreationDTO) {
+  put(id:Signal<number>, location:Location) {
     return this.http.put<LocationStation>('/api/locations/'+ id(), location);
   }
 

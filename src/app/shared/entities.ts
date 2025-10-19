@@ -1,3 +1,47 @@
+/* Api MapTiler */
+
+export interface MapTilerSuggestion {
+
+    type: "Feature";
+    id: string;
+    place_type: string[];
+    place_type_name: string[];
+    relevance: number;
+    text: string;
+    text_fr?: string;
+    place_name: string;
+    place_name_fr?: string;
+    address?: string;
+    bbox?: [number, number, number, number];
+    center: [number, number];
+    geometry: {
+        type: "Point";
+        coordinates: [number, number];
+    };
+    context?: Array<{
+        id: string;
+        text: string;
+        text_fr?: string;
+        wikidata?: string;
+        short_code?: string;
+    }>;
+    properties?: {
+        ref?: string;
+        country_code?: string;
+        wikidata?: string;
+        kind?: string;
+        place_type_name?: string[];
+        [key: string]: unknown;
+    };
+}
+
+export interface MapTilerSuggestionsResponse {
+  type: "FeatureCollection";
+  query: string[];
+  features: MapTilerSuggestion[];
+}
+
+
 
 /* User */
 export interface User {
@@ -52,7 +96,7 @@ export interface FavoriteStation {
 }
 
 
-/* Location */
+/* LocationStation */
 export interface LocationStation extends Location {
     id:string;
 }

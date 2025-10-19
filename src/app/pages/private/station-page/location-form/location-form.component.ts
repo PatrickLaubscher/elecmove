@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LocationCreationDTO } from '../../../../api/dto';
 import { InteractiveMapComponent } from '../../../../components/interactive-map/interactive-map.component';
 import { debounceTime } from 'rxjs';
+import { Location } from '../../../../shared/entities';
 
 
 @Component({
@@ -16,7 +16,7 @@ export class LocationFormComponent implements OnInit {
 
   @ViewChild('mapComponent') mapComponent!: InteractiveMapComponent;
 
-  readonly locationFormSubmit = output<{location: LocationCreationDTO}>();
+  readonly locationFormSubmit = output<{location: Location}>();
 
   ngOnInit() {
   this.form.get('address')?.valueChanges
@@ -53,7 +53,7 @@ export class LocationFormComponent implements OnInit {
       this.form.markAllAsDirty();
       return;
     }
-    const newLocation:LocationCreationDTO = {
+    const newLocation:Location = {
       address: this.form.value.address!,
       city: this.form.value.city!,
       zipcode: this.form.value.zipcode!,
