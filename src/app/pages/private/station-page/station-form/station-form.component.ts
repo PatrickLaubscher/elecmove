@@ -86,7 +86,6 @@ export class StationFormComponent {
     }
 
     this.addNewStation(newStation);
-    console.log(newStation);
   }
 
 

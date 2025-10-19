@@ -1,5 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { BookingFormComponent } from "./booking-form/booking-form.component";
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { BookingService } from '../../../api/booking/booking.service';
+import { CarService } from '../../../api/car/car.service';
 
 @Component({
   selector: 'app-booking-page',
@@ -8,5 +12,11 @@ import { BookingFormComponent } from "./booking-form/booking-form.component";
   styleUrl: './booking-page.component.css'
 })
 export class BookingPageComponent {
+
+  protected readonly router = inject(Router);
+  protected readonly serverError = signal('');
+  private readonly bookingService = inject(BookingService);
+  private readonly carService = inject(CarService);
+  private readonly snackBar = inject(MatSnackBar);
 
 }

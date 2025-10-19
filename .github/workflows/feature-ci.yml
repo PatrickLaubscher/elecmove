@@ -1,4 +1,4 @@
-name: Deploy to production
+name: Analyse & linting
 
 on:
   push:

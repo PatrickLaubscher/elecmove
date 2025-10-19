@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AuthentificationService } from '../../../api/authentication/authentification.service';
 import { BookingService } from '../../../api/booking/booking.service';
 import { StationService } from '../../../api/station/station.service';

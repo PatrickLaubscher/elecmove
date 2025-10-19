@@ -53,10 +53,9 @@ export interface FavoriteStationCreationDTO {
 } 
 
 export interface BookingCreationDTO {
-    date:Date;
+    date:string;
     startTime:string;
     endTime:string;
-    user:User;
-    car:Car;
-    station:Station;
+    carId:string;
+    stationId:string;
 }

@@ -1,1 +1,224 @@
-<p>booking-form works!</p>
+
+
+<form
+[formGroup]="form" 
+(ngSubmit)="handleSubmit()"
+class="w-full md:w-4/5 lg:w-3/5 mx-auto flex flex-col justify-center items-center"
+>   
+
+    <!-- borne choisie -->
+    <div
+    class="w-full mb-3"
+    >
+        @let stationIdInput = form.controls.stationId;
+
+        <label 
+        for="name"
+        class="hidden"
+        >
+            Id de la borne
+        </label>
+        <input 
+        formControlName="stationId" 
+        type="text" 
+        class="hidden" 
+            required 
+        />
+
+        <button 
+        (click)="isMapModalOpen.set(true)"
+        class="mb-2 cursor-pointer bg-noir text-blanc px-4 py-2 rounded-md border border-vert ease-in-out duration-200 hover:drop-shadow-2xl hover:text-vert"
+        >   
+            @if(stationSelected()!) {
+                Choisir une borne
+            } @else {
+                Choisir une nouvelle borne
+            }
+            
+        </button>
+
+        <div class="h-5 my-1 text-sm">
+            @if (stationIdInput.invalid) {
+                @if (stationIdInput.hasError('required')) {
+                    <span
+                    class="text-rouge">
+                        Veuillez choisir une borne de recharge
+                    </span>
+                }
+            }
+        </div>
+
+    </div>
+
+
+
+    <!-- date de la réservation -->
+    <div
+    class="w-1/2 self-start"
+    >
+        <label 
+        for="date"	 
+        >
+            Date de la réservation
+        </label>
+        <input 
+        formControlName="date" 
+        type="date"
+        [min]="today"
+        class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
+        required 
+        />
+        <div class="h-5 mt-1 text-sm">
+            @let dateInput = form.controls.date;
+            @if (dateInput.invalid && (dateInput.touched)) {
+                @if (dateInput.hasError('required')) {
+                    <span
+                    class="text-rouge">
+                        Veuillez choisir une date de réservation
+                    </span>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 w-full gap-2">
+        <!-- heure de début -->
+        <div
+        class=""
+        >
+            <label 
+            for="startTime"	 
+            >
+                Heure de début
+            </label>
+            <input
+            id="startTime"
+            formControlName="startTime" 
+            type="time"
+            step="1800" 
+            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
+            required 
+            />
+        </div>
+            
+        <!-- heure de fin -->
+        <div
+        class=""
+        >
+            <label 
+            for="endTime"	 
+            >
+                Heure de fin
+            </label>
+            <input
+            id="endTime"
+            formControlName="endTime" 
+            type="time"
+            step="1800" 
+            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
+            required 
+            />
+        </div>
+    </div>
+    <div class="h-5 mt-1 text-sm">
+            @let startTimeInput = form.controls.startTime;
+            @if (startTimeInput.invalid && (startTimeInput.touched)) {
+                @if (startTimeInput.hasError('required')) {
+                    <span
+                    class="text-rouge">
+                        Veuillez choisir une heure début
+                    </span>
+                }
+            }
+            @let endTimeInput = form.controls.endTime;
+                @if (endTimeInput.invalid && (endTimeInput.touched)) {
+                    @if (endTimeInput.hasError('required')) {
+                        <span
+                        class="text-rouge">
+                            Veuillez choisir une heure de fin
+                        </span>
+                    }
+            }
+            @if (form.hasError('endBeforeStart') && form.touched) {
+                <span class="text-rouge text-sm">L'heure de fin doit être après l'heure de début</span>
+            }
+    </div>
+
+
+    <!-- voiture à recharger -->
+    <div
+    class="w-full my-3"
+    >   
+        @let carIdInput = form.controls.carId;
+
+        <label 
+        for="carId"
+        class=""
+        >
+            Votre véhicule à recharger
+        </label>
+        <select 
+        formControlName="carId"
+        name="carId"
+        class="w-full rounded-xl mb-1 border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
+        required
+        >   
+            <option value="" disabled>Choisissez une voiture</option>
+            @if(cars.hasValue()) {
+                @for(car of cars.value(); track car.id) {
+                    <option value="{{car.id}}">{{car.type}}</option>
+                }
+            }
+        </select>
+
+        
+        <button 
+        (click)="isCarModalOpen.set(true)"
+        class="mb-2 cursor-pointer bg-noir text-blanc px-4 py-2 rounded-md border border-vert ease-in-out duration-200 hover:drop-shadow-2xl hover:text-vert"
+        >   
+            + Ajouter une voiture à votre liste
+        </button>
+        
+        <app-standard-modal  [(open)]="isCarModalOpen">
+            <h2
+            ngProjectAs="card-title"
+            class="text-sm md:text-md uppercase"
+            >
+                Rajouter votre voiture
+            </h2>
+            <div ngProjectAs="card-body">
+                <app-car-form />
+            </div>
+            <p ngProjectAs="card-footer" class="text-white"></p>
+        </app-standard-modal>
+
+        <div class="h-5 my-1 text-sm">
+            @if (carIdInput.invalid) {
+                @if (carIdInput.hasError('required')) {
+                    <span
+                    class="text-rouge">
+                        Veuillez choisir le véhicule à recharger
+                    </span>
+                }
+            }
+        </div>
+    </div>
+
+    <!-- récapitulatif durée/prix -->
+    <div 
+    class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
+    >
+    Durée totale
+    Prix € net
+    </div>
+
+    <button 
+    type="submit" 
+    [disabled]="form.invalid"
+    class="mt-8 uppercase cursor-pointer bg-noir text-blanc px-4 py-2 rounded-md border border-vert ease-in-out duration-200 hover:drop-shadow-2xl hover:text-vert"
+    >
+        Confirmer votre réservation
+    </button>
+
+</form>
+
