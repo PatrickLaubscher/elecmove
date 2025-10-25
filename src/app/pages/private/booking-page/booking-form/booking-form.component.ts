@@ -9,6 +9,7 @@ import { CarService } from '../../../../api/car/car.service';
 import { endAfterStartValidator, futureDateValidator } from '../../../../shared/validators';
 import { StationService } from '../../../../api/station/station.service';
 import { ActivatedRoute } from '@angular/router';
+import { BookingStorageService } from '../../../../services/booking-storage.service';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class BookingFormComponent implements OnInit {
   protected readonly isCarModalOpen = signal(false);
   protected readonly carService = inject(CarService);
   protected readonly stationService = inject(StationService);
+   protected readonly bookingStorageService = inject(BookingStorageService);
 
   readonly stationId = signal<string>('');
   readonly station = signal<Station | null>(null);
@@ -34,9 +36,7 @@ export class BookingFormComponent implements OnInit {
   
 
   readonly cars = this.carService.getAll();
-
   private readonly now = new Date();
-
   private readonly formatTime = (d: Date) => d.toTimeString().substring(0, 5);
 
   private getInitialStart(): Date {
@@ -69,6 +69,41 @@ export class BookingFormComponent implements OnInit {
   
   ngOnInit() {
 
+    // Charger les valeurs sauvegardées dans la sessionStorage
+    const savedDate = this.bookingStorageService.getBookingDate?.() ?? this.today;
+    const savedStart = this.bookingStorageService.getBookingStartTime?.() ?? this.formatTime(this.getInitialStart());
+    const savedEnd = this.bookingStorageService.getBookingEndTime?.() ?? this.formatTime(this.getInitialEnd());
+
+    this.form.patchValue({
+      date: savedDate,
+      startTime: savedStart,
+      endTime: savedEnd
+    });
+
+    this.form.get('date')?.valueChanges.subscribe(date => {
+      if (date) this.bookingStorageService.addBookingDate(date);
+    });
+
+    this.form.get('startTime')?.valueChanges.subscribe(start => {
+      if (start) {
+        this.bookingStorageService.addBookingStartTime(start);
+
+        const [h, m] = start.split(':').map(Number);
+        const end = new Date();
+        end.setHours(h, m + 30);
+        const formattedEnd = end.toTimeString().substring(0, 5);
+        this.form.patchValue({ endTime: formattedEnd }, { emitEvent: false });
+
+        this.bookingStorageService.addBookingEndTime(formattedEnd);
+      }
+    });
+
+    this.form.get('endTime')?.valueChanges.subscribe(end => {
+      if (end) this.bookingStorageService.addBookingEndTime(end);
+    });
+
+    
+    // Loading existing station and cars
     this.activatedRoute.queryParams.subscribe(params => {
         const id = params['stationId'];
         if (id) {
@@ -89,15 +124,6 @@ export class BookingFormComponent implements OnInit {
       this.form.patchValue({ carId: this.carSelected()!.id });
     }
 
-    this.form.get('startTime')?.valueChanges.subscribe(start => {
-      if (start) {
-        const [h, m] = start.split(':').map(Number);
-        const end = new Date();
-        end.setHours(h, m + 30);
-        const formattedEnd = end.toTimeString().substring(0, 5);
-        this.form.patchValue({ endTime: formattedEnd }, { emitEvent: false });
-      }
-    });
   }
 
 

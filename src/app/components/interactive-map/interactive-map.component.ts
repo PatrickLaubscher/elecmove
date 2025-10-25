@@ -8,6 +8,7 @@ import "@maptiler/sdk/dist/maptiler-sdk.css";
 import { StationService } from '../../api/station/station.service';
 import { Router } from '@angular/router';
 import { Location, MapTilerSuggestion } from '../../shared/entities';
+import { BookingStorageService } from '../../services/booking-storage.service';
 
 
 @Component({
@@ -21,6 +22,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
 
   protected readonly stationApi = inject(StationService);
   protected readonly router = inject(Router);
+  protected readonly bookingStorageService = inject(BookingStorageService);
 
   protected map: Map | undefined;
   protected isHybrid = false;
@@ -202,8 +204,12 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
           const link = popup.getElement().querySelector('.bookingLink');
           if (link) {
             link.addEventListener('click', () => {
+
+              this.bookingStorageService.addBookingDate(this.bookingDate);
+              this.bookingStorageService.addBookingStartTime(this.bookingStartTime);
+              this.bookingStorageService.addBookingEndTime(this.bookingEndTime);
+              
               this.router.navigate(['/private/bookings'], {queryParams: {stationId: station.id} });
-              console.log('test')
             });
           }
         });
