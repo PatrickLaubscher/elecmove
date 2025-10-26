@@ -99,6 +99,12 @@ export interface LocationStation extends Location {
     id:string;
 }
 
+/* BookingEstimate */
+export interface PreBookingEstimate {
+    bookingDuration:number;
+    bookingEstimatePrice:number;
+}
+
 
 /* Booking */
 export interface Booking {

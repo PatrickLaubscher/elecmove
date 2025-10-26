@@ -216,10 +216,14 @@ class="w-full md:w-4/5 lg:w-3/5 mx-auto flex flex-col justify-center items-cente
 
     <!-- récapitulatif durée/prix -->
     <div 
-    class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
+    class="w-full rounded-xl p-2 border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
     >
-    Durée totale
-    Prix € net
+        <p>
+            Durée totale : {{timeConversion.formatDuration(preBookingEstimate().bookingDuration)}}
+        </p>
+        <p>
+            Coût de la réservation {{preBookingEstimate().bookingEstimatePrice}} € net
+        </p>
     </div>
 
     <button 

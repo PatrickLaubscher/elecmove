@@ -3,13 +3,14 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 import { StandardModalComponent } from '../../../../components/standard-modal/standard-modal.component';
 import { CarFormComponent } from '../../car-page/car-form/car-form.component';
-import { BookingCreationDTO } from '../../../../api/dto';
-import { Car, Station } from '../../../../shared/entities';
+import { BookingCreationDTO, PreBookingEstimateResquestDTO } from '../../../../api/dto';
+import { Car, PreBookingEstimate, Station } from '../../../../shared/entities';
 import { CarService } from '../../../../api/car/car.service';
 import { endAfterStartValidator, futureDateValidator } from '../../../../shared/validators';
 import { StationService } from '../../../../api/station/station.service';
 import { ActivatedRoute } from '@angular/router';
 import { BookingStorageService } from '../../../../services/booking-storage.service';
+import { TimeConversionService } from '../../../../services/time-conversion.service';
 
 
 @Component({
@@ -26,10 +27,15 @@ export class BookingFormComponent implements OnInit {
   protected readonly isCarModalOpen = signal(false);
   protected readonly carService = inject(CarService);
   protected readonly stationService = inject(StationService);
-   protected readonly bookingStorageService = inject(BookingStorageService);
+  protected readonly bookingStorageService = inject(BookingStorageService);
+  protected readonly timeConversion = inject(TimeConversionService);
 
   readonly stationId = signal<string>('');
   readonly station = signal<Station | null>(null);
+  readonly preBookingEstimate = signal<PreBookingEstimate>({
+    bookingDuration: 0,
+    bookingEstimatePrice: 0
+  });
   readonly isLoadingStation = signal(false);
   readonly carSelected = input<Car>();
   readonly bookingFormSubmit = output<{booking: BookingCreationDTO}>();
@@ -122,6 +128,29 @@ export class BookingFormComponent implements OnInit {
 
     if(this.carSelected()?.id){
       this.form.patchValue({ carId: this.carSelected()!.id });
+    }
+
+    // get prebooking estimation duration and price
+
+    const preBookingRequest:PreBookingEstimateResquestDTO = {
+      bookingStartTime: savedStart,
+      bookingEndTime: savedEnd
+    } 
+
+    if (this.stationId() && this.stationId().trim() !== '') {
+      this.stationService.getPrebookingEstimate(this.stationId(), preBookingRequest).subscribe({
+        next: (res) => {
+          this.preBookingEstimate.update((preBookingEstimate) => ({ 
+            ...preBookingEstimate,
+            bookingDuration: res.bookingDuration,
+            bookingEstimatePrice: res.bookingEstimatePrice
+          }))
+          console.log(this.preBookingEstimate());
+        },
+        error: () => {
+          console.log("Erreur chargement des données de prebooking");
+        }
+      })
     }
 
   }

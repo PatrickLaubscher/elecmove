@@ -1,17 +1,19 @@
 import { Location } from "../shared/entities";
 
 
-
+/* Credentials */
 export interface LoginCredentialsDTO {
     email:string;
     password:string;
 }
 
+/* Login */
 export interface LoginResponseDTO {
     token:string;
     user:UserConnectedDTO;
 }
 
+/* User */
 export interface UserCreationDTO {
     firstname:string;
     lastname:string;
@@ -32,12 +34,14 @@ export interface UserAddressCreationDTO extends Location {
     addressName?:string;
 }
 
+/* Car */
 export interface CarCreationDTO {
     type:string;
     registration:string;
     brand:string;
 }
 
+/* Station */
 export interface StationCreationDTO {
     name:string;
     tarification:number;
@@ -52,6 +56,14 @@ export interface FavoriteStationCreationDTO {
     stationId:string;
 } 
 
+/* BookingEstimate */
+export interface PreBookingEstimateResquestDTO {
+    bookingStartTime:string;
+    bookingEndTime:string;
+}
+
+
+/* Booking */
 export interface BookingCreationDTO {
     date:string;
     startTime:string;

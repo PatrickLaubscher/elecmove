@@ -1,7 +1,7 @@
 import { HttpClient, httpResource } from '@angular/common/http';
 import { inject, Injectable, Signal } from '@angular/core';
-import { Station } from '../../shared/entities';
-import { StationCreationDTO } from '../dto';
+import { PreBookingEstimate, Station } from '../../shared/entities';
+import { PreBookingEstimateResquestDTO, StationCreationDTO } from '../dto';
 import { Observable } from 'rxjs';
 
 export interface CoordinatesWithRadius {
@@ -32,6 +32,10 @@ export class StationService {
   getAllNearby(coordinates:CoordinatesWithRadius) {
     return this.http.post<Station[]>('/api/stations/nearby', coordinates);
   }
+
+  getPrebookingEstimate(id:string, preBookingResquest:PreBookingEstimateResquestDTO) {
+    return this.http.post<PreBookingEstimate>(`/api/stations/${id}/prebooking/estimate`, preBookingResquest);
+  } 
 
   add(newStation:StationCreationDTO) {
     return this.http.post<Station>('/api/stations', newStation);
