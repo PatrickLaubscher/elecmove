@@ -105,7 +105,8 @@ class="w-full md:w-4/5 lg:w-3/5 mx-auto flex flex-col justify-center items-cente
             id="startTime"
             formControlName="startTime" 
             type="time"
-            step="1800" 
+            step="1800"
+            [min]="minStartTime()"
             class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
             required 
             />
@@ -124,7 +125,7 @@ class="w-full md:w-4/5 lg:w-3/5 mx-auto flex flex-col justify-center items-cente
             id="endTime"
             formControlName="endTime" 
             type="time"
-            step="1800" 
+            step="1800"
             class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
             required 
             />
@@ -151,6 +152,11 @@ class="w-full md:w-4/5 lg:w-3/5 mx-auto flex flex-col justify-center items-cente
             }
             @if (form.hasError('endBeforeStart') && form.touched) {
                 <span class="text-rouge text-sm">L'heure de fin doit être après l'heure de début</span>
+            }
+            @if (form.value.date === today && form.hasError('startTimeInPast')) {
+                <span class="text-gray-600 block text-sm">
+                    Réservation possible à partir de {{ minStartTime() }} aujourd'hui
+                </span>
             }
     </div>
 
@@ -222,7 +228,7 @@ class="w-full md:w-4/5 lg:w-3/5 mx-auto flex flex-col justify-center items-cente
             Durée totale : {{timeConversion.formatDuration(preBookingEstimate().bookingDuration)}}
         </p>
         <p>
-            Coût de la réservation {{preBookingEstimate().bookingEstimatePrice}} € net
+            Coût de la réservation : {{preBookingEstimate().bookingEstimatePrice}} € net
         </p>
     </div>
 

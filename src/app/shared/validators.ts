@@ -28,3 +28,29 @@ export const endAfterStartValidator: ValidatorFn = (
   return end > start ? null : { endBeforeStart: true };
 }
 
+
+export const startTimeInPastValidator = (getTodayFn: () => string, getMinTimeFn: () => string): ValidatorFn => {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const group = control as FormGroup;
+    const date = group.get('date')?.value;
+    const startTime = group.get('startTime')?.value;
+    
+    if (!date || !startTime) {
+      return null;
+    }
+
+    const today = getTodayFn();
+    
+    // Vérifier seulement pour aujourd'hui
+    if (date === today) {
+      const minTime = getMinTimeFn();
+      
+      if (startTime < minTime) {
+        return { startTimeInPast: true };
+      }
+    }
+    
+    return null;
+  };
+}
+

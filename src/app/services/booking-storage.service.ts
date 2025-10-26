@@ -18,6 +18,8 @@ export class BookingStorageService {
     sessionStorage.setItem('bookingEndTime', JSON.stringify(endTime));
   }
 
+  
+
   getBookingDate(): string | null {
     const date = sessionStorage.getItem('bookingDate');
     return date ? JSON.parse(date) : null;
