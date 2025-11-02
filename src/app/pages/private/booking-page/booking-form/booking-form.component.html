@@ -197,7 +197,11 @@ class="w-full md:w-4/5 lg:w-3/5 mx-auto flex flex-col justify-center items-cente
             <option value="" disabled>Choisissez une voiture</option>
             @if(cars.hasValue()) {
                 @for(car of cars.value(); track car.id) {
-                    <option value="{{car.id}}">{{car.type}}</option>
+                    <option 
+                    value="{{car.id}}" 
+                    >
+                    {{car.brand}} - {{car.type}}
+                    </option>    
                 }
             }
         </select>
@@ -215,10 +219,10 @@ class="w-full md:w-4/5 lg:w-3/5 mx-auto flex flex-col justify-center items-cente
             ngProjectAs="card-title"
             class="text-sm md:text-md uppercase"
             >
-                Rajouter votre voiture
+                Rajouter une nouvelle voiture
             </h2>
             <div ngProjectAs="card-body">
-                <app-car-form />
+                <app-car-form [isCarModalOpen]="isCarModalOpen()" (closingModal)="isCarModalOpen.set(false)"/>
             </div>
             <p ngProjectAs="card-footer" class="text-white"></p>
         </app-standard-modal>

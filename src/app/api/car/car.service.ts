@@ -15,19 +15,19 @@ export class CarService {
   }
 
   getOne(id:string) {
-    return httpResource<Car>(() => '/api//api/cars/' + id);
+    return httpResource<Car>(() => '/api/cars/' + id);
   }
 
   add(newCar:CarCreationDTO) {
-    return this.http.post<Car>('/api//api/cars', newCar);
+    return this.http.post<Car>('/api/cars', newCar);
   }
 
   put(id:Signal<number>, Car:CarCreationDTO) {
-    return this.http.put<Car>('/api//api/cars/'+ id(), Car);
+    return this.http.put<Car>('/api/cars/'+ id(), Car);
   }
 
   delete(id:Signal<number>) {
-    return this.http.delete<null>('/api//api/cars/'+ id());
+    return this.http.delete<null>('/api/cars/'+ id());
   }
   
 }

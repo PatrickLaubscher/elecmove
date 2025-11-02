@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit, output, signal } from '@angular/core';
+import { Component, effect, inject, input, OnInit, output, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { StandardModalComponent } from '../../../../components/standard-modal/standard-modal.component';
@@ -46,6 +46,26 @@ export class BookingFormComponent implements OnInit {
   private readonly formatTime = (d: Date) => d.toTimeString().substring(0, 5);
   readonly minStartTime = signal<string>('');
 
+  private wasOpen = false;
+
+  constructor() {
+    effect(() => {
+      const isOpen = this.isCarModalOpen();
+      
+      const savedCar = this.bookingStorageService.getCarId();
+      // La modale vient de se fermer
+      if (this.wasOpen && !isOpen) {
+        this.cars.reload();
+        if(savedCar && savedCar.length > 1) {
+          this.form.patchValue({
+            carId: savedCar
+          })
+        }
+      }
+      
+      this.wasOpen = isOpen;
+    });
+}
 
   private getInitialStart(): Date {
     const start = new Date(this.now);
@@ -120,9 +140,24 @@ export class BookingFormComponent implements OnInit {
   );
 
   
-ngOnInit() {
+  ngOnInit() {
 
     // input values from session storage
+    
+    // Carid
+    const savedCar = this.bookingStorageService.getCarId();
+    if(savedCar && savedCar.length > 1) {
+      this.form.patchValue({
+        carId: savedCar
+      })
+    }
+    this.form.get('carId')?.valueChanges.subscribe(carId => {
+      if (carId) {
+        this.bookingStorageService.addCarId(carId);
+      }
+    });
+    
+    // Booking time
     const savedDate = this.bookingStorageService.getBookingDate?.() ?? this.today;
     const savedStart = this.bookingStorageService.getBookingStartTime?.() ?? this.formatTime(this.getInitialStart());
     const savedEnd = this.bookingStorageService.getBookingEndTime?.() ?? this.formatTime(this.getInitialEnd());
@@ -130,7 +165,7 @@ ngOnInit() {
     this.form.patchValue({
       date: savedDate,
       startTime: savedStart,
-      endTime: savedEnd
+      endTime: savedEnd,
     });
 
     // Initialiser l'heure minimum
@@ -213,7 +248,6 @@ ngOnInit() {
         this.updatePrebookingEstimate();
       }
     });
-
     
     // Loading existing station and cars
     this.activatedRoute.queryParams.subscribe(params => {
@@ -283,10 +317,7 @@ ngOnInit() {
       carId: this.form.value.carId!,
       stationId: this.form.value.stationId!
     }
-
     this.bookingFormSubmit.emit({booking:newBooking});
-    console.log(this.bookingFormSubmit);
-
   }
 
 }

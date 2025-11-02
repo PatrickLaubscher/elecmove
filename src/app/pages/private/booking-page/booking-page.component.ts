@@ -3,7 +3,6 @@ import { BookingFormComponent } from "./booking-form/booking-form.component";
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BookingService } from '../../../api/booking/booking.service';
-import { CarService } from '../../../api/car/car.service';
 import { BookingCreationDTO } from '../../../api/dto';
 import { BookingStorageService } from '../../../services/booking-storage.service';
 
@@ -22,7 +21,6 @@ export class BookingPageComponent {
   protected readonly serverError = signal('');
   private readonly bookingService = inject(BookingService);
   protected readonly bookingStorageService = inject(BookingStorageService);
-  private readonly carService = inject(CarService);
   private readonly snackBar = inject(MatSnackBar);
 
 
@@ -31,7 +29,7 @@ export class BookingPageComponent {
     this.bookingService.add(newBooking)
     .subscribe({
       next: () => {
-        this.snackBar.open('Votre réservation a bien été enregistrée', 'ok', {duration: 5000})
+        this.snackBar.open('Votre réservation a bien été enregistrée', 'ok', {duration: 5000, verticalPosition:'top', horizontalPosition:'right'})
         this.bookingStorageService.clearBooking();
       },
       error: () => {

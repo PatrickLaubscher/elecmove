@@ -213,7 +213,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
               this.bookingStorageService.addBookingEndTime(this.bookingEndTime);
 
               if(this.isMapModalOpen() === true) {
-                this.closingModal.emit(false);
+                this.closingModal.emit(true);
               } 
               
               this.router.navigate(['/private/bookings'], {queryParams: {stationId: station.id} });

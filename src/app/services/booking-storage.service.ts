@@ -18,6 +18,10 @@ export class BookingStorageService {
     sessionStorage.setItem('bookingEndTime', JSON.stringify(endTime));
   }
 
+  addCarId(id:string):void {
+    sessionStorage.setItem('carId', JSON.stringify(id));
+  }
+
   
 
   getBookingDate(): string | null {
@@ -35,10 +39,17 @@ export class BookingStorageService {
     return endTime ? JSON.parse(endTime) : null;
   }
 
+  getCarId(): string | null {
+    const carId = sessionStorage.getItem('carId');
+    return carId ? JSON.parse(carId) : null;
+  }
+
+
   clearBooking(): void {
     sessionStorage.removeItem('bookingDate');
     sessionStorage.removeItem('bookingStartTime');
     sessionStorage.removeItem('bookingEndTime');
+    sessionStorage.removeItem('carId');
   }
   
 }
