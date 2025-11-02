@@ -76,6 +76,7 @@ class="map-wrap mx-auto"
 
             <input
             [(ngModel)]="bookingDate"
+            (change)="onTimeChange()"
             [ngClass]="{
                 'opacity-100 max-h-40 scale-100': showInputs,
                 'opacity-0 max-h-0 scale-95 group-hover:opacity-100 group-hover:max-h-40 group-hover:scale-100': !showInputs
@@ -97,10 +98,9 @@ class="map-wrap mx-auto"
             >
             <input
                 [(ngModel)]="bookingStartTime"
+                (change)="onStartTimeChange()"
                 type="time"
                 step="1800"
-                min="09:00"
-                max="18:00"
                 class="flex-1 border-0 text-noir bg-blanc rounded-s-md text-sm py-0.5 px-2 focus:ring-vert focus:outline-none"
             />
             <span class="inline-flex items-center px-3 text-sm text-noir bg-blanc rounded-e-md">
@@ -123,10 +123,9 @@ class="map-wrap mx-auto"
             >
             <input
                 [(ngModel)]="bookingEndTime"
+                (change)="onTimeChange()"
                 type="time"
                 step="1800"
-                min="09:00"
-                max="18:00"
                 class="flex-1 border-0 text-noir bg-blanc rounded-s-md text-sm py-0.5 px-2 focus:ring-vert focus:outline-none"
             />
             <span class="inline-flex items-center px-3 text-sm text-noir bg-blanc rounded-e-md">

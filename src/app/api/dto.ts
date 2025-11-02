@@ -54,14 +54,30 @@ export interface StationCreationDTO {
 
 export interface FavoriteStationCreationDTO {
     stationId:string;
-} 
+}
+
+
+
+/* Coordinates with radisu */
+export interface CoordinatesWithRadiusDTO {
+    latitude:number;
+    longitude:number;
+    rayonMeters:number;
+}
+
+/* Coordinates with time slot */
+export interface CoordinatesWithRadiusAndTimeSlotDTO extends CoordinatesWithRadiusDTO {
+    date:string;
+    startTime:string;
+    endTime:string;
+}
+
 
 /* BookingEstimate */
 export interface PreBookingEstimateResquestDTO {
     bookingStartTime:string;
     bookingEndTime:string;
 }
-
 
 /* Booking */
 export interface BookingCreationDTO {

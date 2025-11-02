@@ -28,6 +28,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
   protected isHybrid = false;
   protected isDark = false;
   protected positionMarker: Marker | null = null
+  protected stationMarkers: Marker[] = [];
 
   isMapModalOpen = input<boolean>();
   closingModal = output<boolean>();
@@ -37,9 +38,11 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
 
   searchQuery = '';
   suggestions: MapTilerSuggestion[] = [];
+  
   bookingDate: string = new Date().toISOString().split('T')[0];
-  bookingStartTime = '09:00';
-  bookingEndTime = '18:00';
+  bookingStartTime: string = '';
+  bookingEndTime: string = '';
+
 
   @ViewChild('map')
   protected readonly mapContainer!: ElementRef<HTMLElement>;
@@ -63,6 +66,13 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
       this.isDark = true;
     }
 
+    const now = new Date();
+    const currentHour = now.getHours();
+    const nextHour = (currentHour + 1) % 24;
+    
+    this.bookingStartTime = `${String(nextHour).padStart(2, '0')}:00`;
+    this.bookingEndTime = `${String(nextHour).padStart(2, '0')}:30`;
+
   }
 
   addPositionMarker(lng: number, lat: number) {
@@ -81,6 +91,108 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     .setLngLat([lng, lat])
     .addTo(this.map!);
 
+  }
+
+
+  onStartTimeChange() {
+    const [hours, minutes] = this.bookingStartTime.split(':').map(Number);
+    
+    // Calculer endTime = startTime + 30 minutes
+    let endHours = hours;
+    let endMinutes = minutes + 30;
+    
+    if (endMinutes >= 60) {
+      endHours += 1;
+      endMinutes -= 60;
+    }
+    
+    if (endHours >= 24) {
+      endHours = 0;
+    }
+    
+    this.bookingEndTime = `${String(endHours).padStart(2, '0')}:${String(endMinutes).padStart(2, '0')}`;
+    
+    this.refreshStations();
+  }
+
+  onTimeChange() {
+    this.refreshStations();
+  }
+
+  private refreshStations() {
+    if (!this.map) return;
+
+    // Supprimer tous les anciens marqueurs
+    this.stationMarkers.forEach(marker => marker.remove());
+    this.stationMarkers = [];
+
+    // Recharger les stations
+    this.loadStations();
+  }
+
+
+   // get all stations with given parameters (location & time)
+  private loadStations() {
+    const center = this.map?.getCenter();
+    if (!center) return;
+
+    
+    this.stationApi.getAllAvailableNearby({
+      latitude: center.lat,
+      longitude: center.lng,
+      rayonMeters: 5000,
+      date: this.bookingDate,
+      startTime: this.bookingStartTime,
+      endTime: this.bookingEndTime
+    }).subscribe((stations) => {
+      stations.forEach((station) => {
+
+        const stationMarker = document.createElement('div');
+        stationMarker.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10 2H9c-2.828 0-4.243 0-5.121.879C3 3.757 3 5.172 3 8v13.25H2a.75.75 0 0 0 0 1.5h15.25a.75.75 0 0 0 0-1.5H16v-3.5h1.571c.375 0 .679.304.679.679v.071a2.25 2.25 0 1 0 4.5 0V7.602c0-.157 0-.265-.006-.37a3.75 3.75 0 0 0-1.24-2.582a9 9 0 0 0-.286-.236l-1.25-1a.75.75 0 1 0-.936 1.172l1.233.986c.144.116.194.156.237.195c.443.397.711.954.745 1.549a6 6 0 0 1 .003.306V8h-.75A1.5 1.5 0 0 0 19 9.5v2.419a1.5 1.5 0 0 0 1.026 1.423l1.224.408v4.75a.75.75 0 0 1-1.5 0v-.071a2.18 2.18 0 0 0-2.179-2.179H16V8c0-2.828 0-4.243-.879-5.121C14.243 2 12.828 2 10 2m-.114 7.357a.75.75 0 0 1 .257 1.029l-.818 1.364H11a.75.75 0 0 1 .643 1.136l-1.5 2.5a.75.75 0 1 1-1.286-.772l.818-1.364H8a.75.75 0 0 1-.643-1.136l1.5-2.5a.75.75 0 0 1 1.029-.257" clip-rule="evenodd"/></svg>`;
+        stationMarker.style.fontSize = '24px';
+
+        const borderColor = station.availableAtGivenSlot ? 'border-bleu' : 'border-rouge';
+
+        stationMarker.classList.add(
+          'text-noir', 'bg-vert', 'rounded-full', 'p-1', 'shadow-md',
+          'border-2', borderColor, 'hover:shadow-2xl', 'hover:-translate-y-0.5',
+          'transition-all', 'delay-300', 'cursor-pointer', 'duration-300', 'ease-in-out'
+        );
+
+        const popup = new Popup().setHTML(`
+          <h1 class="font-bold">Borne</h1>
+          <p>Adresse : ${station.location.address}</p>
+          <p>Type : ${station.type}</p>
+          <a class="bookingLink cursor-pointer hover:text-vert">Réserver</a>
+        `);
+
+        const marker = new Marker({ element: stationMarker })
+          .setLngLat([station.location.longitude, station.location.latitude]) 
+          .setPopup(popup)
+          .addTo(this.map!);
+
+        this.stationMarkers.push(marker);
+
+        popup.on('open', () => {
+          const link = popup.getElement().querySelector('.bookingLink');
+          if (link) {
+            link.addEventListener('click', () => {
+
+              // Mise en session storage uniquement au clic sur "Réserver"
+              this.bookingStorageService.addBookingDate(this.bookingDate);
+              this.bookingStorageService.addBookingStartTime(this.bookingStartTime);
+              this.bookingStorageService.addBookingEndTime(this.bookingEndTime);
+
+              if(this.isMapModalOpen() === true) {
+                this.closingModal.emit(true);
+              } 
+              
+              this.router.navigate(['/private/bookings'], {queryParams: {stationId: station.id} });
+            });
+          }
+        });
+      });
+    });
   }
 
 
@@ -108,12 +220,12 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
         return;
       }
       const { lng, lat } = center;
-
       this.addPositionMarker(lng, lat);
 
+      this.loadStations();
     });
     
-    // Ajout d'un boutoon de mode sombre 
+    // Darkmode map selector
     const btnDarkMode = document.createElement('button');
     btnDarkMode.innerText = '🌓';
     btnDarkMode.style.cssText = `
@@ -130,7 +242,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
       this.map?.setStyle(newStyle);
     };
 
-    // Ajout d'un boutoon de mode hybride (vue satellite avec mentions sur la carte)
+    // Hybrid map mode selector
     const btnHybridMode = document.createElement('button');
     btnHybridMode.innerText = '🛰️';
     btnHybridMode.style.cssText = `
@@ -147,6 +259,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
       this.map?.setStyle(newStyle);
     };
 
+    // add control in container map
     const controlContainer = document.createElement('div');
     controlContainer.className = 'maplibregl-ctrl maplibregl-ctrl-group';
     controlContainer.appendChild(btnDarkMode);
@@ -160,75 +273,10 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
       'top-right'
     );
     
-    const stationMarker = document.createElement('div');
-    stationMarker.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10 2H9c-2.828 0-4.243 0-5.121.879C3 3.757 3 5.172 3 8v13.25H2a.75.75 0 0 0 0 1.5h15.25a.75.75 0 0 0 0-1.5H16v-3.5h1.571c.375 0 .679.304.679.679v.071a2.25 2.25 0 1 0 4.5 0V7.602c0-.157 0-.265-.006-.37a3.75 3.75 0 0 0-1.24-2.582a9 9 0 0 0-.286-.236l-1.25-1a.75.75 0 1 0-.936 1.172l1.233.986c.144.116.194.156.237.195c.443.397.711.954.745 1.549a6 6 0 0 1 .003.306V8h-.75A1.5 1.5 0 0 0 19 9.5v2.419a1.5 1.5 0 0 0 1.026 1.423l1.224.408v4.75a.75.75 0 0 1-1.5 0v-.071a2.18 2.18 0 0 0-2.179-2.179H16V8c0-2.828 0-4.243-.879-5.121C14.243 2 12.828 2 10 2m-.114 7.357a.75.75 0 0 1 .257 1.029l-.818 1.364H11a.75.75 0 0 1 .643 1.136l-1.5 2.5a.75.75 0 1 1-1.286-.772l.818-1.364H8a.75.75 0 0 1-.643-1.136l1.5-2.5a.75.75 0 0 1 1.029-.257" clip-rule="evenodd"/></svg>`; 
-    stationMarker.style.fontSize = '24px';
-    stationMarker.classList.add('text-noir', 'bg-vert', 'rounded-full', 'p-1', 'shadow-md', 'border-2', 'border-rouge', 'hover:shadow-2xl', 'hover:-translate-y-0.5', 'transition-all', 'delay-300', 'cursor-pointer', 'duration-300', 'ease-in-out');
-
-
-    new Marker({element: stationMarker})
-    .setLngLat([4.850000,45.760000])
-    .setPopup(new Popup().setHTML(
-      '<h1>Borne 1</h1>'
-      + '<p>Adresse : 1 rue de la République</p>'
-      + '<p>Type : Borne de recharge</p>'
-      + '<p>Réservée de 10h jusqu\'à 14h</p>'
-    ))
-    .addTo(this.map);
-
-    this.stationApi.getAllNearby({
-      latitude: 45.7578,
-      longitude: 4.8320,
-      rayonMeters: 5000
-    }).subscribe((stations) => {
-      stations.forEach((station) => {
-        const stationMarker = document.createElement('div');
-        stationMarker.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10 2H9c-2.828 0-4.243 0-5.121.879C3 3.757 3 5.172 3 8v13.25H2a.75.75 0 0 0 0 1.5h15.25a.75.75 0 0 0 0-1.5H16v-3.5h1.571c.375 0 .679.304.679.679v.071a2.25 2.25 0 1 0 4.5 0V7.602c0-.157 0-.265-.006-.37a3.75 3.75 0 0 0-1.24-2.582a9 9 0 0 0-.286-.236l-1.25-1a.75.75 0 1 0-.936 1.172l1.233.986c.144.116.194.156.237.195c.443.397.711.954.745 1.549a6 6 0 0 1 .003.306V8h-.75A1.5 1.5 0 0 0 19 9.5v2.419a1.5 1.5 0 0 0 1.026 1.423l1.224.408v4.75a.75.75 0 0 1-1.5 0v-.071a2.18 2.18 0 0 0-2.179-2.179H16V8c0-2.828 0-4.243-.879-5.121C14.243 2 12.828 2 10 2m-.114 7.357a.75.75 0 0 1 .257 1.029l-.818 1.364H11a.75.75 0 0 1 .643 1.136l-1.5 2.5a.75.75 0 1 1-1.286-.772l.818-1.364H8a.75.75 0 0 1-.643-1.136l1.5-2.5a.75.75 0 0 1 1.029-.257" clip-rule="evenodd"/></svg>`;
-        stationMarker.style.fontSize = '24px';
-        stationMarker.classList.add(
-          'text-noir', 'bg-vert', 'rounded-full', 'p-1', 'shadow-md',
-          'border-2', 'border-bleu', 'hover:shadow-2xl', 'hover:-translate-y-0.5',
-          'transition-all', 'delay-300', 'cursor-pointer', 'duration-300', 'ease-in-out'
-        );
-
-        const popup = new Popup().setHTML(`
-          <h1>Borne</h1>
-          <p>Adresse : ${station.location.address}</p>
-          <p>Type : ${station.type}</p>
-          <a class="bookingLink cursor-pointer hover:text-vert">Réserver</a>
-        `);
-
-        new Marker({ element: stationMarker })
-          .setLngLat([station.location.longitude, station.location.latitude]) 
-          .setPopup(popup)
-          .addTo(this.map!);
-
-        popup.on('open', () => {
-          const link = popup.getElement().querySelector('.bookingLink');
-          if (link) {
-            link.addEventListener('click', () => {
-
-              this.bookingStorageService.addBookingDate(this.bookingDate);
-              this.bookingStorageService.addBookingStartTime(this.bookingStartTime);
-              this.bookingStorageService.addBookingEndTime(this.bookingEndTime);
-
-              if(this.isMapModalOpen() === true) {
-                this.closingModal.emit(true);
-              } 
-              
-              this.router.navigate(['/private/bookings'], {queryParams: {stationId: station.id} });
-            });
-          }
-        });
-          
-      });
-    });
-
-
-    
   }
 
-  // Fonction pour l'automatisation de la recherche
+
+  // Search automatisation
   onSearchInput(query: string) {
 
     if (query.trim().length < 3) {
@@ -236,7 +284,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
       return;
     }
 
-    // Récupérer les coordonnées actuelles de la carte
+    // Get given map coordinates
     const center = this.map?.getCenter();
     if (!center) {
       this.suggestions = [];
@@ -244,7 +292,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     }
     const { lng, lat } = center;
 
-    // Définir une zone autour de la carte, par exemple un rayon de 50 km
+    // Define zone on the map
     const bbox = [
       lng - 0.5, lat - 0.5, // Coin inférieur gauche
       lng + 0.5, lat + 0.5  // Coin supérieur droit
@@ -253,7 +301,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     const apiKey = 'GC5T8jKrwWEDcC6F741K';
     const url = `https://api.maptiler.com/geocoding/${encodeURIComponent(query)}.json?key=${apiKey}&language=fr&country=fr&bbox=${bbox.join(',')}`;
   
-    // Requête API
+    // API request
     fetch(url)
       .then(res => res.json())
       .then(data => {
@@ -262,7 +310,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
       .catch(err => console.error('Erreur géocodage :', err));
   }
   
-  // Fonction pour gérer la sélection d'une suggestion
+  // Manage searching suggestions
   selectSuggestion(index: number) {
     const feature = this.suggestions[index];
     if (!feature) return;
@@ -285,7 +333,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
       });
     }
 
-    // Centrer la carte sur les coordonnées sélectionnées
+    // Center map at given coordinates
     this.map?.flyTo({ center: [lng, lat], zoom: 15 });
 
     this.addPositionMarker(lng, lat);
@@ -299,17 +347,11 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
       longitude: Number.parseFloat(lng.toFixed(6))
     });
   
-    // Ajouter un marqueur si nécessaire
     // const marker = new Marker().setLngLat([lng, lat]).addTo(this.map);
-  
-    // Remplir le champ de saisie avec le lieu sélectionné
     this.searchQuery = this.suggestions[index].place_name;
-    
-    // Vider la liste des suggestions après sélection
     this.suggestions = [];
   }
 
-  // Fonction pour gérer l'apparition des dates et heures de réservation
   get showInputs(): boolean {
     return this.searchQuery.trim().length > 0;
   }

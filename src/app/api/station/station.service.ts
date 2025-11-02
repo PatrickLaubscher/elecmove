@@ -1,14 +1,8 @@
 import { HttpClient, httpResource } from '@angular/common/http';
 import { inject, Injectable, Signal } from '@angular/core';
 import { PreBookingEstimate, Station } from '../../shared/entities';
-import { PreBookingEstimateResquestDTO, StationCreationDTO } from '../dto';
+import { CoordinatesWithRadiusAndTimeSlotDTO, CoordinatesWithRadiusDTO, PreBookingEstimateResquestDTO, StationCreationDTO } from '../dto';
 import { Observable } from 'rxjs';
-
-export interface CoordinatesWithRadius {
-    latitude:number;
-    longitude:number;
-    rayonMeters:number;
-}
 
 @Injectable({
   providedIn: 'root'
@@ -29,8 +23,12 @@ export class StationService {
   return this.http.get<Station>(`/api/stations/${id}`);
 }
 
-  getAllNearby(coordinates:CoordinatesWithRadius) {
+  getAllNearby(coordinates:CoordinatesWithRadiusDTO) {
     return this.http.post<Station[]>('/api/stations/nearby', coordinates);
+  }
+
+  getAllAvailableNearby(coordinatesWithTime:CoordinatesWithRadiusAndTimeSlotDTO) {
+    return this.http.post<Station[]>('/api/stations/nearby-available', coordinatesWithTime);
   }
 
   getPrebookingEstimate(id:string, preBookingResquest:PreBookingEstimateResquestDTO) {

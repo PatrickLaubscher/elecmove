@@ -83,8 +83,13 @@ export interface Car {
 export interface Station {
     id:string;
     name?:string;
+    power:string;
+    available:boolean;
+    freeStanding:boolean;
     type:string;
+    tarification:number;
     location:Location;
+    availableAtGivenSlot?:boolean;
 }
 
 /* Favorite station */
