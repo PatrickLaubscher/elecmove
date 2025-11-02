@@ -47,6 +47,21 @@ class="w-full md:w-4/5 lg:w-3/5 mx-auto flex flex-col justify-center items-cente
             
         </button>
 
+
+        <app-standard-modal  [(open)]="isMapModalOpen">
+            <h2
+            ngProjectAs="card-title"
+            class="text-sm md:text-md uppercase"
+            >
+                Choisir une borne de recharge
+            </h2>
+            <div ngProjectAs="card-body">
+                <app-interactive-map [isMapModalOpen]="isMapModalOpen()" (closingModal)="isMapModalOpen.set(false)"/>
+            </div>
+            <p ngProjectAs="card-footer" class="text-white"></p>
+        </app-standard-modal>
+        
+        
         <div class="h-5 my-1 text-sm">
             @if (stationIdInput.invalid) {
                 @if (stationIdInput.hasError('required')) {

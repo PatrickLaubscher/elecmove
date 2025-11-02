@@ -29,6 +29,9 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
   protected isDark = false;
   protected positionMarker: Marker | null = null
 
+  isMapModalOpen = input<boolean>();
+  closingModal = output<boolean>();
+
   readonly form = input<FormGroup>();
   readonly addressSelected = output<Location>();
 
@@ -208,6 +211,10 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
               this.bookingStorageService.addBookingDate(this.bookingDate);
               this.bookingStorageService.addBookingStartTime(this.bookingStartTime);
               this.bookingStorageService.addBookingEndTime(this.bookingEndTime);
+
+              if(this.isMapModalOpen() === true) {
+                this.closingModal.emit(false);
+              } 
               
               this.router.navigate(['/private/bookings'], {queryParams: {stationId: station.id} });
             });

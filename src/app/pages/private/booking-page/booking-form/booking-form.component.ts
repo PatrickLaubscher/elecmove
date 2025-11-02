@@ -11,11 +11,12 @@ import { StationService } from '../../../../api/station/station.service';
 import { ActivatedRoute } from '@angular/router';
 import { BookingStorageService } from '../../../../services/booking-storage.service';
 import { TimeConversionService } from '../../../../services/time-conversion.service';
+import { InteractiveMapComponent } from "../../../../components/interactive-map/interactive-map.component";
 
 
 @Component({
   selector: 'app-booking-form',
-  imports: [ReactiveFormsModule, CommonModule,  StandardModalComponent, CarFormComponent],
+  imports: [ReactiveFormsModule, CommonModule, StandardModalComponent, CarFormComponent, InteractiveMapComponent],
   templateUrl: './booking-form.component.html',
   styleUrl: './booking-form.component.css'
 })
