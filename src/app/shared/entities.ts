@@ -35,9 +35,27 @@ export interface MapTilerSuggestion {
 }
 
 export interface MapTilerSuggestionsResponse {
-  type: "FeatureCollection";
-  query: string[];
-  features: MapTilerSuggestion[];
+    type: "FeatureCollection";
+    query: string[];
+    features: MapTilerSuggestion[];
+}
+
+
+export interface GeolocalisationResponse {
+    country_code:string,
+    country:string,
+    country_bounds:number[],
+    country_languages:string[],
+    continent: string,
+    continent_code: string,
+    eu: boolean,
+    city: string,
+    latitude: number,
+    longitude: number,
+    postal: string,
+    region: string,
+    region_code: string,
+    timezone: string
 }
 
 

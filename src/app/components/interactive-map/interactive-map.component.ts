@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener, OnDestroy, inject, input, output } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener, OnDestroy, inject, input, output, signal } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { FormGroup, FormsModule } from '@angular/forms';
 import { Map, MapStyle, Marker, Popup } from '@maptiler/sdk';
@@ -7,7 +7,7 @@ import * as maptilersdk from '@maptiler/sdk';
 import "@maptiler/sdk/dist/maptiler-sdk.css";
 import { StationService } from '../../api/station/station.service';
 import { Router } from '@angular/router';
-import { Location, MapTilerSuggestion } from '../../shared/entities';
+import { GeolocalisationResponse, Location, MapTilerSuggestion } from '../../shared/entities';
 import { BookingStorageService } from '../../services/booking-storage.service';
 
 
@@ -20,6 +20,7 @@ import { BookingStorageService } from '../../services/booking-storage.service';
 
 export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  protected readonly API_KEY = 'GC5T8jKrwWEDcC6F741K';
   protected readonly stationApi = inject(StationService);
   protected readonly router = inject(Router);
   protected readonly bookingStorageService = inject(BookingStorageService);
@@ -30,8 +31,10 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
   protected positionMarker: Marker | null = null
   protected stationMarkers: Marker[] = [];
 
-  isMapModalOpen = input<boolean>();
-  closingModal = output<boolean>();
+  protected initialLng = 4.8357; 
+  protected initialLat = 45.7640;
+  protected initialLanguage = 'fr'; 
+  private geolocLoaded = false;
 
   readonly form = input<FormGroup>();
   readonly addressSelected = output<Location>();
@@ -43,6 +46,8 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
   bookingStartTime: string = '';
   bookingEndTime: string = '';
 
+  isMapModalOpen = input<boolean>();
+  closingModal = output<boolean>();
 
   @ViewChild('map')
   protected readonly mapContainer!: ElementRef<HTMLElement>;
@@ -59,8 +64,18 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     }
   }
 
-  ngOnInit(): void {
-    maptilersdk.config.apiKey = 'GC5T8jKrwWEDcC6F741K';
+  async ngOnInit(): Promise<void> {
+    maptilersdk.config.apiKey = this.API_KEY;
+
+    const geolocResponse = await this.getGeolocalisation();
+    if(geolocResponse) {
+      this.initialLng = geolocResponse.longitude;
+      this.initialLat = geolocResponse.latitude;
+      this.initialLanguage = geolocResponse.country_languages[0] || 'fr';
+      this.geolocLoaded = true;
+    }
+
+
 
     if(document.documentElement.classList.contains('dark')) {
       this.isDark = true;
@@ -69,11 +84,12 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     const now = new Date();
     const currentHour = now.getHours();
     const nextHour = (currentHour + 1) % 24;
-    
+
     this.bookingStartTime = `${String(nextHour).padStart(2, '0')}:00`;
     this.bookingEndTime = `${String(nextHour).padStart(2, '0')}:30`;
 
   }
+
 
   addPositionMarker(lng: number, lat: number) {
     if (this.positionMarker) {
@@ -86,12 +102,33 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     el.classList.add(/* tes classes Tailwind );*/
 
     this.positionMarker = new maptilersdk.Marker({
-      color: "#FFFFFF"
+      color: "#1D1E18",
+      draggable: true
     })
     .setLngLat([lng, lat])
     .addTo(this.map!);
-
   }
+
+
+  async getGeolocalisation(): Promise<GeolocalisationResponse|null> {
+    const GEOLOC_URL = `https://api.maptiler.com/geolocation/ip.json?key=${this.API_KEY}`;
+
+    try {
+      const response = await fetch(GEOLOC_URL);
+      if(!response.ok) {
+        throw new Error(`Erreur HTTP : ${response.status}`);
+      }
+
+      const data: GeolocalisationResponse = await response.json();
+      return data;
+
+    } catch(err) {
+      console.error('Erreur géolocalisation :', err);
+      return null;
+    }
+  }
+    
+  
 
 
   onStartTimeChange() {
@@ -140,7 +177,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     this.stationApi.getAllAvailableNearby({
       latitude: center.lat,
       longitude: center.lng,
-      rayonMeters: 5000,
+      rayonMeters: 20000,
       date: this.bookingDate,
       startTime: this.bookingStartTime,
       endTime: this.bookingEndTime
@@ -196,32 +233,37 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
 
-  ngAfterViewInit():void {
+  async ngAfterViewInit():Promise<void> {
+
+    if (!this.geolocLoaded) {
+      // petite attente si le fetch n’est pas fini
+      await new Promise(resolve => setTimeout(resolve, 300));
+    }
 
     this.map = new maptilersdk.Map({
       container: this.mapContainer.nativeElement,
-      style: MapStyle.STREETS,
-      language: 'fr',
-      //center: [initialState.lng, initialState.lat],
-      //zoom: initialState.zoom,
+      style: this.isDark ? maptilersdk.MapStyle.STREETS.DARK : maptilersdk.MapStyle.STREETS,
+      language: this.initialLanguage.toUpperCase(),
+      center: [this.initialLng, this.initialLat],
       zoom: 14,
-      geolocate: true,
-      geolocateControl: true,
+      geolocateControl: false,
       maxBounds: [
         [-5.2, 41.3], 
         [9.7, 51.1] 
-      ]
+      ],
     });
 
-    this.map.on('load', () => {
-      const center = this.map?.getCenter();
-      if (!center) {
-        this.suggestions = [];
-        return;
-      }
-      const { lng, lat } = center;
-      this.addPositionMarker(lng, lat);
+    const geolocateControl = new maptilersdk.GeolocateControl({
+      positionOptions: { enableHighAccuracy: true },
+      trackUserLocation: true,
+      showUserLocation: true,
+      showAccuracyCircle: false, 
+    });
+    this.map.addControl(geolocateControl, 'bottom-right');
 
+
+    this.map.on('load', () => {
+      this.addPositionMarker(this.initialLng, this.initialLat);
       this.loadStations();
     });
     
@@ -272,7 +314,8 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
       },
       'top-right'
     );
-    
+
+      
   }
 
 
@@ -297,9 +340,8 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
       lng - 0.5, lat - 0.5, // Coin inférieur gauche
       lng + 0.5, lat + 0.5  // Coin supérieur droit
     ];
-  
-    const apiKey = 'GC5T8jKrwWEDcC6F741K';
-    const url = `https://api.maptiler.com/geocoding/${encodeURIComponent(query)}.json?key=${apiKey}&language=fr&country=fr&bbox=${bbox.join(',')}`;
+
+    const url = `https://api.maptiler.com/geocoding/${encodeURIComponent(query)}.json?key=${this.API_KEY}&language=fr&country=fr&bbox=${bbox.join(',')}`;
   
     // API request
     fetch(url)
@@ -334,7 +376,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     // Center map at given coordinates
-    this.map?.flyTo({ center: [lng, lat], zoom: 15 });
+    this.map?.flyTo({ center: [lng, lat], zoom: 25 });
 
     this.addPositionMarker(lng, lat);
 
