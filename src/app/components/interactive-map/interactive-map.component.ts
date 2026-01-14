@@ -213,9 +213,9 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
         );
 
         const popup = new Popup().setHTML(`
-          <h1 class="font-bold">Borne</h1>
+          <h1 class="font-bold">${station.name}</h1>
           <p>Adresse : ${station.location.address}</p>
-          <p>Type : ${station.type}</p>
+          <p>Type : ${station.power}</p>
           <a class="bookingLink cursor-pointer hover:text-vert">Réserver</a>
         `);
 

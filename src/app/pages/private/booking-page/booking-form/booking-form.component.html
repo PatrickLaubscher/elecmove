@@ -29,6 +29,7 @@ class="w-full md:w-4/5 lg:w-3/5 mx-auto flex flex-col justify-center items-cente
             <p class="dark:text-gray-200">Chargement de la borne...</p>
         } @else {
             <div class="mt-2 p-3 bg-gray-100 rounded-md dark:bg-gray-800 dark:border-gray-600">
+                <p class="dark:text-gray-200"><strong>Nom :</strong> {{ station()?.name }}</p>
                 <p class="dark:text-gray-200"><strong>Adresse :</strong> {{ station()?.location?.address }}</p>
                 <p class="dark:text-gray-200"><strong>Type :</strong> {{ station()?.type }}</p>
             </div>
