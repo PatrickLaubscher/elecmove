@@ -2,7 +2,7 @@
 <!-- New location station Form -->
 
 <section
-class="w-full mx-auto"
+class="w-full mx-auto dark:text-gray-200"
 >
     
     <div class="h-64 md:h-80 rounded-xl overflow-hidden">
@@ -24,55 +24,55 @@ class="w-full mx-auto"
         <div
         class="w-full mb-2"
         >
-            <label 
-            for="address" 
+            <label
+            for="address"
             class="hidden"
             >
                 Adresse du lieu
             </label>
-            <input 
-            formControlName="address" 
-            type="text" 
-            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
-            placeholder="Rechercher une adresse..." required 
+            <input
+            formControlName="address"
+            type="text"
+            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+            placeholder="Rechercher une adresse..." required
             />
         </div>
- 
+
 
         <!-- Ville -->
         <div
         class="w-full mb-2"
         >
-            <label 
-            for="city"	 
+            <label
+            for="city"
             class="hidden"
             >
                 Ville
             </label>
-            <input 
-            formControlName="city" 
-            type="text" 
-            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
-            placeholder="Ville..." required 
+            <input
+            formControlName="city"
+            type="text"
+            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+            placeholder="Ville..." required
             />
         </div>
-    
-        
+
+
         <!-- Code postal -->
         <div
         class="w-full mb-4"
         >
-            <label 
-            for="zipcode"	 
+            <label
+            for="zipcode"
             class="hidden"
             >
                 Code postal
             </label>
-            <input 
-            formControlName="zipcode" 
-            type="text" 
-            class="w-1/2 rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
-            placeholder="Code postal..." required 
+            <input
+            formControlName="zipcode"
+            type="text"
+            class="w-1/2 rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+            placeholder="Code postal..." required
             />
         </div>
 
@@ -82,17 +82,18 @@ class="w-full mx-auto"
             <div
             class="flex flex-col w-1/2"
             >
-                <label 
-                for="latitude"	 
+                <label
+                for="latitude"
+                class="dark:text-gray-200"
                 >
                     Latitude
                 </label>
-                <input 
-                formControlName="latitude" 
+                <input
+                formControlName="latitude"
                 type="number"
                 readonly
-                class="mb-5 rounded-xl border border-noir px-4 py-2 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
-                placeholder="" required 
+                class="mb-5 rounded-xl border border-noir px-4 py-2 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                placeholder="" required
                 />
 
             </div>
@@ -101,27 +102,28 @@ class="w-full mx-auto"
             <div
             class="flex flex-col w-1/2"
             >
-                <label 
-                for="longitude"	 
+                <label
+                for="longitude"
+                class="dark:text-gray-200"
                 >
                     Longitude
                 </label>
-                <input 
-                formControlName="longitude" 
+                <input
+                formControlName="longitude"
                 type="number"
-                readonly 
-                class="mb-5 rounded-xl border border-noir px-4 py-2 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
-                placeholder="" required 
+                readonly
+                class="mb-5 rounded-xl border border-noir px-4 py-2 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                placeholder="" required
                 />
             </div>
         </div>
 
 
 
-        <button 
-        type="submit" 
+        <button
+        type="submit"
         [disabled]="form.invalid"
-        class="mt-8 uppercase cursor-pointer bg-noir text-blanc px-4 py-2 rounded-md border border-vert ease-in-out duration-200 hover:drop-shadow-2xl hover:text-vert"
+        class="mt-8 uppercase cursor-pointer bg-noir text-blanc px-4 py-2 rounded-md border border-vert ease-in-out duration-200 hover:drop-shadow-2xl hover:text-vert dark:bg-gray-800 dark:text-gray-200"
         >
             Ajouter la localisation
         </button>

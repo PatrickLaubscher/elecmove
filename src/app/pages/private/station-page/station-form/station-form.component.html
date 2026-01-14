@@ -14,13 +14,13 @@ class="w-11/12 md:w-4/6 mx-auto my-5 h-4"
 <!-- New station Form -->
 
 <section
-class="w-11/12 md:w-4/6 mx-auto"
->   
-    
-    <h2 
-    class="text-md md:text-xl uppercase mb-15"
+class="w-11/12 md:w-4/6 mx-auto dark:text-gray-200"
+>
+
+    <h2
+    class="text-md md:text-xl uppercase mb-15 dark:text-gray-200"
     >
-        Ajouter une station
+        Ajouter une borne
     </h2>
 
 
@@ -34,16 +34,17 @@ class="w-11/12 md:w-4/6 mx-auto"
         <div
         class="w-full mb-2"
         >
-            <label 
-            for="name" 
+            <label
+            for="name"
+            class="dark:text-gray-200"
             >
-                Nom de la station
+                Nom de la borne
             </label>
-            <input 
-            formControlName="name" 
-            type="text" 
-            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
-            placeholder="Nom de la borne" required 
+            <input
+            formControlName="name"
+            type="text"
+            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+            placeholder="Nom de la borne" required
             />
             <div class="h-5 mt-1 text-sm">
                 @let nameInput = form.controls.name;
@@ -66,9 +67,9 @@ class="w-11/12 md:w-4/6 mx-auto"
         >   
             @let locationStationIdInput = form.controls.locationStationId;
 
-            <button 
+            <button
             (click)="isLocationModalOpen.set(true)"
-            class="mb-2 cursor-pointer bg-noir text-blanc px-4 py-2 rounded-md border border-vert ease-in-out duration-200 hover:drop-shadow-2xl hover:text-vert"
+            class="mb-2 cursor-pointer bg-noir text-blanc px-4 py-2 rounded-md border border-vert ease-in-out duration-200 hover:drop-shadow-2xl hover:text-vert dark:bg-gray-800 dark:text-gray-200"
             >   
                 @if(locationStationIdInput.value!) {
                     Changer la localisation
@@ -80,7 +81,7 @@ class="w-11/12 md:w-4/6 mx-auto"
 
             @if(locationAddress()) {
                 <p
-                class="font-bold"
+                class="font-bold dark:text-gray-200"
                 >
                     Localisation: {{ locationAddress() }}
                 </p>
@@ -129,16 +130,17 @@ class="w-11/12 md:w-4/6 mx-auto"
         <div
         class="w-full mb-2"
         >
-            <label 
-            for="tarification"	 
+            <label
+            for="tarification"
+            class="dark:text-gray-200"
             >
                 Tarif horaire en €
             </label>
-            <input 
-            formControlName="tarification" 
-            type="number" 
-            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
-             required 
+            <input
+            formControlName="tarification"
+            type="number"
+            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+             required
             />
             <div class="h-5 mt-1 text-sm">
                 @let tarificationInput = form.controls.tarification;
@@ -159,15 +161,16 @@ class="w-11/12 md:w-4/6 mx-auto"
         <div
         class="w-full mb-4"
         >
-            <label 
-            for="power" 
+            <label
+            for="power"
+            class="dark:text-gray-200"
             >
                 Puissance de la borne
             </label>
-            <select 
+            <select
             formControlName="power"
             name="power"
-            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
+            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
             required
             >
                 <option value="" disabled>Choisissez une puissance de borne</option>
@@ -183,17 +186,17 @@ class="w-11/12 md:w-4/6 mx-auto"
         <div
         class="w-full mb-4"
         >
-            <label 
-            for="instruction"	 
+            <label
+            for="instruction"
             class="hidden"
             >
                 Vos instructions pour accéder à la borne
             </label>
-            <textarea 
-            formControlName="instruction" 
-            type="instruction" 
-            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
-            placeholder="Vos instructions (optionel)" 
+            <textarea
+            formControlName="instruction"
+            type="instruction"
+            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+            placeholder="Vos instructions (optionel)"
             >
             </textarea>
 
@@ -216,7 +219,7 @@ class="w-11/12 md:w-4/6 mx-auto"
             name="freeStanding"
             class="mb-1 rounded-xl border border-noir accent-vert text-vert px-4 py-2 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent"
             />
-            <span class="text-gray-700">
+            <span class="text-gray-700 dark:text-gray-200">
                 Borne sur pied (décocher si fixée au mur)
             </span>
         </div>
@@ -226,27 +229,27 @@ class="w-11/12 md:w-4/6 mx-auto"
         <div
         class="w-full mb-4 flex flex-col"
         >
-            <label 
-            for="available"	 
+            <label
+            for="available"
             class="hidden"
             >
                 Borne disponible à la location
             </label>
-            <input 
-            formControlName="available" 
+            <input
+            formControlName="available"
             type="checkbox"
             name="available"
-            class="mb-1 rounded-xl border border-noir accent-vert text-vert px-4 py-2 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent"
+            class="mb-1 rounded-xl border border-noir accent-vert text-vert px-4 py-2 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent dark:border-gray-600"
             />
-            <span class="text-gray-700">
+            <span class="text-gray-700 dark:text-gray-200">
                 Borne disponible à la location (par défaut oui, sinon décochez cette case)
             </span>
         </div>
 
-        <button 
-        type="submit" 
+        <button
+        type="submit"
         [disabled]="form.invalid"
-        class="mt-8 uppercase cursor-pointer bg-noir text-blanc px-4 py-2 rounded-md border border-vert ease-in-out duration-200 hover:drop-shadow-2xl hover:text-vert"
+        class="mt-8 uppercase cursor-pointer bg-noir text-blanc px-4 py-2 rounded-md border border-vert ease-in-out duration-200 hover:drop-shadow-2xl hover:text-vert dark:bg-gray-800 dark:text-gray-200"
         >
             Ajouter votre borne
         </button>

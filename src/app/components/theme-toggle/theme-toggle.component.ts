@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-theme-toggle',
@@ -6,33 +7,15 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './theme-toggle.component.html',
   styleUrl: './theme-toggle.component.css'
 })
-export class ThemeToggleComponent implements OnInit {
+export class ThemeToggleComponent {
 
-  isDarkMode = false;
+  protected readonly themeService = inject(ThemeService);
 
-  ngOnInit(): void {
-    // Vérifie la préférence sauvegardée
-    const storedTheme = localStorage.getItem('color-theme');
-    if (
-      storedTheme === 'dark' ||
-      (!storedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)
-    ) {
-      this.isDarkMode = true;
-      document.documentElement.classList.add('dark');
-    } else {
-      this.isDarkMode = false;
-      document.documentElement.classList.remove('dark');
-    }
+  get isDarkMode(): boolean {
+    return this.themeService.isDarkMode();
   }
 
   toggleTheme(): void {
-    this.isDarkMode = !this.isDarkMode;
-    if (this.isDarkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('color-theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('color-theme', 'light');
-    }
+    this.themeService.toggleTheme();
   }
 }

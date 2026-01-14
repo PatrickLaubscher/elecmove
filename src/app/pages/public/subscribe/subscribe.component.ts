@@ -43,7 +43,7 @@ export class SubscribeComponent {
     this.auth.register(newUser)
       .subscribe({
         next: () => {
-          this.snackBar.open('Votre compte été créé avec succès !', 'Ok', {duration: 5000, verticalPosition:'top'});
+          this.snackBar.open('Votre compte été créé avec succès. Veuillez vérifiez votre boîte mail pour valider le compte.', 'Ok', {duration: 5000, verticalPosition:'top'});
           this.router.navigate(['/login']);
         },
         error: (err) => {

@@ -23,6 +23,12 @@ body {
     font-family: "Montserrat", sans-serif;
     font-weight: 400;
     font-style: normal;
+    transition: background-color 0.3s ease;
+}
+
+body.dark {
+    background-color: #111827;
+    color: #e5e7eb;
 }
 
 h1, h2, h3, a, button {

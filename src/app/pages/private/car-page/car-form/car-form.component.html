@@ -13,11 +13,11 @@ class="w-11/12 md:w-4/6 mx-auto my-5 h-4"
 <!-- Car Form -->
 
 <section
-class="mx-auto"
+class="mx-auto dark:text-gray-200"
 >
 
     <form
-    [formGroup]="form" 
+    [formGroup]="form"
     (ngSubmit)="submit()"
     class="w-5/6 mx-auto flex flex-col justify-center items-center"
     >   
@@ -27,17 +27,17 @@ class="mx-auto"
         <div
         class="w-full mb-2"
         >
-            <label 
-            for="brand" 
+            <label
+            for="brand"
             class="hidden"
             >
                 Marque de la voiture
             </label>
-            <input 
-            formControlName="brand" 
-            type="text" 
-            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
-            placeholder="Marque de votre voiture" required 
+            <input
+            formControlName="brand"
+            type="text"
+            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+            placeholder="Marque de votre voiture" required
             />
 
             <div class="h-5 mt-1 text-sm">
@@ -59,17 +59,17 @@ class="mx-auto"
         <div
         class="w-full mb-2"
         >
-            <label 
-            for="type"	 
+            <label
+            for="type"
             class="hidden"
             >
                 Le modèle de votre voiture
             </label>
-            <input 
-            formControlName="type" 
-            type="text" 
-            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
-            placeholder="Le modèle de votre voiture" required 
+            <input
+            formControlName="type"
+            type="text"
+            class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+            placeholder="Le modèle de votre voiture" required
             />
 
             <div class="h-5 mt-1 text-sm">
@@ -90,17 +90,17 @@ class="mx-auto"
         <div
         class="w-4/5 mb-2"
         >
-            <label 
-            for="registration"	 
+            <label
+            for="registration"
             class="hidden"
             >
                 Votre plaque d'immatriculation
             </label>
-            <input 
-            formControlName="registration" 
-            type="text" 
-            class="mx-auto mb-5 rounded-xl border border-noir px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
-            placeholder="Numéro d'immatriculation" required 
+            <input
+            formControlName="registration"
+            type="text"
+            class="mx-auto mb-5 rounded-xl border border-noir px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
+            placeholder="Numéro d'immatriculation" required
             />
 
 
@@ -124,10 +124,10 @@ class="mx-auto"
 
         </div>
 
-        <button 
-        type="submit" 
+        <button
+        type="submit"
         [disabled]="form.invalid"
-        class="mt-8 uppercase cursor-pointer bg-noir text-blanc px-4 py-2 rounded-md border border-vert ease-in-out duration-200 hover:drop-shadow-2xl hover:text-vert"
+        class="mt-8 uppercase cursor-pointer bg-noir text-blanc px-4 py-2 rounded-md border border-vert ease-in-out duration-200 hover:drop-shadow-2xl hover:text-vert dark:bg-gray-800 dark:text-gray-200"
         >
             Rajouter la voiture
         </button>

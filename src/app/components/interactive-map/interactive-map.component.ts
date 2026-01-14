@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener, OnDestroy, inject, input, output, signal } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener, OnDestroy, inject, input, output, signal, effect } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { FormGroup, FormsModule } from '@angular/forms';
 import { Map, MapStyle, Marker, Popup } from '@maptiler/sdk';
@@ -9,6 +9,7 @@ import { StationService } from '../../api/station/station.service';
 import { Router } from '@angular/router';
 import { GeolocalisationResponse, Location, MapTilerSuggestion } from '../../shared/entities';
 import { BookingStorageService } from '../../services/booking-storage.service';
+import { ThemeService } from '../../services/theme.service';
 
 
 @Component({
@@ -24,6 +25,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
   protected readonly stationApi = inject(StationService);
   protected readonly router = inject(Router);
   protected readonly bookingStorageService = inject(BookingStorageService);
+  protected readonly themeService = inject(ThemeService);
 
   protected map: Map | undefined;
   protected isHybrid = false;
@@ -31,9 +33,23 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
   protected positionMarker: Marker | null = null
   protected stationMarkers: Marker[] = [];
 
-  protected initialLng = 4.8357; 
-  protected initialLat = 45.7640;
-  protected initialLanguage = 'fr'; 
+  constructor() {
+    // Surveiller les changements de thème et mettre à jour la carte
+    effect(() => {
+      const isDark = this.themeService.isDarkMode();
+      if (this.map && this.isDark !== isDark) {
+        this.isDark = isDark;
+        const newStyle = this.isDark
+          ? maptilersdk.MapStyle.STREETS.DARK
+          : maptilersdk.MapStyle.STREETS;
+        this.map.setStyle(newStyle);
+      }
+    });
+  }
+
+  protected initialLng = 4.8357;  // Lyon longitude
+  protected initialLat = 45.7640;  // Lyon latitude
+  protected initialLanguage = 'fr';
   private geolocLoaded = false;
 
   readonly form = input<FormGroup>();
@@ -67,19 +83,19 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
   async ngOnInit(): Promise<void> {
     maptilersdk.config.apiKey = this.API_KEY;
 
-    const geolocResponse = await this.getGeolocalisation();
-    if(geolocResponse) {
-      this.initialLng = geolocResponse.longitude;
-      this.initialLat = geolocResponse.latitude;
-      this.initialLanguage = geolocResponse.country_languages[0] || 'fr';
-      this.geolocLoaded = true;
-    }
+    // Commenté pour forcer le centrage sur Lyon au lieu de la géolocalisation IP
+    // const geolocResponse = await this.getGeolocalisation();
+    // if(geolocResponse) {
+    //   this.initialLng = geolocResponse.longitude;
+    //   this.initialLat = geolocResponse.latitude;
+    //   this.initialLanguage = geolocResponse.country_languages[0] || 'fr';
+    //   this.geolocLoaded = true;
+    // }
 
+    this.geolocLoaded = true; // Marquer comme chargé pour continuer l'initialisation
 
-
-    if(document.documentElement.classList.contains('dark')) {
-      this.isDark = true;
-    }
+    // Synchroniser avec le thème actuel
+    this.isDark = this.themeService.isDarkMode();
 
     const now = new Date();
     const currentHour = now.getHours();
@@ -173,11 +189,11 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
     const center = this.map?.getCenter();
     if (!center) return;
 
-    
+
     this.stationApi.getAllAvailableNearby({
       latitude: center.lat,
       longitude: center.lng,
-      rayonMeters: 20000,
+      rayonMeters: 50000, // 50km de rayon pour voir plus de bornes
       date: this.bookingDate,
       startTime: this.bookingStartTime,
       endTime: this.bookingEndTime
@@ -266,23 +282,11 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
       this.addPositionMarker(this.initialLng, this.initialLat);
       this.loadStations();
     });
-    
-    // Darkmode map selector
-    const btnDarkMode = document.createElement('button');
-    btnDarkMode.innerText = '🌓';
-    btnDarkMode.style.cssText = `
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-    `;
 
-    btnDarkMode.onclick = () => {
-      this.isDark = !this.isDark;
-      const newStyle = this.isDark
-        ? maptilersdk.MapStyle.STREETS.DARK
-        : maptilersdk.MapStyle.STREETS;
-      this.map?.setStyle(newStyle);
-    };
+    // Recharger les stations quand l'utilisateur déplace ou zoom la carte
+    this.map.on('moveend', () => {
+      this.loadStations();
+    });
 
     // Hybrid map mode selector
     const btnHybridMode = document.createElement('button');
@@ -293,18 +297,22 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
       box-shadow: 0 1px 4px rgba(0,0,0,0.3);
     `;
 
-    btnHybridMode .onclick = () => {
-      this.isHybrid = !this.isHybrid; 
-      const newStyle = this.isHybrid
-        ? maptilersdk.MapStyle.HYBRID 
-        : maptilersdk.MapStyle.STREETS;
+    btnHybridMode.onclick = () => {
+      this.isHybrid = !this.isHybrid;
+      let newStyle;
+      if (this.isHybrid) {
+        newStyle = maptilersdk.MapStyle.HYBRID;
+      } else if (this.isDark) {
+        newStyle = maptilersdk.MapStyle.STREETS.DARK;
+      } else {
+        newStyle = maptilersdk.MapStyle.STREETS;
+      }
       this.map?.setStyle(newStyle);
     };
 
     // add control in container map
     const controlContainer = document.createElement('div');
     controlContainer.className = 'maplibregl-ctrl maplibregl-ctrl-group';
-    controlContainer.appendChild(btnDarkMode);
     controlContainer.appendChild(btnHybridMode);
 
     this.map.addControl(

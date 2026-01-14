@@ -1,11 +1,36 @@
 .map-wrap {
     position: relative;
     width: 100%;
-    height: 70vh; 
+    height: 70vh;
   }
-  
+
 .map {
   position: absolute;
   width: 100%;
   height: 100%;
+}
+
+/* Style des popups en dark mode */
+:host ::ng-deep .maplibregl-popup-content {
+  background-color: white;
+  color: #1D1E18;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+:host ::ng-deep .dark .maplibregl-popup-content {
+  background-color: #1f2937; /* gray-800 */
+  color: #e5e7eb; /* gray-200 */
+}
+
+:host ::ng-deep .dark .maplibregl-popup-tip {
+  border-top-color: #1f2937; /* gray-800 pour la flèche */
+}
+
+:host ::ng-deep .dark .bookingLink {
+  color: #10b981; /* vert en dark mode */
+}
+
+:host ::ng-deep .dark .bookingLink:hover {
+  color: #059669; /* vert plus foncé au hover */
 }
