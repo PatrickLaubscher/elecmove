@@ -144,7 +144,8 @@ class="w-11/12 md:w-4/6 mx-auto dark:text-gray-200"
             formControlName="tarification"
             type="number"
             class="w-full rounded-xl border border-noir focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
-             required
+            required
+            min="0"
             />
             <div class="h-5 mt-1 text-sm">
                 @let tarificationInput = form.controls.tarification;
@@ -153,6 +154,12 @@ class="w-11/12 md:w-4/6 mx-auto dark:text-gray-200"
                         <span
                         class="text-rouge">
                             Veuillez renseigner le tarif de la borne
+                        </span>
+                    }
+                    @if (tarificationInput.hasError('min')) {
+                        <span
+                        class="text-rouge">
+                            Le tarif ne peut pas être négatif
                         </span>
                     }
                 }

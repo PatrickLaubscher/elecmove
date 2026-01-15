@@ -2,10 +2,12 @@ name: Analyse & linting
 
 on:
   push:
-    branches:   
+    branches:
+        - 'dev'   
         - 'feature/**'
   pull_request:
-    branches: 
+    branches:
+        - 'dev'  
         - 'feature/**'
 
 jobs:
