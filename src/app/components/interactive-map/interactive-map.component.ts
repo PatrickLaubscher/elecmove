@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener, OnDestroy, inject, input, output, signal, effect } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener, OnDestroy, inject, input, output, effect } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { FormGroup, FormsModule } from '@angular/forms';
-import { Map, MapStyle, Marker, Popup } from '@maptiler/sdk';
+import { Map, Marker, Popup } from '@maptiler/sdk';
 import * as maptilersdk from '@maptiler/sdk';
 
 import "@maptiler/sdk/dist/maptiler-sdk.css";
@@ -32,17 +32,20 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
   protected isDark = false;
   protected positionMarker: Marker | null = null
   protected stationMarkers: Marker[] = [];
+  private manualOverride = false; // Pour savoir si l'utilisateur a changé manuellement
 
   constructor() {
-    // Surveiller les changements de thème et mettre à jour la carte
+    // Synchroniser avec le thème du site, sauf si l'utilisateur a fait un changement manuel
     effect(() => {
-      const isDark = this.themeService.isDarkMode();
-      if (this.map && this.isDark !== isDark) {
-        this.isDark = isDark;
-        const newStyle = this.isDark
-          ? maptilersdk.MapStyle.STREETS.DARK
-          : maptilersdk.MapStyle.STREETS;
-        this.map.setStyle(newStyle);
+      if (!this.manualOverride) {
+        const isDark = this.themeService.isDarkMode();
+        if (this.map && this.isDark !== isDark) {
+          this.isDark = isDark;
+          const newStyle = this.isDark
+            ? maptilersdk.MapStyle.STREETS.DARK
+            : maptilersdk.MapStyle.STREETS;
+          this.map.setStyle(newStyle);
+        }
       }
     });
   }
@@ -59,8 +62,8 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
   suggestions: MapTilerSuggestion[] = [];
   
   bookingDate: string = new Date().toISOString().split('T')[0];
-  bookingStartTime: string = '';
-  bookingEndTime: string = '';
+  bookingStartTime = '';
+  bookingEndTime = '';
 
   isMapModalOpen = input<boolean>();
   closingModal = output<boolean>();
@@ -94,7 +97,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
 
     this.geolocLoaded = true; // Marquer comme chargé pour continuer l'initialisation
 
-    // Synchroniser avec le thème actuel
+    // Synchroniser avec le thème actuel du site
     this.isDark = this.themeService.isDarkMode();
 
     const now = new Date();
@@ -219,11 +222,15 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
         const bookingLink = station.availableAtGivenSlot
           ? '<a class="bookingLink cursor-pointer hover:text-vert font-semibold">Réserver</a>'
           : '<span class="text-gray-400 cursor-not-allowed">Réservation impossible</span>';
+        
+        const stationType = station.freeStanding ? "Murale" : "Sur pied";
 
         const popup = new Popup().setHTML(`
           <h1 class="font-bold">${station.name}</h1>
           <p>Adresse : ${station.location.address}</p>
-          <p>Type : ${station.power}</p>
+          <p>Puissance : ${station.power}</p>
+          <p>Type : ${stationType} </p>
+          <p class="font-bold">${station.tarification} € / heure</p>
           ${availabilityMessage}
           ${bookingLink}
         `);
@@ -297,13 +304,61 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
       this.loadStations();
     });
 
+    // Dark/Light mode toggle button for map
+    const btnDarkMode = document.createElement('button');
+    btnDarkMode.innerText = this.isDark ? '☀️' : '🌙';
+    btnDarkMode.title = this.isDark ? 'Mode clair' : 'Mode sombre';
+    btnDarkMode.style.cssText = `
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      background: white;
+      padding: 5px;
+      border-radius: 4px;
+    `;
+
+    btnDarkMode.onclick = () => {
+      const siteTheme = this.themeService.isDarkMode();
+
+      // Si la carte suit déjà le thème du site, basculer en mode manuel
+      if (!this.manualOverride && this.isDark === siteTheme) {
+        this.manualOverride = true;
+        this.isDark = !this.isDark;
+      }
+      // Si en mode manuel et différent du thème site, continuer à basculer manuellement
+      else if (this.manualOverride && this.isDark !== siteTheme) {
+        this.isDark = !this.isDark;
+      }
+      // Si en mode manuel mais revenu au même état que le thème site, repasser en auto
+      else if (this.manualOverride && this.isDark === siteTheme) {
+        this.manualOverride = false;
+      }
+
+      btnDarkMode.innerText = this.isDark ? '☀️' : '🌙';
+      btnDarkMode.title = this.isDark ? 'Mode clair' : 'Mode sombre';
+
+      let newStyle;
+      if (this.isHybrid) {
+        newStyle = maptilersdk.MapStyle.HYBRID;
+      } else if (this.isDark) {
+        newStyle = maptilersdk.MapStyle.STREETS.DARK;
+      } else {
+        newStyle = maptilersdk.MapStyle.STREETS;
+      }
+      this.map?.setStyle(newStyle);
+    };
+
     // Hybrid map mode selector
     const btnHybridMode = document.createElement('button');
     btnHybridMode.innerText = '🛰️';
+    btnHybridMode.title = 'Mode satellite';
     btnHybridMode.style.cssText = `
       border: none;
       cursor: pointer;
       box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      background: white;
+      padding: 5px;
+      border-radius: 4px;
     `;
 
     btnHybridMode.onclick = () => {
@@ -319,9 +374,10 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
       this.map?.setStyle(newStyle);
     };
 
-    // add control in container map
+    // add controls in container map
     const controlContainer = document.createElement('div');
     controlContainer.className = 'maplibregl-ctrl maplibregl-ctrl-group';
+    controlContainer.appendChild(btnDarkMode);
     controlContainer.appendChild(btnHybridMode);
 
     this.map.addControl(

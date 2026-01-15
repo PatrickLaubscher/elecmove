@@ -47,24 +47,24 @@ class="map-wrap mx-auto"
             <!-- Suggestion après auto-complétion -->
 
             @if(suggestions.length > 0) {
-                
+
                 <ul
-                class="absolute left-0 top-20 bg-white border border-gray-300 w-full mt-1 rounded-xl z-50 shadow-md max-h-60 overflow-auto"
+                class="absolute left-0 top-20 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 w-full mt-1 rounded-xl z-50 shadow-md max-h-60 overflow-auto"
                 >
-                    
+
                     @for(suggestion of suggestions; track suggestion.id; let i = $index) {
                         <button
                         type="button"
-                        (click)="selectSuggestion(i)" 
-                        (keydown)="selectSuggestion(i)" 
+                        (click)="selectSuggestion(i)"
+                        (keydown)="selectSuggestion(i)"
                         tabindex="0"
-                        class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm w-full text-left"
+                        class="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm w-full text-left text-gray-900 dark:text-gray-100"
                         >
                             {{ suggestion.place_name }}
                         </button>
                     }
 
-                    
+
                 </ul>
 
 

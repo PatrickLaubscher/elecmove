@@ -7,14 +7,12 @@ import { Booking } from '../shared/entities';
 })
 export class ExcelExportService {
 
-  constructor() { }
-
   /**
    * Exporte les réservations passées au format Excel
    * @param bookings Liste des réservations à exporter
    * @param filename Nom du fichier (optionnel)
    */
-  exportBookingsToExcel(bookings: Booking[], filename: string = 'Reservations_Passees'): void {
+  exportBookingsToExcel(bookings: Booking[], filename = 'Reservations_Passees'): void {
     // Transformer les données en format tabulaire
     const data = bookings.map(booking => ({
       'Numéro de réservation': booking.id,
@@ -68,15 +66,15 @@ export class ExcelExportService {
     };
 
     // Générer le fichier Excel et le télécharger
-    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const excelBuffer: Uint8Array = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     this.saveAsExcelFile(excelBuffer, filename);
   }
 
   /**
    * Sauvegarde le buffer comme fichier Excel
    */
-  private saveAsExcelFile(buffer: any, fileName: string): void {
-    const data: Blob = new Blob([buffer], {
+  private saveAsExcelFile(buffer: Uint8Array, fileName: string): void {
+    const data: Blob = new Blob([buffer as BlobPart], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'
     });
     const link = document.createElement('a');

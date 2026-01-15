@@ -33,6 +33,7 @@ export class BookingFormComponent implements OnInit {
 
   readonly stationId = signal<string>('');
   readonly station = signal<Station | null>(null);
+  readonly stationType = this.station()?.freeStanding ? "Murale" : "Sur pied";
   readonly preBookingEstimate = signal<PreBookingEstimate>({
     bookingDuration: 0,
     bookingEstimatePrice: 0

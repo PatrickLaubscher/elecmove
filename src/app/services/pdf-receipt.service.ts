@@ -7,8 +7,6 @@ import { Booking } from '../shared/entities';
 })
 export class PdfReceiptService {
 
-  constructor() { }
-
   /**
    * Génère un reçu PDF pour une réservation acceptée
    * @param booking Les données de la réservation

@@ -50,7 +50,7 @@ export class StationFormComponent {
           instruction: '',
           freeStanding: station.freeStanding,
           available: station.available,
-          locationStationId: (station.location as any).id || ''
+          locationStationId: station.location.id || ''
         });
         this.locationAddress.set(
           `${station.location.address}, ${station.location.zipcode} ${station.location.city}`

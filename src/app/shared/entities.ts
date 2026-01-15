@@ -104,9 +104,8 @@ export interface Station {
     power:string;
     available:boolean;
     freeStanding:boolean;
-    type:string;
     tarification:number;
-    location:Location;
+    location:LocationStation;
     availableAtGivenSlot?:boolean;
 }
 
