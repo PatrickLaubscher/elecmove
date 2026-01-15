@@ -37,7 +37,11 @@ class="max-w-screen-xl w-11/12 md:w-4/6 mx-auto my-15 dark:text-gray-200"
 
             @if(stationsList.hasValue()) {
 
-                <app-station-list [stations]="stationsList.value()"/>
+                <app-station-list
+                    [stations]="stationsList.value()"
+                    (editStation)="onEditStation($event)"
+                    (deleteStation)="onDeleteStation($event)"
+                />
 
             } @else {
 
@@ -47,7 +51,40 @@ class="max-w-screen-xl w-11/12 md:w-4/6 mx-auto my-15 dark:text-gray-200"
         }
     </section>
 } @else {
-    <app-station-form/>
+    <app-station-form [stationToEdit]="stationToEdit()"/>
 }
+
+<!-- Modale de confirmation de suppression -->
+<app-standard-modal [(open)]="isDeleteModalOpen">
+    <h2
+    ngProjectAs="card-title"
+    class="text-sm md:text-md uppercase dark:text-gray-200"
+    >
+        Confirmer la suppression
+    </h2>
+    <div ngProjectAs="card-body" class="dark:text-gray-200">
+        <p class="mb-4">
+            Êtes-vous sûr de vouloir supprimer la borne
+            <strong>{{ stationToDelete()?.name }}</strong> ?
+        </p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">
+            Cette action est irréversible.
+        </p>
+    </div>
+    <div ngProjectAs="card-footer" class="flex gap-4 justify-end">
+        <button
+            (click)="cancelDelete()"
+            class="cursor-pointer bg-gray-300 dark:bg-gray-600 text-noir dark:text-gray-200 px-4 py-2 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors"
+        >
+            Annuler
+        </button>
+        <button
+            (click)="confirmDelete()"
+            class="cursor-pointer bg-rouge text-blanc px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
+        >
+            Supprimer
+        </button>
+    </div>
+</app-standard-modal>
 
 

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, input, signal } from '@angular/core';
 import { StationService } from '../../../../api/station/station.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { StandardModalComponent } from "../../../../components/standard-modal/standard-modal.component";
 import { LocationFormComponent } from "../location-form/location-form.component";
 import { LocationStationService } from '../../../../api/location-station/location-station.service';
-import { Location } from '../../../../shared/entities';
+import { Location, Station } from '../../../../shared/entities';
 
 @Component({
   selector: 'app-station-form',
@@ -26,6 +26,8 @@ export class StationFormComponent {
   protected readonly isLocationModalOpen = signal(false);
   protected readonly locationAddress = signal<string>('');
 
+  readonly stationToEdit = input<Station | null>(null);
+
   protected readonly form = new FormGroup({
       name: new FormControl<string>('Borne de recharge', {validators: [Validators.required]}),
       tarification: new FormControl<number|undefined>(undefined, {validators: [Validators.required, Validators.min(0)]}),
@@ -36,6 +38,26 @@ export class StationFormComponent {
       locationStationId: new FormControl<string>('', {validators: [Validators.required]})
     }
   );
+
+  constructor() {
+    effect(() => {
+      const station = this.stationToEdit();
+      if (station) {
+        this.form.patchValue({
+          name: station.name,
+          tarification: station.tarification,
+          power: station.power,
+          instruction: '',
+          freeStanding: station.freeStanding,
+          available: station.available,
+          locationStationId: (station.location as any).id || ''
+        });
+        this.locationAddress.set(
+          `${station.location.address}, ${station.location.zipcode} ${station.location.city}`
+        );
+      }
+    });
+  }
 
     
   addNewLocation(newLocation:Location) {
@@ -70,12 +92,26 @@ export class StationFormComponent {
     });
   }
 
+  updateStation(id: string, updatedStation: StationCreationDTO) {
+    this.serverError.set('');
+    const idSignal = signal(Number(id));
+    this.stationService.put(idSignal, updatedStation)
+      .subscribe({
+        next: () => {
+          this.snackBar.open('La borne a été mise à jour avec succès', 'Ok', {duration: 5000, verticalPosition:'top'});
+        },
+        error: () => {
+          this.serverError.set("Erreur lors de la mise à jour");
+        }
+      });
+  }
+
   submit() {
     if (this.form.invalid) {
       this.form.markAllAsDirty();
       return;
     }
-    const newStation:StationCreationDTO = {
+    const stationData: StationCreationDTO = {
       name: this.form.value.name!,
       tarification: this.form.value.tarification!,
       power: this.form.value.power!,
@@ -85,7 +121,12 @@ export class StationFormComponent {
       locationStationId: this.form.value.locationStationId!
     }
 
-    this.addNewStation(newStation);
+    const station = this.stationToEdit();
+    if (station) {
+      this.updateStation(station.id, stationData);
+    } else {
+      this.addNewStation(stationData);
+    }
   }
 
 

@@ -41,12 +41,13 @@ class="px-4 py-6 rounded-2xl border-1 border-noir dark:border-gray-600 dark:bg-g
         class="flex-col">
             <!-- Edit station -->
             <button
+            (click)="onEdit()"
             class="group hover:cursor-pointer"
-            >   
-                
-                <svg 
+            >
+
+                <svg
                 class="size-8"
-                viewBox="0 0 34 34" 
+                viewBox="0 0 34 34"
                 fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M13.5051 15.7955C13.2655 16.0351 13.0755 16.3196 12.9459 16.6327C12.8164 16.9458 12.7498 17.2813 12.75 17.6202V21.2497H16.4022C17.0864 21.2497 17.7438 20.9777 18.2283 20.4932L28.9949 9.72082C29.235 9.48132 29.4255 9.19681 29.5554 8.88358C29.6854 8.57035 29.7523 8.23457 29.7523 7.89545C29.7523 7.55633 29.6854 7.22054 29.5554 6.90731C29.4255 6.59408 29.235 6.30957 28.9949 6.07007L27.931 5.00615C27.6915 4.76586 27.4069 4.5752 27.0935 4.4451C26.7802 4.31501 26.4442 4.24805 26.1049 4.24805C25.7656 4.24805 25.4297 4.31501 25.1163 4.4451C24.803 4.5752 24.5184 4.76586 24.2788 5.00615L13.5051 15.7955Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
                 class="group-hover:stroke-vert ease-in-out duration-200 dark:stroke-gray-300"/>
@@ -57,6 +58,7 @@ class="px-4 py-6 rounded-2xl border-1 border-noir dark:border-gray-600 dark:bg-g
 
             <!-- Delete station -->
             <button
+            (click)="onDelete()"
             class="group hover:cursor-pointer"
             >
                 <svg 

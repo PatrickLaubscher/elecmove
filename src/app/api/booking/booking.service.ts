@@ -22,6 +22,10 @@ export class BookingService {
     return httpResource<Booking[]>(() => '/api/bookings/upcoming');
   }
 
+  getAllPast() {
+    return httpResource<Booking[]>(() => '/api/bookings/past');
+  }
+
   getAllByStationId(id:Signal<number>) {
     return httpResource<Booking[]>(() => '/api/bookings/station/' + id());
   }

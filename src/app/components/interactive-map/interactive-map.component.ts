@@ -212,11 +212,20 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
           'transition-all', 'delay-300', 'cursor-pointer', 'duration-300', 'ease-in-out'
         );
 
+        const availabilityMessage = station.availableAtGivenSlot
+          ? '<p class="text-green-600 font-semibold">✓ Disponible sur ce créneau</p>'
+          : '<p class="text-red-600 font-semibold">✗ Non disponible sur ce créneau</p>';
+
+        const bookingLink = station.availableAtGivenSlot
+          ? '<a class="bookingLink cursor-pointer hover:text-vert font-semibold">Réserver</a>'
+          : '<span class="text-gray-400 cursor-not-allowed">Réservation impossible</span>';
+
         const popup = new Popup().setHTML(`
           <h1 class="font-bold">${station.name}</h1>
           <p>Adresse : ${station.location.address}</p>
           <p>Type : ${station.power}</p>
-          <a class="bookingLink cursor-pointer hover:text-vert">Réserver</a>
+          ${availabilityMessage}
+          ${bookingLink}
         `);
 
         const marker = new Marker({ element: stationMarker })
@@ -261,11 +270,11 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
       style: this.isDark ? maptilersdk.MapStyle.STREETS.DARK : maptilersdk.MapStyle.STREETS,
       language: this.initialLanguage.toUpperCase(),
       center: [this.initialLng, this.initialLat],
-      zoom: 14,
+      zoom: 11,
       geolocateControl: false,
       maxBounds: [
-        [-5.2, 41.3], 
-        [9.7, 51.1] 
+        [-5.2, 41.3],
+        [9.7, 51.1]
       ],
     });
 

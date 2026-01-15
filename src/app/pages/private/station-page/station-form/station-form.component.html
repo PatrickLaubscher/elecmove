@@ -20,7 +20,11 @@ class="w-11/12 md:w-4/6 mx-auto dark:text-gray-200"
     <h2
     class="text-md md:text-xl uppercase mb-15 dark:text-gray-200"
     >
-        Ajouter une borne
+        @if(stationToEdit()) {
+            Modifier la borne
+        } @else {
+            Ajouter une borne
+        }
     </h2>
 
 
@@ -251,7 +255,11 @@ class="w-11/12 md:w-4/6 mx-auto dark:text-gray-200"
         [disabled]="form.invalid"
         class="mt-8 uppercase cursor-pointer bg-noir text-blanc px-4 py-2 rounded-md border border-vert ease-in-out duration-200 hover:drop-shadow-2xl hover:text-vert dark:bg-gray-800 dark:text-gray-200"
         >
-            Ajouter votre borne
+            @if(stationToEdit()) {
+                Modifier la borne
+            } @else {
+                Ajouter votre borne
+            }
         </button>
 
     </form>

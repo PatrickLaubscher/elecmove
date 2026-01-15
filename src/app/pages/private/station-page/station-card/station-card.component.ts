@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Station } from '../../../../shared/entities';
 
 @Component({
@@ -10,5 +10,15 @@ import { Station } from '../../../../shared/entities';
 export class StationCardComponent {
 
   readonly station = input.required<Station>();
+  readonly editStation = output<Station>();
+  readonly deleteStation = output<Station>();
+
+  onEdit() {
+    this.editStation.emit(this.station());
+  }
+
+  onDelete() {
+    this.deleteStation.emit(this.station());
+  }
 
 }
