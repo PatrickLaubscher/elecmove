@@ -9,11 +9,12 @@ import { ExcelExportService } from '../../../services/excel-export.service';
 import { Booking } from '../../../shared/entities';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { StandardModalComponent } from "../../../components/standard-modal/standard-modal.component";
 
 
 @Component({
   selector: 'app-dashboard-homepage',
-  imports: [RouterLink, CommonModule, FormsModule],
+  imports: [RouterLink, CommonModule, FormsModule, StandardModalComponent],
   templateUrl: './dashboard-homepage.component.html',
   styleUrl: './dashboard-homepage.component.css'
 })
@@ -29,6 +30,8 @@ export class DashboardHomepageComponent {
   readonly pendingStatusId = 1;
   readonly stations = this.stationService.getAll();
   readonly pendingBookings = this.bookingService.getAllByStationOwnerAndStatus(this.pendingStatusId);
+  readonly isRefuseModalOpen = signal<boolean>(false);
+  readonly pendingBookingToRefuse = signal<Booking | null>(null);
 
   readonly actualBookings = this.bookingService.getAllUpcoming();
   readonly pastBookings = this.bookingService.getAllPast();
@@ -79,12 +82,19 @@ export class DashboardHomepageComponent {
             }
           } else {
             this.snackBar.open('Réservation annulée :(', 'Ok', {duration: 5000, verticalPosition:'top'});
+            this.isRefuseModalOpen.set(false);
+            this.pendingBookingToRefuse.set(null);
           }
 
         },
         error:  () => console.error('Erreur dans la mise à jour de la réservation')
       }
     )
+  }
+
+  cancelRefuse() {
+      this.pendingBookingToRefuse.set(null);
+      this.isRefuseModalOpen.set(false);
   }
 
   generateReceipt(booking: Booking) {

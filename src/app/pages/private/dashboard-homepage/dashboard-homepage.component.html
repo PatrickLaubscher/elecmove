@@ -180,20 +180,20 @@ class="w-11/12 md:w-4/6 mx-auto my-30 dark:text-gray-200"
                 <div
                 class="flex justify-between items-center mt-4">
                     <button
-                    class="flex flex-col items-center justify-center cursor-pointer group"
+                    class="flex flex-col items-center justify-center cursor-pointer group hover:text-vert ease-in-out duration-200"
                     (click)="updateBookingStatus(booking.id,2,booking)"
                     >
                         <svg
                         class="size-10"
                         viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M30.6 17C30.6012 19.9948 29.6138 22.9062 27.7911 25.2825C25.9684 27.6588 23.4123 29.367 20.5195 30.142C17.6268 30.917 14.5591 30.7155 11.7925 29.5688C9.02593 28.4221 6.71524 26.3942 5.219 23.8H1.4144C4.0375 29.8044 10.03 34 17 34C26.3891 34 34 26.3891 34 17C34 7.6109 26.3891 0 17 0C10.03 0 4.0375 4.1956 1.4144 10.2H5.219C6.71524 7.60575 9.02593 5.57792 11.7925 4.43119C14.5591 3.28447 17.6268 3.08298 20.5195 3.85801C23.4123 4.63303 25.9684 6.34122 27.7911 8.71749C29.6138 11.0938 30.6012 14.0052 30.6 17ZM3.5054 18.7H13.6V25.5L23.8 17L13.6 8.5V15.3H0V18.7H3.5054Z"
-                        class="fill-noir group-hover:fill-vert ease-in-out duration-200 dark:fill-gray-300"/>
+                        class="fill-vert rounded-full ease-in-out duration-200"/>
                         </svg>
                         Valider
                     </button>
                     <button
-                    class="flex flex-col items-center justify-center cursor-pointer group"
-                    (click)="updateBookingStatus(booking.id,4)"
+                    class="flex flex-col items-center justify-center cursor-pointer group hover:text-rouge ease-in-out duration-200"
+                    (click)="isRefuseModalOpen.set(true)"
                     >
                         <svg
                         class="size-10"
@@ -205,6 +205,41 @@ class="w-11/12 md:w-4/6 mx-auto my-30 dark:text-gray-200"
                     </button>
                 </div>
             </div>
+
+
+            <!-- Modal for confirming refusing booking -->
+            <app-standard-modal [(open)]="isRefuseModalOpen">
+                <h2
+                ngProjectAs="card-title"
+                class="text-sm md:text-md uppercase dark:text-gray-200"
+                >
+                    Confirmer la suppression
+                </h2>
+                <div ngProjectAs="card-body" class="dark:text-gray-200">
+                    <p class="mb-4">
+                        Êtes-vous sûr de vouloir refuser la réservation de 
+                        <strong>{{ pendingBookingToRefuse()?.user?.firstname }} {{ pendingBookingToRefuse()?.user?.lastname }}</strong> ?
+                    </p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        Cette action est irréversible.
+                    </p>
+                </div>
+                <div ngProjectAs="card-footer" class="flex gap-4 justify-end">
+                    <button
+                        (click)="cancelRefuse()"
+                        class="cursor-pointer bg-gray-300 dark:bg-gray-600 text-noir dark:text-gray-200 px-4 py-2 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors"
+                    >
+                        Annuler
+                    </button>
+                    <button
+                        (click)="updateBookingStatus(booking.id,4)"
+                        class="cursor-pointer bg-rouge text-blanc px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
+                    >
+                        Supprimer
+                    </button>
+                </div>
+            </app-standard-modal>
+
 
         }
 
