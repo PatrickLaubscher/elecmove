@@ -10,6 +10,7 @@ import { authGuard } from './api/authentication/auth.guard';
 import { StationPageComponent } from './pages/private/station-page/station-page.component';
 import { BookingPageComponent } from './pages/private/booking-page/booking-page.component';
 import { FindStationPageComponent } from './pages/private/find-station-page/find-station-page.component';
+import { CarPageComponent } from './pages/private/car-page/car-page.component';
 
 
 
@@ -28,6 +29,7 @@ export const routes: Routes = [
             {path: 'stations', component: StationPageComponent},
             {path: 'bookings', component: BookingPageComponent},
             {path: 'find-station', component: FindStationPageComponent},
+            {path: 'cars', component: CarPageComponent},
 
         ],
     canActivate: [authGuard]},

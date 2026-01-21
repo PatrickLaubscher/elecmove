@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(npm install:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(dir \"c:\\\\Users\\\\patri\\\\Documents\\\\elecmove\\\\elecmove-front\\\\src\\\\app\\\\pages\\\\private\" -type d)",
+      "Bash(npx ng:*)"
     ]
   }
 }

@@ -1,0 +1,12 @@
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    @for(car of cars(); track car.id) {
+    <app-car-card
+        [car]="car"
+        (editCar)="onEdit($event)"
+        (deleteCar)="onDelete($event)"
+    />
+    }
+
+</div>

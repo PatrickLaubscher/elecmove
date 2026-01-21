@@ -1,9 +1,10 @@
-import { Component, inject, input, output, signal } from '@angular/core';
+import { Component, effect, inject, input, output, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CarService } from '../../../../api/car/car.service';
 import { CarCreationDTO } from '../../../../api/dto';
 import { BookingStorageService } from '../../../../services/booking-storage.service';
+import { Car } from '../../../../shared/entities';
 
 @Component({
   selector: 'app-car-form',
@@ -21,6 +22,8 @@ export class CarFormComponent {
   isCarModalOpen = input<boolean>();
   closingModal = output<boolean>();
 
+  readonly carToEdit = input<Car | null>(null);
+  readonly formClosed = output<void>();
 
   protected readonly form = new FormGroup({
     brand: new FormControl<string>('', {validators: [Validators.required]}),
@@ -28,7 +31,21 @@ export class CarFormComponent {
     registration: new FormControl<string>('', {validators: [Validators.required]}),
     }
   );
-  
+
+  constructor() {
+    effect(() => {
+      const car = this.carToEdit();
+      if (car) {
+        this.form.patchValue({
+          brand: car.brand,
+          type: car.type,
+          registration: car.registration
+        });
+      } else {
+        this.form.reset();
+      }
+    });
+  }
 
   registerNewCar(newCar:CarCreationDTO) {
     this.serverError.set('');
@@ -36,10 +53,12 @@ export class CarFormComponent {
       .subscribe({
         next: (res) => {
           this.snackBar.open('La voiture a été rajoutée à votre compte', 'Ok', {duration: 5000, verticalPosition:'top', horizontalPosition:'right'});
-          
+
           if(this.isCarModalOpen() === true) {
             this.closingModal.emit(true);
             this.bookingStorageService.addCarId(res.id);
+          } else {
+            this.formClosed.emit();
           }
 
         },
@@ -49,18 +68,38 @@ export class CarFormComponent {
     });
   }
 
+  updateCar(id: string, updatedCar: CarCreationDTO) {
+    this.serverError.set('');
+    const idSignal = signal(Number(id));
+    this.carService.put(idSignal, updatedCar)
+      .subscribe({
+        next: () => {
+          this.snackBar.open('La voiture a été mise à jour avec succès', 'Ok', {duration: 5000, verticalPosition:'top'});
+          this.formClosed.emit();
+        },
+        error: () => {
+          this.serverError.set("Erreur lors de la mise à jour");
+        }
+      });
+  }
+
   submit() {
     if (this.form.invalid) {
       this.form.markAllAsDirty();
       return;
     }
-    const newCar:CarCreationDTO = {
+    const carData: CarCreationDTO = {
       brand: this.form.value.brand!,
       type: this.form.value.type!,
       registration: this.form.value.registration!
     }
 
-    this.registerNewCar(newCar);
+    const car = this.carToEdit();
+    if (car) {
+      this.updateCar(car.id, carData);
+    } else {
+      this.registerNewCar(carData);
+    }
   }
 
 }
