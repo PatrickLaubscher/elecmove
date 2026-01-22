@@ -5,6 +5,9 @@
       "Bash(npx tsc:*)",
       "Bash(dir \"c:\\\\Users\\\\patri\\\\Documents\\\\elecmove\\\\elecmove-front\\\\src\\\\app\\\\pages\\\\private\" -type d)",
       "Bash(npx ng:*)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\patri\\Documents\\elecmove\\elecmove-front"
     ]
   }
 }

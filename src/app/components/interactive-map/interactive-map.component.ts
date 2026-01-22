@@ -4,7 +4,7 @@ import { FormGroup, FormsModule } from '@angular/forms';
 import { Map, Marker, Popup } from '@maptiler/sdk';
 import * as maptilersdk from '@maptiler/sdk';
 
-import "@maptiler/sdk/dist/maptiler-sdk.css";
+// CSS MapTiler importé globalement via angular.json
 import { StationService } from '../../api/station/station.service';
 import { Router } from '@angular/router';
 import { GeolocalisationResponse, Location, MapTilerSuggestion } from '../../shared/entities';
