@@ -53,9 +53,12 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
   protected initialLng = 4.8357;  // Lyon longitude
   protected initialLat = 45.7640;  // Lyon latitude
   protected initialLanguage = 'fr';
+  protected initialZoom = 11;
   private geolocLoaded = false;
 
   readonly form = input<FormGroup>();
+  readonly centerLat = input<number>();
+  readonly centerLng = input<number>();
   readonly addressSelected = output<Location>();
 
   searchQuery = '';
@@ -268,16 +271,21 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
   async ngAfterViewInit():Promise<void> {
 
     if (!this.geolocLoaded) {
-      // petite attente si le fetch n’est pas fini
+      // petite attente si le fetch n'est pas fini
       await new Promise(resolve => setTimeout(resolve, 300));
     }
+
+    // Utiliser les coordonnées passées en input si disponibles
+    const lng = this.centerLng() ?? this.initialLng;
+    const lat = this.centerLat() ?? this.initialLat;
+    const zoom = (this.centerLng() && this.centerLat()) ? 15 : this.initialZoom;
 
     this.map = new maptilersdk.Map({
       container: this.mapContainer.nativeElement,
       style: this.isDark ? maptilersdk.MapStyle.STREETS.DARK : maptilersdk.MapStyle.STREETS,
       language: this.initialLanguage.toUpperCase(),
-      center: [this.initialLng, this.initialLat],
-      zoom: 11,
+      center: [lng, lat],
+      zoom: zoom,
       geolocateControl: false,
       maxBounds: [
         [-5.2, 41.3],

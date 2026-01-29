@@ -38,6 +38,10 @@ export class BookingService {
     return httpResource<Booking[]>(() => '/api/bookings/stations/user/status/' + statusId);
   }
 
+  getAllByStationOwnerAndStatusObservable(statusId:number) {
+    return this.http.get<Booking[]>('/api/bookings/stations/user/status/' + statusId);
+  }
+
   add(newBooking:BookingCreationDTO) {
     return this.http.post<Booking>('/api/bookings', newBooking);
   }

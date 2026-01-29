@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { StandardModalComponent } from '../../../../components/standard-modal/standard-modal.component';
 import { CarFormComponent } from '../../car-page/car-form/car-form.component';
 import { BookingCreationDTO, PreBookingEstimateResquestDTO } from '../../../../api/dto';
-import { Car, PreBookingEstimate, Station } from '../../../../shared/entities';
+import { Car, FavoriteStation, PreBookingEstimate, Station } from '../../../../shared/entities';
 import { CarService } from '../../../../api/car/car.service';
 import { endAfterStartValidator, futureDateValidator, startTimeInPastValidator } from '../../../../shared/validators';
 import { StationService } from '../../../../api/station/station.service';
@@ -12,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import { BookingStorageService } from '../../../../services/booking-storage.service';
 import { TimeConversionService } from '../../../../services/time-conversion.service';
 import { InteractiveMapComponent } from "../../../../components/interactive-map/interactive-map.component";
+import { FavoriteStationService } from '../../../../api/favorite-station/favorite-station.service';
 
 
 @Component({
@@ -26,10 +27,14 @@ export class BookingFormComponent implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);
   protected readonly isMapModalOpen = signal(false);
   protected readonly isCarModalOpen = signal(false);
+  protected readonly isFavoritesModalOpen = signal(false);
   protected readonly carService = inject(CarService);
   protected readonly stationService = inject(StationService);
+  protected readonly favoriteStationService = inject(FavoriteStationService);
   protected readonly bookingStorageService = inject(BookingStorageService);
   protected readonly timeConversion = inject(TimeConversionService);
+
+  readonly favoriteStations = this.favoriteStationService.getAll();
 
   readonly stationId = signal<string>('');
   readonly station = signal<Station | null>(null);
@@ -319,6 +324,15 @@ export class BookingFormComponent implements OnInit {
       stationId: this.form.value.stationId!
     }
     this.bookingFormSubmit.emit({booking:newBooking});
+  }
+
+  selectFavoriteStation(favoriteStation: FavoriteStation) {
+    const station = favoriteStation.station;
+    this.stationId.set(station.id);
+    this.station.set(station);
+    this.form.patchValue({ stationId: station.id });
+    this.isFavoritesModalOpen.set(false);
+    this.updatePrebookingEstimate();
   }
 
 }

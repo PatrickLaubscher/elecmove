@@ -111,6 +111,7 @@ export interface Station {
 
 /* Favorite station */
 export interface FavoriteStation {
+    id?:string;
     user:User;
     station:Station;
 }

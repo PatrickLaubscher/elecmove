@@ -1,8 +1,9 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthentificationService } from '../../../api/authentication/authentification.service';
 import { BookingService } from '../../../api/booking/booking.service';
 import { StationService } from '../../../api/station/station.service';
+import { FavoriteStationService } from '../../../api/favorite-station/favorite-station.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PdfReceiptService } from '../../../services/pdf-receipt.service';
 import { ExcelExportService } from '../../../services/excel-export.service';
@@ -18,14 +19,17 @@ import { StandardModalComponent } from "../../../components/standard-modal/stand
   templateUrl: './dashboard-homepage.component.html',
   styleUrl: './dashboard-homepage.component.css'
 })
-export class DashboardHomepageComponent {
+export class DashboardHomepageComponent implements OnInit {
 
   protected readonly authService = inject(AuthentificationService);
   protected readonly stationService = inject(StationService);
   protected readonly bookingService = inject(BookingService);
+  protected readonly favoriteStationService = inject(FavoriteStationService);
   protected readonly snackBar = inject(MatSnackBar);
   protected readonly pdfReceiptService = inject(PdfReceiptService);
   protected readonly excelExportService = inject(ExcelExportService);
+
+  readonly favoriteStationsMap = signal<Map<string, string>>(new Map()); // stationId -> favoriteId
 
   readonly pendingStatusId = 1;
   readonly stations = this.stationService.getAll();
@@ -121,6 +125,81 @@ export class DashboardHomepageComponent {
     this.searchTerm.set('');
     this.selectedMonth.set('');
     this.selectedStatus.set('');
+  }
+
+  ngOnInit() {
+    this.loadFavorites();
+    this.checkPendingBookings();
+  }
+
+  private checkPendingBookings() {
+    this.bookingService.getAllByStationOwnerAndStatusObservable(this.pendingStatusId).subscribe({
+      next: (bookings) => {
+        if (bookings && bookings.length > 0) {
+          const message = bookings.length === 1
+            ? 'Vous avez 1 réservation en attente de validation'
+            : `Vous avez ${bookings.length} réservations en attente de validation`;
+
+          this.snackBar.open(message, 'Voir', {
+            duration: 8000,
+            verticalPosition: 'top',
+            horizontalPosition: 'center'
+          }).onAction().subscribe(() => {
+            document.getElementById('reservations-a-traiter')?.scrollIntoView({ behavior: 'smooth' });
+          });
+        }
+      }
+    });
+  }
+
+  private loadFavorites() {
+    this.favoriteStationService.getAllObservable().subscribe({
+      next: (favorites) => {
+        const map = new Map<string, string>();
+        favorites.forEach(fav => {
+          if (fav.station?.id && fav.id) {
+            map.set(fav.station.id, fav.id);
+          }
+        });
+        this.favoriteStationsMap.set(map);
+      },
+      error: () => {
+        this.favoriteStationsMap.set(new Map());
+      }
+    });
+  }
+
+  isStationFavorite(stationId: string): boolean {
+    return this.favoriteStationsMap().has(stationId);
+  }
+
+  toggleFavorite(stationId: string) {
+    if (this.isStationFavorite(stationId)) {
+      const favoriteId = this.favoriteStationsMap().get(stationId);
+      if (favoriteId) {
+        this.favoriteStationService.delete(favoriteId).subscribe({
+          next: () => {
+            const newMap = new Map(this.favoriteStationsMap());
+            newMap.delete(stationId);
+            this.favoriteStationsMap.set(newMap);
+            this.snackBar.open('Borne retirée des favoris', 'Ok', { duration: 3000, verticalPosition: 'top' });
+          },
+          error: () => this.snackBar.open('Erreur lors de la suppression du favori', 'Ok', { duration: 3000, verticalPosition: 'top' })
+        });
+      }
+    } else {
+      this.favoriteStationService.add({ stationId }).subscribe({
+        next: (newFavorite) => {
+          const newMap = new Map(this.favoriteStationsMap());
+          if (newFavorite.id) {
+            newMap.set(stationId, newFavorite.id);
+          }
+          this.favoriteStationsMap.set(newMap);
+          this.snackBar.open('Borne ajoutée aux favoris', 'Ok', { duration: 3000, verticalPosition: 'top' });
+        },
+        error: () => this.snackBar.open('Erreur lors de l\'ajout aux favoris', 'Ok', { duration: 3000, verticalPosition: 'top' })
+      });
+    }
   }
 
 }

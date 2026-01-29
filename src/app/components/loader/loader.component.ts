@@ -1,0 +1,14 @@
+import { Component, inject } from '@angular/core';
+import { LoaderService } from '../../services/loader.service';
+
+@Component({
+  selector: 'app-loader',
+  standalone: true,
+  templateUrl: './loader.component.html',
+  styleUrl: './loader.component.css'
+})
+export class LoaderComponent {
+  private readonly loaderService = inject(LoaderService);
+
+  readonly isLoading = this.loaderService.isLoading;
+}

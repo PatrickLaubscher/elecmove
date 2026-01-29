@@ -5,6 +5,7 @@ import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { globalInterceptor } from './interceptors/global.interceptor';
 import { tokenInterceptor } from './interceptors/token.interceptor';
+import { loadingInterceptor } from './interceptors/loading.interceptor';
 
 
 
@@ -22,6 +23,6 @@ export const appConfig: ApplicationConfig = {
       })
     ),
     provideClientHydration(withEventReplay()),
-    provideHttpClient(withFetch(), withInterceptors([globalInterceptor, tokenInterceptor]))
+    provideHttpClient(withFetch(), withInterceptors([loadingInterceptor, globalInterceptor, tokenInterceptor]))
   ]
 };

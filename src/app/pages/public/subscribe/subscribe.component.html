@@ -30,27 +30,27 @@ class="w-11/12 md:w-4/6 mx-auto my-30"
 >
 
     <form
-    [formGroup]="form" 
+    [formGroup]="form"
     (ngSubmit)="submit()"
     class="w-full md:w-4/5 lg:w-3/5 mx-auto flex flex-col justify-center items-center"
-    >   
+    >
 
 
         <!-- prénom -->
         <div
         class="w-full mb-2"
         >
-            <label 
-            for="firstname" 
+            <label
+            for="firstname"
             class="hidden"
             >
                 Votre prénom
             </label>
-            <input 
-            formControlName="firstname" 
-            type="text" 
-            class="w-full rounded-xl border border-noir dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
-            placeholder="Votre prénom" required 
+            <input
+            formControlName="firstname"
+            type="text"
+            class="w-full rounded-xl border border-noir dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent"
+            placeholder="Votre prénom" required
             />
 
             <div class="h-5 mt-1 text-sm">
@@ -66,23 +66,23 @@ class="w-11/12 md:w-4/6 mx-auto my-30"
             </div>
 
         </div>
- 
+
 
         <!-- nom -->
         <div
         class="w-full mb-2"
         >
-            <label 
-            for="lastname"	 
+            <label
+            for="lastname"
             class="hidden"
             >
                 Votre nom
             </label>
-            <input 
-            formControlName="lastname" 
-            type="text" 
-            class="w-full rounded-xl border border-noir dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
-            placeholder="Votre nom" required 
+            <input
+            formControlName="lastname"
+            type="text"
+            class="w-full rounded-xl border border-noir dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent"
+            placeholder="Votre nom" required
             />
 
             <div class="h-5 mt-1 text-sm">
@@ -97,23 +97,23 @@ class="w-11/12 md:w-4/6 mx-auto my-30"
                 }
             </div>
         </div>
-    
-        
+
+
         <!-- Email -->
         <div
         class="w-full mb-2"
         >
-            <label 
-            for="email"	 
+            <label
+            for="email"
             class="hidden"
             >
                 Votre email
             </label>
-            <input 
-            formControlName="email" 
-            type="email" 
-            class="w-full rounded-xl border border-noir dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
-            placeholder="Votre email" required 
+            <input
+            formControlName="email"
+            type="email"
+            class="w-full rounded-xl border border-noir dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent"
+            placeholder="Votre email" required
             />
 
             <div class="h-5 mt-1 text-sm">
@@ -141,17 +141,17 @@ class="w-11/12 md:w-4/6 mx-auto my-30"
         <div
         class="w-full mb-2"
         >
-            <label 
-            for="mobile"	 
+            <label
+            for="mobile"
             class="hidden"
             >
                 Votre téléphone mobile
             </label>
-            <input 
-            formControlName="mobile" 
-            type="tel" 
-            class="mx-auto mb-5 rounded-xl border border-noir dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
-            placeholder="Votre portable" required 
+            <input
+            formControlName="mobile"
+            type="tel"
+            class="mx-auto mb-5 rounded-xl border border-noir dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent"
+            placeholder="Votre portable" required
             />
 
 
@@ -180,33 +180,33 @@ class="w-11/12 md:w-4/6 mx-auto my-30"
         <div
         class="w-full"
         >
-            <label 
-            for="password"	 
+            <label
+            for="password"
             class="hidden"
             >
                 Votre mot de passe
             </label>
-            <input 
-            formControlName="password" 
-            type="password" 
-            class="mx-auto mb-5 rounded-xl border border-noir dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
-            placeholder="Votre mot de passe" required 
+            <input
+            formControlName="password"
+            type="password"
+            class="mx-auto mb-5 rounded-xl border border-noir dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent"
+            placeholder="Votre mot de passe" required
             />
 
         </div>
 
         <!-- Confirmation du mot de passe -->
-        <label 
-        for="password_confirmation"	 
+        <label
+        for="password_confirmation"
         class="hidden"
         >
             Votre mot de passe (confirmation)
         </label>
-        <input 
-        formControlName="password_confirmation" 
-        type="password" 
-        class="mx-auto mb-5 rounded-xl border border-noir px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
-        placeholder="Confirmation de votre mot de passe" required 
+        <input
+        formControlName="password_confirmation"
+        type="password"
+        class="mx-auto mb-5 rounded-xl border border-noir dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent"
+        placeholder="Confirmation de votre mot de passe" required
         />
 
         <div class="text-rouge mb-4" *ngIf="form.errors?.['PasswordNoMatch']">
@@ -224,20 +224,20 @@ class="w-11/12 md:w-4/6 mx-auto my-30"
         </button>
 
 
-         
 
- <!--   
-        <label 
-        for="address"	 
+
+ <!--
+        <label
+        for="address"
         class="hidden"
         >
             Votre adresse
         </label>
-        <input 
-        formControlName="address" 
-        type="text" 
-        class="mx-auto mb-5 rounded-xl border border-noir px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
-        placeholder="Votre adresse" required 
+        <input
+        formControlName="address"
+        type="text"
+        class="mx-auto mb-5 rounded-xl border border-noir px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent"
+        placeholder="Votre adresse" required
         />
 
         <div
@@ -246,39 +246,39 @@ class="w-11/12 md:w-4/6 mx-auto my-30"
             <div
             class="w-full md:w-1/2"
             >
-                <label 
-                for="city"	 
+                <label
+                for="city"
                 class="hidden"
                 >
                     Votre ville
                 </label>
-                <input 
-                formControlName="city" 
-                type="text" 
-                class="w-full rounded-xl border border-noir px-4 py-2 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
-                placeholder="Votre ville" required 
+                <input
+                formControlName="city"
+                type="text"
+                class="w-full rounded-xl border border-noir px-4 py-2 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent"
+                placeholder="Votre ville" required
                 />
             </div>
 
             <div
             class="w-full md:w-1/2"
             >
-                <label 
-                for="zipcode"	 
+                <label
+                for="zipcode"
                 class="hidden"
                 >
                     Votre code postal
                 </label>
-                <input 
-                formControlName="zipcode" 
-                type="number" 
-                class="w-full rounded-xl border border-noir px-4 py-2 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent" 
-                placeholder="Votre code postal" required 
+                <input
+                formControlName="zipcode"
+                type="number"
+                class="w-full rounded-xl border border-noir px-4 py-2 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent"
+                placeholder="Votre code postal" required
                 />
             </div>
-        </div> 
+        </div>
 -->
-    
+
 
     </form>
 

@@ -16,15 +16,19 @@ export class FavoriteStationService {
   }
 
   getAll() {
-    return httpResource<FavoriteStation>(() => '/api/favorite-stations/');
+    return httpResource<FavoriteStation[]>(() => '/api/favorite-stations/');
+  }
+
+  getAllObservable() {
+    return this.http.get<FavoriteStation[]>('/api/favorite-stations/');
   }
 
   add(newFavorite:FavoriteStationCreationDTO) {
     return this.http.post<FavoriteStation>('/api/favorite-stations', newFavorite);
   }
 
-  delete(id:Signal<number>) {
-    return this.http.delete<null>('/api/favorite-stations/'+ id());
+  delete(id: string) {
+    return this.http.delete<null>('/api/favorite-stations/' + id);
   }
-  
+
 }
