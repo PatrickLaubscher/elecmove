@@ -1,5 +1,5 @@
 import { HttpClient, httpResource } from '@angular/common/http';
-import { inject, Injectable, Signal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { FavoriteStation } from '../../shared/entities';
 import { FavoriteStationCreationDTO } from '../dto';
 
