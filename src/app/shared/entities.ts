@@ -149,3 +149,12 @@ export interface BookingStatus {
     id:number;
     name:string;
 }
+
+/* Review */
+export interface Review {
+    id:string;
+    rate:number;
+    comment:string;
+    createdAt:Date;
+    user:User;
+}

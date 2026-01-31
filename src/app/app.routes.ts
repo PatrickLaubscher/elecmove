@@ -11,6 +11,7 @@ import { StationPageComponent } from './pages/private/station-page/station-page.
 import { BookingPageComponent } from './pages/private/booking-page/booking-page.component';
 import { FindStationPageComponent } from './pages/private/find-station-page/find-station-page.component';
 import { CarPageComponent } from './pages/private/car-page/car-page.component';
+import { BookingConfirmationPageComponent } from './pages/private/booking-confirmation-page/booking-confirmation-page.component';
 
 
 
@@ -28,6 +29,7 @@ export const routes: Routes = [
             {path: '', component: DashboardHomepageComponent},
             {path: 'stations', component: StationPageComponent},
             {path: 'bookings', component: BookingPageComponent},
+            {path: 'booking-confirmation', component: BookingConfirmationPageComponent},
             {path: 'find-station', component: FindStationPageComponent},
             {path: 'cars', component: CarPageComponent},
 

@@ -29,8 +29,8 @@ export class BookingPageComponent {
     this.bookingService.add(newBooking)
     .subscribe({
       next: () => {
-        this.snackBar.open('Votre réservation a bien été enregistrée', 'ok', {duration: 5000, verticalPosition:'top', horizontalPosition:'right'})
         this.bookingStorageService.clearBooking();
+        this.router.navigate(['/private/booking-confirmation']);
       },
       error: () => {
         this.serverError.set("Erreur serveur");

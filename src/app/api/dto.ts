@@ -87,3 +87,9 @@ export interface BookingCreationDTO {
     carId:string;
     stationId:string;
 }
+
+/* Review */
+export interface ReviewCreationDTO {
+    rate:number;
+    comment:string;
+}
