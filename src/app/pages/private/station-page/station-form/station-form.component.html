@@ -314,8 +314,9 @@ class="w-11/12 md:w-4/6 mx-auto dark:text-gray-200"
                         <form [formGroup]="exceptionForm" (ngSubmit)="addException()" class="space-y-4">
                             <!-- Jour de la semaine -->
                             <div>
-                                <label class="block mb-1 dark:text-gray-200">Jour de la semaine</label>
+                                <label for="exception-day" class="block mb-1 dark:text-gray-200">Jour de la semaine</label>
                                 <select
+                                    id="exception-day"
                                     formControlName="day"
                                     class="w-full rounded-xl border border-noir p-2 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
                                 >
@@ -328,8 +329,9 @@ class="w-11/12 md:w-4/6 mx-auto dark:text-gray-200"
 
                             <!-- Heure de début -->
                             <div>
-                                <label class="block mb-1 dark:text-gray-200">Heure de début</label>
+                                <label for="exception-start-time" class="block mb-1 dark:text-gray-200">Heure de début</label>
                                 <input
+                                    id="exception-start-time"
                                     type="time"
                                     formControlName="startLocalTime"
                                     class="w-full rounded-xl border border-noir p-2 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"
@@ -338,8 +340,9 @@ class="w-11/12 md:w-4/6 mx-auto dark:text-gray-200"
 
                             <!-- Heure de fin -->
                             <div>
-                                <label class="block mb-1 dark:text-gray-200">Heure de fin</label>
+                                <label for="exception-end-time" class="block mb-1 dark:text-gray-200">Heure de fin</label>
                                 <input
+                                    id="exception-end-time"
                                     type="time"
                                     formControlName="endLocalTime"
                                     class="w-full rounded-xl border border-noir p-2 focus:outline-none focus:ring-2 focus:ring-vert focus:border-transparent dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200"

@@ -31,10 +31,10 @@
 
             <!-- Star Rating -->
             <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 text-center">
+                <span class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 text-center">
                     Note
-                </label>
-                <div class="flex justify-center gap-2">
+                </span>
+                <div class="flex justify-center gap-2" role="group" aria-label="Note">
                     @for(star of [1, 2, 3, 4, 5]; track star) {
                         <button
                             type="button"

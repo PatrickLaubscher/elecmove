@@ -92,7 +92,7 @@ export class StationFormComponent {
   }
 
   getDayLabel(dayValue: string): string {
-    const englishToFrench: { [key: string]: string } = {
+    const englishToFrench: Record<string, string> = {
       'monday': 'Lundi',
       'tuesday': 'Mardi',
       'wednesday': 'Mercredi',
