@@ -3,12 +3,13 @@ import { StationService } from '../../../../api/station/station.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { StationCreationDTO } from '../../../../api/dto';
+import { StationCreationDTO, StationExceptionCreationDTO } from '../../../../api/dto';
 import { CommonModule } from '@angular/common';
 import { StandardModalComponent } from "../../../../components/standard-modal/standard-modal.component";
 import { LocationFormComponent } from "../location-form/location-form.component";
 import { LocationStationService } from '../../../../api/location-station/location-station.service';
-import { Location, Station } from '../../../../shared/entities';
+import { Location, Station, StationException } from '../../../../shared/entities';
+import { StationExceptionService } from '../../../../api/station-exception/station-exception.service';
 
 @Component({
   selector: 'app-station-form',
@@ -20,11 +21,14 @@ export class StationFormComponent {
 
   private readonly stationService = inject(StationService);
   private readonly locationService = inject(LocationStationService);
+  private readonly stationExceptionService = inject(StationExceptionService);
   protected readonly router = inject(Router);
   protected readonly serverError = signal('');
   private readonly snackBar = inject(MatSnackBar);
   protected readonly isLocationModalOpen = signal(false);
+  protected readonly isExceptionModalOpen = signal(false);
   protected readonly locationAddress = signal<string>('');
+  protected readonly stationExceptions = signal<StationException[]>([]);
 
   readonly stationToEdit = input<Station | null>(null);
 
@@ -38,6 +42,22 @@ export class StationFormComponent {
       locationStationId: new FormControl<string>('', {validators: [Validators.required]})
     }
   );
+
+  protected readonly exceptionForm = new FormGroup({
+    day: new FormControl<string>('', {validators: [Validators.required]}),
+    startLocalTime: new FormControl<string>('', {validators: [Validators.required]}),
+    endLocalTime: new FormControl<string>('', {validators: [Validators.required]})
+  });
+
+  protected readonly daysOfWeek = [
+    { value: 'Lundi', label: 'Lundi' },
+    { value: 'Mardi', label: 'Mardi' },
+    { value: 'Mercredi', label: 'Mercredi' },
+    { value: 'Jeudi', label: 'Jeudi' },
+    { value: 'Vendredi', label: 'Vendredi' },
+    { value: 'Samedi', label: 'Samedi' },
+    { value: 'Dimanche', label: 'Dimanche' }
+  ];
 
   constructor() {
     effect(() => {
@@ -55,6 +75,75 @@ export class StationFormComponent {
         this.locationAddress.set(
           `${station.location.address}, ${station.location.zipcode} ${station.location.city}`
         );
+        this.loadStationExceptions(station.id);
+      }
+    });
+  }
+
+  loadStationExceptions(stationId: string) {
+    this.stationExceptionService.getAllByStation(stationId).subscribe({
+      next: (exceptions) => {
+        this.stationExceptions.set(exceptions);
+      },
+      error: () => {
+        console.error('Erreur lors du chargement des exceptions');
+      }
+    });
+  }
+
+  getDayLabel(dayValue: string): string {
+    const englishToFrench: { [key: string]: string } = {
+      'monday': 'Lundi',
+      'tuesday': 'Mardi',
+      'wednesday': 'Mercredi',
+      'thursday': 'Jeudi',
+      'friday': 'Vendredi',
+      'saturday': 'Samedi',
+      'sunday': 'Dimanche'
+    };
+    return englishToFrench[dayValue.toLowerCase()] || dayValue;
+  }
+
+  addException() {
+    const station = this.stationToEdit();
+    if (!station || this.exceptionForm.invalid) {
+      this.exceptionForm.markAllAsTouched();
+      return;
+    }
+
+    const exceptionData: StationExceptionCreationDTO = {
+      day: this.exceptionForm.value.day!,
+      startLocalTime: this.exceptionForm.value.startLocalTime!,
+      endLocalTime: this.exceptionForm.value.endLocalTime!,
+      stationId: station.id
+    };
+
+    console.log('Sending exception data:', exceptionData);
+
+    this.stationExceptionService.add(exceptionData).subscribe({
+      next: () => {
+        this.snackBar.open('Exception de disponibilité ajoutée', 'Ok', { duration: 3000, verticalPosition: 'top' });
+        this.loadStationExceptions(station.id);
+        this.exceptionForm.reset();
+        this.isExceptionModalOpen.set(false);
+      },
+      error: () => {
+        this.serverError.set('Erreur lors de l\'ajout de l\'exception');
+      }
+    });
+  }
+
+  deleteException(exceptionId: string) {
+    const station = this.stationToEdit();
+    if (!station) return;
+
+    this.stationExceptionService.delete(exceptionId).subscribe({
+      next: () => {
+        this.snackBar.open('Exception supprimée', 'Ok', { duration: 3000, verticalPosition: 'top' });
+        this.loadStationExceptions(station.id);
+      },
+      error: () => {
+        this.serverError.set('Erreur lors de la suppression de l\'exception');
       }
     });
   }

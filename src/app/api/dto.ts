@@ -93,3 +93,11 @@ export interface ReviewCreationDTO {
     rate:number;
     comment:string;
 }
+
+/* Station Exception (disponibilité) */
+export interface StationExceptionCreationDTO {
+    day:string;
+    startLocalTime:string;
+    endLocalTime:string;
+    stationId:string;
+}

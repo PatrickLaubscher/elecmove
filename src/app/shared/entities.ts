@@ -158,3 +158,12 @@ export interface Review {
     createdAt:Date;
     user:User;
 }
+
+/* Station Exception (disponibilité) */
+export interface StationException {
+    id:string;
+    day:string;
+    startLocalTime:string;
+    endLocalTime:string;
+    station:Station;
+}
