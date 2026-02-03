@@ -3,6 +3,8 @@ import { inject } from '@angular/core';
 import { LoaderService } from '../services/loader.service';
 import { finalize } from 'rxjs';
 
+const LOADER_DELAY_MS = 300;
+
 export const loadingInterceptor: HttpInterceptorFn = (req, next: HttpHandlerFn) => {
 
   const loaderService = inject(LoaderService);
@@ -14,11 +16,18 @@ export const loadingInterceptor: HttpInterceptorFn = (req, next: HttpHandlerFn) 
     return next(req);
   }
 
-  loaderService.show();
+  let loaderShown = false;
+  const timer = setTimeout(() => {
+    loaderShown = true;
+    loaderService.show();
+  }, LOADER_DELAY_MS);
 
   return next(req).pipe(
     finalize(() => {
-      loaderService.hide();
+      clearTimeout(timer);
+      if (loaderShown) {
+        loaderService.hide();
+      }
     })
   );
 };
