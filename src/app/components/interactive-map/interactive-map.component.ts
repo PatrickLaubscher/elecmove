@@ -7,7 +7,8 @@ import * as maptilersdk from '@maptiler/sdk';
 // CSS MapTiler importé globalement via angular.json
 import { StationService } from '../../api/station/station.service';
 import { Router } from '@angular/router';
-import { GeolocalisationResponse, Location, MapTilerSuggestion } from '../../shared/entities';
+import { GeolocalisationResponse, Location, MapTilerSuggestion, Picture } from '../../shared/entities';
+import { PictureService } from '../../api/picture/picture.service';
 import { BookingStorageService } from '../../services/booking-storage.service';
 import { ThemeService } from '../../services/theme.service';
 
@@ -23,6 +24,7 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
 
   protected readonly API_KEY = 'GC5T8jKrwWEDcC6F741K';
   protected readonly stationApi = inject(StationService);
+  protected readonly pictureService = inject(PictureService);
   protected readonly router = inject(Router);
   protected readonly bookingStorageService = inject(BookingStorageService);
   protected readonly themeService = inject(ThemeService);
@@ -229,23 +231,45 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
         const stationType = station.freeStanding ? "Murale" : "Sur pied";
 
         const popup = new Popup().setHTML(`
-          <h1 class="font-bold">${station.name}</h1>
-          <p>Adresse : ${station.location.address}</p>
-          <p>Puissance : ${station.power}</p>
-          <p>Type : ${stationType} </p>
-          <p class="font-bold">${station.tarification} € / heure</p>
+          <div class="flex gap-3">
+            <div class="station-thumbnail-container flex-shrink-0" data-station-id="${station.id}">
+              <svg width="48" height="48" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14.1666 35.0003V5.83366L14.3133 5.73533C17.4781 3.62564 21.1965 2.49987 25 2.49987C28.8035 2.49987 32.5219 3.62564 35.6866 5.73533L35.8333 5.83366V35.0003M9.99998 37.5003H40M14.1666 27.5003H12.5C10.7319 27.5003 9.03618 26.7979 7.78593 25.5477C6.53569 24.2975 5.83331 22.6018 5.83331 20.8337V10.0003M5.83331 10.0003C7.49998 10.0003 8.33331 9.16699 8.33331 9.16699V5.00033M5.83331 10.0003C4.16665 10.0003 3.33331 9.16699 3.33331 9.16699V5.00033M8.33331 5.00033H3.33331M8.33331 5.00033V1.66699M3.33331 5.00033V1.66699M26.6666 20.0003C25.8333 23.3337 23.3333 25.0003 23.3333 25.0003V25.8337H26.6666V26.667C25.8333 30.0003 23.3333 31.667 23.3333 31.667M30.8333 15.8337H19.1666V8.40533C22.9621 7.1996 27.0379 7.1996 30.8333 8.40533V15.8337Z" stroke="#1D1E18" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <h1 class="font-bold">${station.name}</h1>
+              <p class="text-sm">Adresse : ${station.location.address}</p>
+              <p class="text-sm">Puissance : ${station.power}</p>
+              <p class="text-sm">Type : ${stationType}</p>
+              <p class="font-bold">${station.tarification} € / heure</p>
+            </div>
+          </div>
           ${availabilityMessage}
           ${bookingLink}
         `);
 
         const marker = new Marker({ element: stationMarker })
-          .setLngLat([station.location.longitude, station.location.latitude]) 
+          .setLngLat([station.location.longitude, station.location.latitude])
           .setPopup(popup)
           .addTo(this.map!);
 
         this.stationMarkers.push(marker);
 
         popup.on('open', () => {
+          // Charger le thumbnail de la station
+          const thumbnailContainer = popup.getElement().querySelector(`.station-thumbnail-container[data-station-id="${station.id}"]`);
+          if (thumbnailContainer) {
+            this.pictureService.getByStation(station.id).subscribe({
+              next: (pictures: Picture[]) => {
+                const mainPicture = pictures.find(p => p.main) || pictures[0];
+                if (mainPicture) {
+                  thumbnailContainer.innerHTML = `<img src="${mainPicture.thumbnail}" alt="${station.name}" class="w-16 h-16 rounded-lg object-cover"/>`;
+                }
+              }
+            });
+          }
+
           const link = popup.getElement().querySelector('.bookingLink');
           if (link) {
             link.addEventListener('click', () => {
@@ -257,8 +281,8 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
 
               if(this.isMapModalOpen() === true) {
                 this.closingModal.emit(true);
-              } 
-              
+              }
+
               this.router.navigate(['/private/bookings'], {queryParams: {stationId: station.id} });
             });
           }

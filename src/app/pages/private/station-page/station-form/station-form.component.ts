@@ -8,8 +8,9 @@ import { CommonModule } from '@angular/common';
 import { StandardModalComponent } from "../../../../components/standard-modal/standard-modal.component";
 import { LocationFormComponent } from "../location-form/location-form.component";
 import { LocationStationService } from '../../../../api/location-station/location-station.service';
-import { Location, Station, StationException } from '../../../../shared/entities';
+import { Location, Picture, Station, StationException } from '../../../../shared/entities';
 import { StationExceptionService } from '../../../../api/station-exception/station-exception.service';
+import { PictureService } from '../../../../api/picture/picture.service';
 
 @Component({
   selector: 'app-station-form',
@@ -22,6 +23,7 @@ export class StationFormComponent {
   private readonly stationService = inject(StationService);
   private readonly locationService = inject(LocationStationService);
   private readonly stationExceptionService = inject(StationExceptionService);
+  private readonly pictureService = inject(PictureService);
   protected readonly router = inject(Router);
   protected readonly serverError = signal('');
   private readonly snackBar = inject(MatSnackBar);
@@ -29,6 +31,8 @@ export class StationFormComponent {
   protected readonly isExceptionModalOpen = signal(false);
   protected readonly locationAddress = signal<string>('');
   protected readonly stationExceptions = signal<StationException[]>([]);
+  protected readonly stationPictures = signal<Picture[]>([]);
+  protected readonly isUploadingPictures = signal(false);
 
   readonly stationToEdit = input<Station | null>(null);
 
@@ -76,6 +80,7 @@ export class StationFormComponent {
           `${station.location.address}, ${station.location.zipcode} ${station.location.city}`
         );
         this.loadStationExceptions(station.id);
+        this.loadStationPictures(station.id);
       }
     });
   }
@@ -87,6 +92,71 @@ export class StationFormComponent {
       },
       error: () => {
         console.error('Erreur lors du chargement des exceptions');
+      }
+    });
+  }
+
+  loadStationPictures(stationId: string) {
+    this.pictureService.getByStation(stationId).subscribe({
+      next: (pictures) => {
+        this.stationPictures.set(pictures);
+      },
+      error: () => {
+        console.error('Erreur lors du chargement des images');
+      }
+    });
+  }
+
+  onFilesSelected(event: Event) {
+    const station = this.stationToEdit();
+    if (!station) return;
+
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+
+    const files = Array.from(input.files);
+    this.isUploadingPictures.set(true);
+
+    this.pictureService.upload(station.id, files).subscribe({
+      next: () => {
+        this.snackBar.open('Image(s) ajoutée(s) avec succès', 'Ok', { duration: 3000, verticalPosition: 'top' });
+        this.loadStationPictures(station.id);
+        this.isUploadingPictures.set(false);
+        input.value = '';
+      },
+      error: () => {
+        this.serverError.set('Erreur lors de l\'upload des images');
+        this.isUploadingPictures.set(false);
+      }
+    });
+  }
+
+  deletePicture(pictureId: string) {
+    const station = this.stationToEdit();
+    if (!station) return;
+
+    this.pictureService.delete(station.id, pictureId).subscribe({
+      next: () => {
+        this.snackBar.open('Image supprimée', 'Ok', { duration: 3000, verticalPosition: 'top' });
+        this.loadStationPictures(station.id);
+      },
+      error: () => {
+        this.serverError.set('Erreur lors de la suppression de l\'image');
+      }
+    });
+  }
+
+  setMainPicture(pictureId: string) {
+    const station = this.stationToEdit();
+    if (!station) return;
+
+    this.pictureService.setMain(station.id, pictureId).subscribe({
+      next: () => {
+        this.snackBar.open('Image principale définie', 'Ok', { duration: 3000, verticalPosition: 'top' });
+        this.loadStationPictures(station.id);
+      },
+      error: () => {
+        this.serverError.set('Erreur lors de la définition de l\'image principale');
       }
     });
   }
@@ -183,8 +253,7 @@ export class StationFormComponent {
 
   updateStation(id: string, updatedStation: StationCreationDTO) {
     this.serverError.set('');
-    const idSignal = signal(Number(id));
-    this.stationService.put(idSignal, updatedStation)
+    this.stationService.put(id, updatedStation)
       .subscribe({
         next: () => {
           this.snackBar.open('La borne a été mise à jour avec succès', 'Ok', {duration: 5000, verticalPosition:'top'});

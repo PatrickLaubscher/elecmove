@@ -29,14 +29,70 @@ class="w-full md:w-4/5 lg:w-3/5 mx-auto flex flex-col justify-center items-cente
             <p class="dark:text-gray-200">Chargement de la borne...</p>
         } @else {
             <div class="mt-2 p-3 bg-gray-100 rounded-md dark:bg-gray-800 dark:border-gray-600">
-                <p class="dark:text-gray-200"><strong>Nom :</strong> {{ station()?.name }}</p>
-                <p class="dark:text-gray-200"><strong>Adresse :</strong> {{ station()?.location?.address }}</p>
-                <p class="dark:text-gray-200"><strong>Puissance :</strong> {{ station()?.power }}</p>
-                <p class="dark:text-gray-200"><strong>Type :</strong> {{ this.stationType }}</p>
-                <hr
-                class="my-2">
+                <!-- Image et infos -->
+                <div class="flex gap-4">
+                    <!-- Thumbnail -->
+                    @if(getMainPicture()) {
+                        <div class="flex-shrink-0">
+                            <img
+                                [src]="getMainPicture()?.thumbnail"
+                                [alt]="station()?.name"
+                                class="w-24 h-24 object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
+                                tabindex="0"
+                                role="button"
+                                (click)="isGalleryModalOpen.set(true)"
+                                (keydown.enter)="isGalleryModalOpen.set(true)"
+                            />
+                            @if(stationPictures().length > 1) {
+                                <button
+                                    type="button"
+                                    (click)="isGalleryModalOpen.set(true)"
+                                    class="mt-1 text-xs text-vert hover:underline cursor-pointer"
+                                >
+                                    Voir les {{ stationPictures().length }} photos
+                                </button>
+                            }
+                        </div>
+                    }
+                    <!-- Infos -->
+                    <div class="flex-1">
+                        <p class="dark:text-gray-200"><strong>Nom :</strong> {{ station()?.name }}</p>
+                        <p class="dark:text-gray-200"><strong>Adresse :</strong> {{ station()?.location?.address }}</p>
+                        <p class="dark:text-gray-200"><strong>Puissance :</strong> {{ station()?.power }}</p>
+                        <p class="dark:text-gray-200"><strong>Type :</strong> {{ this.stationType }}</p>
+                    </div>
+                </div>
+                <hr class="my-2">
                 <p class="dark:text-gray-200"><strong>Tarif horaire :</strong> {{ station()?.tarification }} €</p>
             </div>
+
+            <!-- Modal galerie -->
+            <app-standard-modal [(open)]="isGalleryModalOpen">
+                <h2
+                    ngProjectAs="card-title"
+                    class="text-sm md:text-md uppercase dark:text-gray-200"
+                >
+                    Photos de la borne
+                </h2>
+                <div ngProjectAs="card-body" class="max-h-[70vh] overflow-y-auto">
+                    @if(stationPictures().length > 0) {
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            @for(picture of stationPictures(); track picture.id) {
+                                <img
+                                    [src]="picture.src"
+                                    [alt]="picture.alt"
+                                    class="w-full rounded-lg"
+                                />
+                            }
+                        </div>
+                    } @else {
+                        <p class="text-gray-500 dark:text-gray-400 text-center py-4">
+                            Aucune photo disponible pour cette borne.
+                        </p>
+                    }
+                </div>
+                <p ngProjectAs="card-footer" class="text-white"></p>
+            </app-standard-modal>
         }
  
 

@@ -167,3 +167,12 @@ export interface StationException {
     endLocalTime:string;
     station:Station;
 }
+
+/* Picture */
+export interface Picture {
+    id:string;
+    src:string;
+    thumbnail:string;
+    alt:string;
+    main:boolean;
+}

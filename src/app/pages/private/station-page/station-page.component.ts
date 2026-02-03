@@ -48,8 +48,7 @@ export class StationPageComponent {
     const station = this.stationToDelete();
     if (!station) return;
 
-    const idSignal = signal(Number(station.id));
-    this.stationService.delete(idSignal).subscribe({
+    this.stationService.delete(station.id).subscribe({
       next: () => {
         this.snackBar.open('La borne a été supprimée avec succès', 'Ok', {
           duration: 5000,
