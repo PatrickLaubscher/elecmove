@@ -7,6 +7,13 @@ export const loadingInterceptor: HttpInterceptorFn = (req, next: HttpHandlerFn) 
 
   const loaderService = inject(LoaderService);
 
+  const excludedUrls = ['api.maptiler.com', 'maptiler'];
+  const shouldSkipLoader = excludedUrls.some(url => req.url.includes(url));
+
+  if (shouldSkipLoader) {
+    return next(req);
+  }
+
   loaderService.show();
 
   return next(req).pipe(
