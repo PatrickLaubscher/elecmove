@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { StandardModalComponent } from '../../../../components/standard-modal/standard-modal.component';
 import { CarFormComponent } from '../../car-page/car-form/car-form.component';
 import { BookingCreationDTO, PreBookingEstimateResquestDTO } from '../../../../api/dto';
-import { Car, FavoriteStation, PreBookingEstimate, Station } from '../../../../shared/entities';
+import { Car, FavoriteStation, Picture, PreBookingEstimate, Station } from '../../../../shared/entities';
 import { CarService } from '../../../../api/car/car.service';
 import { endAfterStartValidator, futureDateValidator, startTimeInPastValidator } from '../../../../shared/validators';
 import { StationService } from '../../../../api/station/station.service';
@@ -13,6 +13,7 @@ import { BookingStorageService } from '../../../../services/booking-storage.serv
 import { TimeConversionService } from '../../../../services/time-conversion.service';
 import { InteractiveMapComponent } from "../../../../components/interactive-map/interactive-map.component";
 import { FavoriteStationService } from '../../../../api/favorite-station/favorite-station.service';
+import { PictureService } from '../../../../api/picture/picture.service';
 
 
 @Component({
@@ -31,10 +32,13 @@ export class BookingFormComponent implements OnInit {
   protected readonly carService = inject(CarService);
   protected readonly stationService = inject(StationService);
   protected readonly favoriteStationService = inject(FavoriteStationService);
+  protected readonly pictureService = inject(PictureService);
   protected readonly bookingStorageService = inject(BookingStorageService);
   protected readonly timeConversion = inject(TimeConversionService);
 
   readonly favoriteStations = this.favoriteStationService.getAll();
+  protected readonly stationPictures = signal<Picture[]>([]);
+  protected readonly isGalleryModalOpen = signal(false);
 
   readonly stationId = signal<string>('');
   readonly station = signal<Station | null>(null);
@@ -268,6 +272,8 @@ export class BookingFormComponent implements OnInit {
               this.isLoadingStation.set(false);
               // Mettre à jour l'estimation après chargement de la station
               this.updatePrebookingEstimate();
+              // Charger les images de la station
+              this.loadStationPictures(id);
             },
             error: () => this.isLoadingStation.set(false)
           });
@@ -333,6 +339,22 @@ export class BookingFormComponent implements OnInit {
     this.form.patchValue({ stationId: station.id });
     this.isFavoritesModalOpen.set(false);
     this.updatePrebookingEstimate();
+    this.loadStationPictures(station.id);
+  }
+
+  loadStationPictures(stationId: string) {
+    this.pictureService.getByStation(stationId).subscribe({
+      next: (pictures) => {
+        this.stationPictures.set(pictures);
+      },
+      error: () => {
+        console.error('Erreur lors du chargement des images');
+      }
+    });
+  }
+
+  getMainPicture(): Picture | undefined {
+    return this.stationPictures().find(p => p.main) || this.stationPictures()[0];
   }
 
 }

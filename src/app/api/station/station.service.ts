@@ -39,12 +39,12 @@ export class StationService {
     return this.http.post<Station>('/api/stations', newStation);
   }
 
-  put(id:Signal<number>, station:StationCreationDTO) {
-    return this.http.put<Station>('/api/stations/'+ id(), station);
+  put(id: string, station:StationCreationDTO) {
+    return this.http.put<Station>(`/api/stations/${id}`, station);
   }
 
-  delete(id:Signal<number>) {
-    return this.http.delete<null>('/api/stations/'+ id());
+  delete(id: string) {
+    return this.http.delete<null>(`/api/stations/${id}`);
   }
 
   

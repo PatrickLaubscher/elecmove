@@ -6,13 +6,22 @@ class="px-4 py-6 rounded-2xl border-1 border-noir dark:border-gray-600 dark:bg-g
     class="flex justify-between gap-2"
     >
         <div
-        class="mb-4 flex items-center gap-2"
+        class="mb-4 flex items-center gap-3"
         >
-            <img
-            src="svg/charging-station.svg"
-            alt="Charging station icon"
-            class="size-12 dark:invert"
-            />
+            <!-- Thumbnail ou icône par défaut -->
+            @if(thumbnail()) {
+                <img
+                [src]="thumbnail()"
+                [alt]="station().name"
+                class="size-14 rounded-lg object-cover flex-shrink-0"
+                />
+            } @else {
+                <img
+                src="svg/charging-station.svg"
+                alt="Charging station icon"
+                class="size-12 dark:invert flex-shrink-0"
+                />
+            }
             <div
             class="flex flex-col items-start justify-center">
                 <!-- station name -->
