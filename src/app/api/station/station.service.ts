@@ -1,5 +1,5 @@
 import { HttpClient, httpResource } from '@angular/common/http';
-import { inject, Injectable, Signal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { PreBookingEstimate, Station } from '../../shared/entities';
 import { CoordinatesWithRadiusAndTimeSlotDTO, CoordinatesWithRadiusDTO, PreBookingEstimateResquestDTO, StationCreationDTO } from '../dto';
 import { Observable } from 'rxjs';
@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class StationService {
-  
+
   private readonly http = inject(HttpClient);
 
   getAll() {
@@ -33,7 +33,7 @@ export class StationService {
 
   getPrebookingEstimate(id:string, preBookingResquest:PreBookingEstimateResquestDTO) {
     return this.http.post<PreBookingEstimate>(`/api/stations/${id}/prebooking/estimate`, preBookingResquest);
-  } 
+  }
 
   add(newStation:StationCreationDTO) {
     return this.http.post<Station>('/api/stations', newStation);
@@ -47,5 +47,5 @@ export class StationService {
     return this.http.delete<null>(`/api/stations/${id}`);
   }
 
-  
+
 }
