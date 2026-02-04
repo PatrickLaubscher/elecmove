@@ -1,6 +1,6 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthentificationService } from '../../../api/authentication/authentification.service';
 import { LoginCredentialsDTO } from '../../../api/dto';
@@ -9,7 +9,7 @@ import { LoginCredentialsDTO } from '../../../api/dto';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -19,7 +19,12 @@ export class LoginComponent {
   protected readonly router = inject(Router);
   protected readonly snackBar = inject(MatSnackBar);
   protected readonly serverError = signal('');
+  protected readonly showPassword = signal(false);
   readonly redirectUrl = input<string>();
+
+  togglePasswordVisibility() {
+    this.showPassword.update(v => !v);
+  }
 
   protected readonly form = new FormGroup({
     email: new FormControl<string>('', {validators: [Validators.required, Validators.email]}),

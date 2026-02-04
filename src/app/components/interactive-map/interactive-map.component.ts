@@ -331,6 +331,11 @@ export class InteractiveMapComponent implements OnInit, AfterViewInit, OnDestroy
       this.loadStations();
     });
 
+    // Ignorer silencieusement les icônes manquantes du style MapTiler
+    this.map.on('styleimagemissing', (e) => {
+      // Ces icônes sont des POI du style MapTiler, pas nos images
+    });
+
     // Recharger les stations quand l'utilisateur déplace ou zoom la carte
     this.map.on('moveend', () => {
       this.loadStations();
